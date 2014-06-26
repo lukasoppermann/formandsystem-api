@@ -10,26 +10,22 @@
  * @version
  */
 
-use Config;
 use Log;
 use App;
 use URL;
+use GuzzleHttp;
+use Exception;
 
 class Api {
 	
 	// global config
-	public static $config;
+	public $config;
 	
 	// global client variable
-	public static $client;
+	public $client;
 	
 	public function __construct()
 	{
-		$this->config = array(
-			'url' => Config::get('package::url'),
-			'user' => Config::get('package::user'),
-			'password' => Config::get('package::password'),
-		);
 		$this->client = new GuzzleHttp\Client();
 	}
 	/**
@@ -41,7 +37,7 @@ class Api {
 	 */
 	public function config( $config )
 	{
-		$this->config = array_merge($config, $this->config);
+		$this->config = array_merge($config, (array)$this->config);
 	}
 	/**
 	 * merge config
@@ -50,10 +46,18 @@ class Api {
 	 *
 	 * @access	public
 	 */
-	public function merge_config( $path, $config )
+	public function merge_config( $path, $config = array() )
 	{
-		$config = array_merge($config, $this->config);
-		$config['url'] = (substr($path, 0, 4) == 'http' ? $path : $config['url'].$path);
+		$config = array_merge($config, (array)$this->config);
+		
+		if( substr($path, 0, 4) !== 'http' && (!isset($config['url']) || $config['url'] == "") )
+		{
+			throw new Exception('Request URL is not specified correctly.');
+		}
+		else
+		{
+			$config['url'] = (substr($path, 0, 4) == 'http' ? $path : $config['url'].$path);
+		}
 		
 		return $config;
 	}
@@ -64,10 +68,11 @@ class Api {
 	 *
 	 * @access	public
 	 */
-	public function get( $path, $config )
+	public function get( $path, $config = array() )
 	{
 		$config = $this->merge_config($path, $config);
-		return $client->get(url($path), ['auth' =>  [$config['user'], $config['password']]]);
+		
+		return $this->client->get(url($config['url']), ['auth' => [$config['user'], $config['password']]]);
 	}
 	/**
 	 * get

@@ -9,7 +9,7 @@ class ApiServiceProvider extends ServiceProvider {
 	 *
 	 * @var bool
 	 */
-	protected $defer = true;
+	protected $defer = false;
   
 	/**
    * Booting
@@ -26,10 +26,10 @@ class ApiServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-    $this->app['Api'] = $this->app->share(function($app)
-    {
-        return new Api;
-    });
+		$this->app['api'] = $this->app->share(function($app)
+		{
+			return new Api;
+		});
 		
 		$this->app->booting(function()
 		{
