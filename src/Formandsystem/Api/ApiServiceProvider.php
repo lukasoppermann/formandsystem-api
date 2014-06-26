@@ -30,6 +30,12 @@ class ApiServiceProvider extends ServiceProvider {
     {
         return new Api;
     });
+		
+		$this->app->booting(function()
+		{
+		  $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+		  $loader->alias('Api', 'Formandsystem\Api\Facades\Api');
+		});
 	}
 
 	/**
