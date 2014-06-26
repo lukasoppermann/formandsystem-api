@@ -17,18 +17,19 @@ use URL;
 
 class Api {
 	
-	// credentials
-	public static $config = array(
-		'url' => Config::get('package::url'),
-		'user' => Config::get('package::user'),
-		'password' => Config::get('package::password'),
-	);
+	// global config
+	public static $config;
 	
 	// global client variable
 	public static $client;
 	
 	public function __construct()
 	{
+		$this->config = array(
+			'url' => Config::get('package::url'),
+			'user' => Config::get('package::user'),
+			'password' => Config::get('package::password'),
+		);
 		$this->client = new GuzzleHttp\Client();
 	}
 	/**
@@ -52,7 +53,7 @@ class Api {
 	public function merge_config( $path, $config )
 	{
 		$config = array_merge($config, $this->config);
-		$config['url'] = (substr($path, 0, 4) == 'http' ? $path : $config['url'].$path;
+		$config['url'] = (substr($path, 0, 4) == 'http' ? $path : $config['url'].$path);
 		
 		return $config;
 	}
@@ -75,9 +76,9 @@ class Api {
 	 *
 	 * @access	public
 	 */
-	public function get( $path )
-	{
-		return $client->get(url('http://www/formandsystem/public/api/v1/stream/navigation.json'), ['auth' =>  ['lukas@vea.re', 'lukas']]);
-	}
+	// public function get( $path )
+	// {
+	// 	return $client->get(url('http://www/formandsystem/public/api/v1/stream/navigation.json'), ['auth' =>  ['lukas@vea.re', 'lukas']]);
+	// }
 	
 }

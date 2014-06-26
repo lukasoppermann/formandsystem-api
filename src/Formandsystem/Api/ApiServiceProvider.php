@@ -26,7 +26,7 @@ class ApiServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-    $this->app['api'] = $this->app->share(function($app)
+    $this->app['Api'] = $this->app->share(function($app)
     {
         return new Api;
     });
