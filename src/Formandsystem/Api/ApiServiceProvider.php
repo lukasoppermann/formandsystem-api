@@ -26,7 +26,10 @@ class ApiServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+    $this->app['api'] = $this->app->share(function($app)
+    {
+        return new Api;
+    });
 	}
 
 	/**
@@ -36,7 +39,7 @@ class ApiServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array('api');
 	}
 
 }
