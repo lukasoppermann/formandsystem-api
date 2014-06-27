@@ -21,6 +21,9 @@ class Api {
 	// global config
 	public $config;
 	
+	// global auth
+	public $auth = ['user', 'password'];
+	
 	// global client variable
 	public $client;
 	
@@ -37,6 +40,11 @@ class Api {
 	 */
 	public function config( $config )
 	{
+		if( isset($config['url']) && substr($config['url'], 0, 4) !== 'http' )
+		{
+			throw new Exception('The base URL is not specified correctly in your call API::config()');
+		}
+		
 		$this->config = array_merge($config, (array)$this->config);
 	}
 	/**
@@ -48,31 +56,85 @@ class Api {
 	 */
 	public function merge_config( $path, $config = array() )
 	{
-		$config = array_merge($config, (array)$this->config);
-		
+		// prepare url
 		if( substr($path, 0, 4) !== 'http' && (!isset($config['url']) || $config['url'] == "") )
 		{
 			throw new Exception('Request URL is not specified correctly.');
 		}
 		else
 		{
-			$config['url'] = (substr($path, 0, 4) == 'http' ? $path : $config['url'].$path);
+			$this->config['url'] = (substr($path, 0, 4) == 'http' ? $path : $config['url'].$path);
 		}
-		
-		return $config;
+		//
+		// // preapre auth
+		// foreach( $this->auth as $item )
+		// {
+		// 	if( !isset($config[$item]) || $config[$item] == "" )
+		// 	{
+		// 		$do_auth = false;
+		// 		return false;
+		// 	}
+		// 	else
+		// 	{
+		// 		$do_auth = true;
+		// 		$auth[] = $config[$item];
+		// 	}
+		// }
+		//
+		// if( isset($do_auth) && $do_auth == true )
+		// {
+		// 	$config['auth'] = $auth;
+		// }
+		// else
+		// {
+		// 	$config['auth'] = "";
+		// }
+		//
+		// return $config;
 	}
 	/**
-	 * get
+	 * call_method
 	 *
-	 * get request
+	 * call_method request
 	 *
 	 * @access	public
 	 */
-	public function get( $path, $config = array() )
+	public function call_method($fn, $path, $config = array(), $returnObj = false)
 	{
-		$config = $this->merge_config($path, $config);
+		$path = $this->merge_config($path, $config);
 		
-		return $this->client->get(url($config['url']), ['auth' => [$config['user'], $config['password']]]);
+		// if( $this->check_auth($config) )
+		// {
+			try{
+				if($returnObj === false)
+				{
+					return $this->client->$fn(url($path), $config)->getBody();
+				}
+				else
+				{
+					return $this->client->$fn(url($path), $config);
+				}
+			}
+			catch(GuzzleHttp\Exception\ClientException $e)
+			{
+				if($e->getCode() == 401)
+				{
+					Log::error('Wrong credentials for Api call to '.$config['url']);
+					return false;
+				}
+			}
+		// }
+		// else
+		// {
+		// 	if($returnObj === false)
+		// 	{
+		// 		return $this->client->$fn(url($config['url']))->getBody();
+		// 	}
+		// 	else
+		// 	{
+		// 		return $this->client->$fn(url($config['url']));
+		// 	}
+		// }
 	}
 	/**
 	 * get
@@ -81,9 +143,53 @@ class Api {
 	 *
 	 * @access	public
 	 */
-	// public function get( $path )
-	// {
-	// 	return $client->get(url('http://www/formandsystem/public/api/v1/stream/navigation.json'), ['auth' =>  ['lukas@vea.re', 'lukas']]);
-	// }
+	public function get( $path, $config = array(), $returnObj = false )
+	{
+		return $this->call_method('get', $path, $config, $returnObj);
+	}
+	/**
+	 * delete
+	 *
+	 * delete request
+	 *
+	 * @access	public
+	 */
+	public function delete( $path, $config = array(), $returnObj = false )
+	{
+		return $this->call_method('delete', $path, $config, $returnObj);
+	}
+	/**
+	 * post
+	 *
+	 * post request
+	 *
+	 * @access	public
+	 */
+	public function post( $path, $config = array(), $returnObj = false )
+	{
+		return $this->call_method('post', $path, $config, $returnObj);
+	}
+	/**
+	 * put
+	 *
+	 * put request
+	 *
+	 * @access	public
+	 */
+	public function put( $path, $config = array(), $returnObj = false )
+	{
+		return $this->call_method('put', $path, $config, $returnObj);
+	}
+	/**
+	 * client
+	 *
+	 * get guzzle client
+	 *
+	 * @access	public
+	 */
+	public function client()
+	{
+		return $this->client;
+	}
 	
 }
