@@ -21,8 +21,8 @@ class Api {
 	// global config
 	public $config;
 	
-	// global auth
-	public $auth = ['user', 'password'];
+	// global path
+	public $path;
 	
 	// global client variable
 	public $client;
@@ -44,53 +44,32 @@ class Api {
 		{
 			throw new Exception('The base URL is not specified correctly in your call API::config()');
 		}
+		else
+		{
+			$this->path = $config['url'];
+			unset($config['url']);
+		}
 		
-		$this->config = array_merge($config, (array)$this->config);
+		$this->config = $config;
 	}
 	/**
-	 * merge config
+	 * path
 	 *
-	 * merge config settings
+	 * build path
 	 *
 	 * @access	public
 	 */
-	public function merge_config( $path, $config = array() )
+	public function path( $new_path )
 	{
 		// prepare url
-		if( substr($path, 0, 4) !== 'http' && (!isset($config['url']) || $config['url'] == "") )
+		if( substr($new_path, 0, 4) !== 'http' && (!isset($this->path) || $this->path == "") )
 		{
 			throw new Exception('Request URL is not specified correctly.');
 		}
 		else
 		{
-			$this->config['url'] = (substr($path, 0, 4) == 'http' ? $path : $config['url'].$path);
+			$this->path = (substr($new_path, 0, 4) == 'http' ? $new_path : $this->path.$new_path);
 		}
-		//
-		// // preapre auth
-		// foreach( $this->auth as $item )
-		// {
-		// 	if( !isset($config[$item]) || $config[$item] == "" )
-		// 	{
-		// 		$do_auth = false;
-		// 		return false;
-		// 	}
-		// 	else
-		// 	{
-		// 		$do_auth = true;
-		// 		$auth[] = $config[$item];
-		// 	}
-		// }
-		//
-		// if( isset($do_auth) && $do_auth == true )
-		// {
-		// 	$config['auth'] = $auth;
-		// }
-		// else
-		// {
-		// 	$config['auth'] = "";
-		// }
-		//
-		// return $config;
 	}
 	/**
 	 * call_method
@@ -101,40 +80,24 @@ class Api {
 	 */
 	public function call_method($fn, $path, $config = array(), $returnObj = false)
 	{
-		$path = $this->merge_config($path, $config);
 		
-		// if( $this->check_auth($config) )
-		// {
-			try{
-				if($returnObj === false)
-				{
-					return $this->client->$fn(url($path), $config)->getBody();
-				}
-				else
-				{
-					return $this->client->$fn(url($path), $config);
-				}
-			}
-			catch(GuzzleHttp\Exception\ClientException $e)
+		try{
+			$req = $this->client->$fn(url($this->path($path)), array_merge((array)$this->config, (array)$config) );
+			
+			if($returnObj !== true)
 			{
-				if($e->getCode() == 401)
-				{
-					Log::error('Wrong credentials for Api call to '.$config['url']);
-					return false;
-				}
+				return $req->getBody();
 			}
-		// }
-		// else
-		// {
-		// 	if($returnObj === false)
-		// 	{
-		// 		return $this->client->$fn(url($config['url']))->getBody();
-		// 	}
-		// 	else
-		// 	{
-		// 		return $this->client->$fn(url($config['url']));
-		// 	}
-		// }
+			return $req;
+		}
+		catch(GuzzleHttp\Exception\ClientException $e)
+		{
+			if($e->getCode() == 401)
+			{
+				Log::error('Wrong credentials for Api call to '.$this->path($path));
+				return false;
+			}
+		}
 	}
 	/**
 	 * get
