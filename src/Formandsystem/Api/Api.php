@@ -38,7 +38,7 @@ class Api {
 	 *
 	 * @access	public
 	 */
-	public function config( $config )
+	public function config( $config = null )
 	{
 		if( isset($config['url']) && substr($config['url'], 0, 4) !== 'http' )
 		{
@@ -49,7 +49,7 @@ class Api {
 			$this->path = $config['url'];
 			unset($config['url']);
 		}
-		
+
 		$this->config = $config;
 	}
 	/**
@@ -78,7 +78,7 @@ class Api {
 	 *
 	 * @access	public
 	 */
-	public function call_method($fn, $path, $config = array(), $returnObj = false)
+	public function call_method($fn, $path = null, $config = array(), $returnObj = false)
 	{
 		
 		try{
@@ -106,7 +106,7 @@ class Api {
 	 *
 	 * @access	public
 	 */
-	public function get( $path, $config = array(), $returnObj = false )
+	public function get( $path = null, $config = array(), $returnObj = false )
 	{
 		return $this->call_method('get', $path, $config, $returnObj);
 	}
