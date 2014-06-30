@@ -97,7 +97,7 @@ class Api {
 				return false;
 			}
 			
-			Log::error($e->getCode()': '.$e->getMessage().' on '.$this->path($path));
+			Log::error($e->getCode().': '.$e->getMessage().' on '.$this->path($path));
 			return false;
 		}
 	}
