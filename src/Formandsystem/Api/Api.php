@@ -96,6 +96,9 @@ class Api {
 				Log::error('Wrong credentials for Api call to '.$this->path($path));
 				return false;
 			}
+			
+			Log::error($e->getCode()': '.$e->getMessage().' on '.$this->path($path));
+			return false;
 		}
 	}
 	/**
