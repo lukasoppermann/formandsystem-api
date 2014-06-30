@@ -17,16 +17,16 @@ use GuzzleHttp;
 use Exception;
 
 class Api {
-	
+
 	// global config
 	public $config;
-	
+
 	// global path
 	public $path;
-	
+
 	// global client variable
 	public $client;
-	
+
 	public function __construct()
 	{
 		$this->client = new GuzzleHttp\Client();
@@ -34,7 +34,7 @@ class Api {
 	/**
 	 * config
 	 *
-	 * set config 
+	 * set config
 	 *
 	 * @access	public
 	 */
@@ -68,7 +68,7 @@ class Api {
 		}
 		else
 		{
-			$this->path = (substr($new_path, 0, 4) == 'http' ? $new_path : $this->path.$new_path);
+			return (substr($new_path, 0, 4) == 'http' ? $new_path : trim($this->path,'/').'/'.$new_path);
 		}
 	}
 	/**
@@ -80,13 +80,12 @@ class Api {
 	 */
 	public function call_method($fn, $path = null, $config = array(), $returnObj = false)
 	{
-		
 		try{
 			$req = $this->client->$fn(url($this->path($path)), array_merge((array)$this->config, (array)$config) );
-			
+
 			if($returnObj !== true)
 			{
-				return $req->getBody();
+				return $req->json();
 			}
 			return $req;
 		}
@@ -154,5 +153,5 @@ class Api {
 	{
 		return $this->client;
 	}
-	
+
 }
