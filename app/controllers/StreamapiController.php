@@ -64,8 +64,6 @@ class StreamapiController extends BaseController {
 			}
 		}
 
-		return Response::json($_GET, 200);
-
 		// merge defaults
 		$opts = array_merge($defaults, $opts);
 
