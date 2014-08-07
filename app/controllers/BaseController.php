@@ -1,10 +1,10 @@
 <?php
 
 class BaseController extends Controller {
-	
+
 	function __construct()
 	{
-		
+
 		// header('Access-Control-Allow-Origin: '.Auth::user()->service_url);
 		// header('Access-Control-Allow-Origin: http://cms.formandsystem.com');
 	  // Allow from any origin
@@ -25,10 +25,10 @@ class BaseController extends Controller {
     //
     //     exit(0);
     // }
-		
+
 		Config::set("database.connections.user", array(
 	    'driver'    => 'mysql',
-	    'host'      => 'localhost',
+	    'host'      => Auth::user()->service_host,
 	    'database'  => Auth::user()->service_name,
 	    'username'  => Auth::user()->service_user,
 	    'password'  => Auth::user()->service_key,
@@ -36,6 +36,6 @@ class BaseController extends Controller {
 	    'collation' => 'utf8_unicode_ci',
 	    'prefix'    => '',
 		));
-	
-	}	
+
+	}
 }
