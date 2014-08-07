@@ -23,9 +23,9 @@ bower_components/
 # db files #
 ############
 database.php
-seeds/*.*
-sessions/*.*
-storage/*.*
+**/seeds/*
+**/sessions/*
+**/storage/*
 
 # laravel #
 ############
