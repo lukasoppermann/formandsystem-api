@@ -64,10 +64,10 @@ class StreamapiController extends BaseController {
 				$opts[$parameter] = $value;
 			}
 		}
-
+return Response::json($opts['path'], 200);
 		// merge defaults
 		$opts = array_merge($defaults, $opts);
-		return Response::json($opts['path'], 200);
+
 		// set language if given
 		if( isset($opts['lang']) && $opts['lang'] != "" )
 		{
