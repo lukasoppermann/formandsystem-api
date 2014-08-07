@@ -73,14 +73,14 @@ class StreamapiController extends BaseController {
 		{
 			Config::set('content.locale', $opts['lang']);
 		}
-		
+
 		// check for path parameter
 		if( isset($opts['path']) && $opts['path'] != "" )
 		{
 			$opts['item'] = urldecode($opts['path']);
 		}
 		// navigation
-		if( $opts['item'] == 'navigation' )
+		if( isset($opts['item']) && $opts['item'] == 'navigation' )
 		{
 			return Response::json(Navigation::getNavigation(), 200);
 		}
@@ -119,7 +119,7 @@ class StreamapiController extends BaseController {
 			$content->data = Input::get('content');
 
 			$content->save();
-    
+
 			return Response::json(array('message' => 'saved'), 200);
 		}
 		else
