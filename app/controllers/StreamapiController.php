@@ -35,7 +35,7 @@ class StreamapiController extends BaseController {
 		// default options
 		$opts = $defaults = array(
 			'format' => 'json',
-			'language' => Config::get('content.locale', 'en')
+			'lang' => Config::get('content.locale', 'en')
 		);
 
 		// accepted formats
@@ -67,7 +67,7 @@ class StreamapiController extends BaseController {
 
 		// merge defaults
 		$opts = array_merge($defaults, $opts);
-
+		return Response::json($opts['path'], 200);
 		// set language if given
 		if( isset($opts['lang']) && $opts['lang'] != "" )
 		{
