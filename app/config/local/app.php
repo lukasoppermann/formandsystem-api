@@ -121,6 +121,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		// 'Illuminate\Workbench\WorkbenchServiceProvider',
     'App\facades\FormandsystemServiceProvider',
+		'Orangehill\Iseed\IseedServiceProvider'
 	),
 
 	/*

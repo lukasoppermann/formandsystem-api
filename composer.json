@@ -5,7 +5,8 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.2.*",
-		"laravelbook/ardent": "dev-master"
+		"laravelbook/ardent": "dev-master",
+		"orangehill/iseed": "dev-master"
 	},
 	"autoload": {
 		"psr-4": {
