@@ -18,10 +18,10 @@ class CreateUserTable extends Migration {
 			$table->string('email', 100)->unique();
 	    $table->string('password', 64);
 	    $table->timestamps();
-			$table->string('service_url', 255)->unique();
-			$table->string('service_name', 255)->unique();
-			$table->string('service_user', 255)->unique();
-			$table->string('service_key', 255)->unique();
+			$table->string('service_url', 255);
+			$table->string('service_name', 255);
+			$table->string('service_user', 255);
+			$table->string('service_key', 255);
 		});
 	}
 
