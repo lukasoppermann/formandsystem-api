@@ -65,7 +65,7 @@ $test = "";
 				$opts[$parameter] = $value;
 			}
 		}
-return Response::json($test, 200);
+return Response::json(Input::all(), 200);
 		// merge defaults
 		$opts = array_merge($defaults, $opts);
 
