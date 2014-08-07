@@ -55,16 +55,17 @@ class StreamapiController extends BaseController {
 		$args[0] !== "" ? $opts['item'] = $args[0] : "";
 		isset($args[1]) && $args[1] !== "" ? $opts['format'] = $args[1] : "";
 		$opts['format'] = in_array($opts['format'], $formats) ? $opts['format'] : $formats[0];
-
+$test = "";
 		// assign parameters
 		foreach(Input::all() as $parameter => $value)
 		{
 			if( in_array($parameter, $parameters) )
 			{
+				$test .= $parameter;
 				$opts[$parameter] = $value;
 			}
 		}
-return Response::json($opts['path'], 200);
+return Response::json($test, 200);
 		// merge defaults
 		$opts = array_merge($defaults, $opts);
 
