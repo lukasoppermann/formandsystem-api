@@ -16,10 +16,10 @@ Route::filter('basic.once', function()
     return Auth::onceBasic();
 });
 
-Route::get('/', function()
-{
-	return Response::json("This url does not exist.", 404);
-});
+// Route::get('/', function()
+// {
+// 	return Response::json("This url does not exist.", 404);
+// });
 
 Route::group(array('prefix' => 'v1', 'before' => array('basic.once')), function()
 {

@@ -3,14 +3,14 @@
 use Illuminate\Support\ServiceProvider;
 
 class FormandsystemServiceProvider extends ServiceProvider {
-	
+
 	/**
 	 * Indicates if loading of the provider is deferred.
 	 *
 	 * @var bool
 	 */
 	protected $defer = false;
-	
+
 	/**
 	 * Bind classes & register facades
 	 */
@@ -21,6 +21,7 @@ class FormandsystemServiceProvider extends ServiceProvider {
 		 */
     $this->app->bind('content', 'ContentModel');
     $this->app->bind('navigation', 'NavigationModel');
+		$this->app->bind('posts', 'PostsModel');
 		/**
 		 * Register Facades
 		 */
@@ -29,6 +30,7 @@ class FormandsystemServiceProvider extends ServiceProvider {
       $loader = \Illuminate\Foundation\AliasLoader::getInstance();
 			$loader->alias('Content', '\App\Facades\Content');
 			$loader->alias('Navigation', '\App\Facades\Navigation');
+			$loader->alias('Posts', '\App\Facades\Posts');
     });
   }
 

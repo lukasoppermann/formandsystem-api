@@ -42,19 +42,15 @@ class StreamapiController extends BaseController {
 		$formats = array('json');
 
 		// accepted parameters
-		$parameters = array('limit','offset','fields','level','depth','lang','lang','pageonly','path');
+		$parameters = array('limit','offset','fields','level','depth','lang','language','path','stream','until','since');
 
-		// if item is missing, throw exception
-		if( $item == null)
-		{
-			throw new Exception('1 parameter needed, 0 where given.');
-		}
-
-		// get format
+		// explode input at . (dot)
 		$args = explode(".", $item);
+		// if args[0] is set, use as item
 		$args[0] !== "" ? $opts['item'] = $args[0] : "";
-		isset($args[1]) && $args[1] !== "" ? $opts['format'] = $args[1] : "";
-		$opts['format'] = in_array($opts['format'], $formats) ? $opts['format'] : $formats[0];
+		// if args[1] is set, use as format if in formats
+		$opts['format'] = isset($args[1]) && $args[1] !== "" && in_array($args[1], $formats) ? $args[1] : $formats[0];
+
 		// assign parameters
 		foreach(Input::all() as $parameter => $value)
 		{
@@ -64,13 +60,19 @@ class StreamapiController extends BaseController {
 			}
 		}
 
+		if( isset($opts['lang']) )
+		{
+			$opts['language'] = $opts['lang'];
+			unset($opts['lang']);
+		}
+
 		// merge defaults
 		$opts = array_merge($defaults, $opts);
 
 		// set language if given
-		if( isset($opts['lang']) && $opts['lang'] != "" )
+		if( isset($opts['language']) && $opts['language'] != "" )
 		{
-			Config::set('content.locale', $opts['lang']);
+			Config::set('content.locale', $opts['language']);
 		}
 
 		// check for path parameter
@@ -78,27 +80,23 @@ class StreamapiController extends BaseController {
 		{
 			$opts['item'] = urldecode($opts['path']);
 		}
+
 		// navigation
 		if( isset($opts['item']) && $opts['item'] == 'navigation' )
 		{
 			return Response::json(Navigation::getNavigation(), 200);
 		}
 		// page
+		elseif( isset($opts['item']) )
+		{
+			return Response::json(Content::getPage($opts['item']), 200);
+		}
+		// pages
 		else
 		{
-			if( !isset($opts['item']) || $opts['item'] == "" )
-			{
-				return Response::json(Content::getFirst(), 200);
-			}
-			elseif( !isset($opts['pageonly']) || $opts['pageonly'] != true )
-			{
-				return Response::json(Content::getPage($opts['item']), 200);
-			}
-			elseif( isset($opts['pageonly']) && $opts['pageonly'] == true )
-			{
-				return Response::json(Content::getContent($opts['item']), 200);
-			}
+			return Response::json(Content::getContent($opts), 200);
 		}
+
 	}
 
 
