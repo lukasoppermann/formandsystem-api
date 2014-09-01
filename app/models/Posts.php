@@ -1,7 +1,6 @@
 <?php
-use LaravelBook\Ardent\Ardent;
 
-class PostsModel extends Ardent{
+class Posts extends Eloquent{
 
 	/**
 	 * The database table used by the model.
@@ -10,6 +9,7 @@ class PostsModel extends Ardent{
 	 */
 	protected $connection = 'user';
 	protected $table = 'fs_posts';
+
 	/**
 	 * Define relationships
 	 *
@@ -17,7 +17,7 @@ class PostsModel extends Ardent{
 	 */
 	function content()
 	{
-		return $this->hasOne(Content::getFacadeRoot(), 'article_id', 'article_id');
+		return $this->hasOne('Content', 'article_id', 'article_id');
 	}
 
 	/**
@@ -33,7 +33,7 @@ class PostsModel extends Ardent{
 		}
 
 		// get the collection obj
-		$collection = Posts::where('stream',$stream);
+		$collection = $this->where('stream',$stream);
 
 		return $collection->get();
 	}
@@ -51,7 +51,7 @@ class PostsModel extends Ardent{
 		}
 
 		// get the collection obj
-		$collection = Posts::where('stream',$stream);
+		$collection = $this->where('stream',$stream);
 
 		return $collection->get();
 	}

@@ -1,7 +1,6 @@
 <?php
-use LaravelBook\Ardent\Ardent;
 
-class NavigationModel extends Ardent{
+class Navigation extends Eloquent{
 
 	/**
 	 * The database table used by the model.
@@ -11,22 +10,12 @@ class NavigationModel extends Ardent{
 	protected $connection = 'user';
 	protected $table = 'fs_navigation';
 	/**
-	 * Ardent validation rules
-	 */
-	public static $rules = array(
-		// 	  'menu_id' => 'required|integer',
-		// 	  'status' => 'required|integer',
-		// 	  'link' => 'required|alpha_dash',
-		// 	  'language' => 'required|alpha',
-		// 'type' => 'required|integer'
-	);
-	/**
 	 * The nav array
 	 *
 	 * @var array
 	 */
 	protected $nav = array();
-	
+
 	/**
 	 * Get full navigation
 	 *
@@ -34,9 +23,9 @@ class NavigationModel extends Ardent{
 	 */
 	public function content()
 	{
-		return $this->hasMany(Content::getFacadeRoot(), 'article_id', 'article_id');
+		return $this->hasMany('Content', 'article_id', 'article_id');
 	}
-	
+
 	/**
 	 * Get first navigation item
 	 *
@@ -53,8 +42,8 @@ class NavigationModel extends Ardent{
 	 * @return mixed
 	 */
 	public function getNested()
-	{		
-		foreach(Navigation::all() as $key => $item)
+	{
+		foreach($this->all() as $key => $item)
 		{
 			$navArray[$item->parent_id][$item->id] = array(
 				'id' => $item->id,
@@ -88,8 +77,8 @@ class NavigationModel extends Ardent{
 	 * @return mixed
 	 */
 	public function getNavigation()
-	{		
-		foreach(Navigation::all() as $key => $item)
+	{
+		foreach($this->all() as $key => $item)
 		{
 			$navArray[$item->parent_id][$item->id] = array(
 				'id' => $item->id,
@@ -124,7 +113,7 @@ class NavigationModel extends Ardent{
 	{
 		if( isset($arr[$index]) )
 		{
-			foreach($arr[$index] as $key => $item) 
+			foreach($arr[$index] as $key => $item)
 			{
 				// check to not have doubled position values
 				$i = 0;

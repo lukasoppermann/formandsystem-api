@@ -1,9 +1,8 @@
 <?php
 
-use LaravelBook\Ardent\Ardent;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
-class ContentModel extends Ardent{
+class Content extends Eloquent{
 
 	/**
 	 * The database table used by the model.
@@ -12,6 +11,7 @@ class ContentModel extends Ardent{
 	 */
 	protected $connection = 'user';
 	protected $table = 'fs_content';
+	protected $models = [];
 	/**
 	 * Enable soft deleteing
 	 *
@@ -19,16 +19,19 @@ class ContentModel extends Ardent{
 	 */
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
+
 	/**
-	 * Ardent validation rules
-	 */
-	public static $rules = array(
-	  'article_id' => 'required|integer',
-	  'status' => 'required|integer',
-	  'link' => 'required|alpha_dash',
-	  'language' => 'required|alpha',
-		'type' => 'required|integer'
-	);
+	* construct
+	*
+	* @return void
+	*/
+	function __construct()
+	{
+		$this->models = [
+			'posts' => new Posts
+		];
+	}
+
 	/**
 	 * Define relationships
 	 *
@@ -36,12 +39,12 @@ class ContentModel extends Ardent{
 	 */
 	function navigation()
 	{
-		return $this->belongsTo(get_class(Navigation::getFacadeRoot()), 'article_id', 'article_id');
+		return $this->belongsTo('Navigation', 'article_id', 'article_id');
 	}
 
 	function posts()
 	{
-		return $this->belongsTo(get_class(Posts::getFacadeRoot()), 'article_id', 'article_id');
+		return $this->belongsTo('Posts', 'article_id', 'article_id');
 	}
 	/**
 	 * Decode data json
@@ -71,7 +74,7 @@ class ContentModel extends Ardent{
 			$id = $data['id'];
 		}
 		// return Item
-		return Content::find($id);
+		return $this->find($id);
 	}
 
 
@@ -89,13 +92,13 @@ class ContentModel extends Ardent{
 		// limit, offset, since, until, stream
 
 		// get the collection obj
-		$collection = Content::newQuery();
+		$collection = $this->newQuery();
 
 		// stream
 		if( isset($param['stream']) )
 		{
 			try {
-				$posts = Posts::getStream($param['stream'])->lists('article_id','position');
+				$posts = $this->models['posts']->getStream($param['stream'])->lists('article_id','position');
 				$collection->whereIn('article_id', $posts);
 			}
 			catch (Exception $e)

@@ -2,6 +2,21 @@
 
 class StreamapiController extends BaseController {
 
+	protected $models = [];
+
+	/**
+	* construct
+	*
+	* @return void
+	*/
+	function __construct()
+	{
+		$this->models = [
+			'navigation' => new Navigation,
+			'content' => new Content
+		];
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -9,7 +24,7 @@ class StreamapiController extends BaseController {
 	 */
 	public function index()
 	{
-		return Response::json(Navigation::getNested(), 200);
+		return Response::json($this->models['navigation']->getNested(), 200);
 	}
 
 
@@ -65,7 +80,6 @@ class StreamapiController extends BaseController {
 			$opts['language'] = $opts['lang'];
 			unset($opts['lang']);
 		}
-
 		// merge defaults
 		$opts = array_merge($defaults, $opts);
 
@@ -84,17 +98,17 @@ class StreamapiController extends BaseController {
 		// navigation
 		if( isset($opts['item']) && $opts['item'] == 'navigation' )
 		{
-			return Response::json(Navigation::getNavigation(), 200);
+			return Response::json($this->models['navigation']->getNavigation(), 200);
 		}
 		// page
 		elseif( isset($opts['item']) )
 		{
-			return Response::json(Content::getPage($opts['item']), 200);
+			return Response::json($this->models['content']->getPage($opts['item']), 200);
 		}
 		// pages
 		else
 		{
-			return Response::json(Content::getContent($opts), 200);
+			return Response::json($this->models['content']->getContent($opts), 200);
 		}
 
 	}
@@ -110,7 +124,7 @@ class StreamapiController extends BaseController {
 	{
 		if( $id != null )
 		{
-			$content = Content::getPage($id);
+			$content = $this->models['content']->getPage($id);
 
 			$content->title = Input::get('title');
 			$content->data = Input::get('content');

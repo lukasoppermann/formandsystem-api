@@ -25,17 +25,5 @@ class BaseController extends Controller {
     //
     //     exit(0);
     // }
-
-		Config::set("database.connections.user", array(
-	    'driver'    => 'mysql',
-	    'host'      => Auth::user()->service_host,
-	    'database'  => Auth::user()->service_name,
-	    'username'  => Auth::user()->service_user,
-	    'password'  => Auth::user()->service_key,
-	    'charset'   => 'utf8',
-	    'collation' => 'utf8_unicode_ci',
-	    'prefix'    => '',
-		));
-
 	}
 }
