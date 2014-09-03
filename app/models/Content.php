@@ -67,10 +67,12 @@ class Content extends Eloquent{
 	 *
 	 * @return array
 	 */
-	function getPage( $id )
+	function getPage( $id, $parameters )
 	{
-		if( !is_numeric( $id ) && $data = $this->whereRaw('link = ? and language = ?', array($id, Config::get('content.locale')) )->first() )
+		return $parameters['language'];
+		if( !is_numeric( $id ) && $data = $this->whereRaw('link = ? and language = ?', array($id, $parameters['language']) )->first() )
 		{
+
 			$id = $data['id'];
 		}
 		// return Item
@@ -89,7 +91,7 @@ class Content extends Eloquent{
 		$parameters = array('language', 'type', 'status');
 
 		// special parameters
-		// limit, offset, since, until, stream
+		// limit, offset, since, until, stream, sort
 
 		// get the collection obj
 		$collection = $this->newQuery();
@@ -126,6 +128,43 @@ class Content extends Eloquent{
 		{
 			$collection->where('created_at','>=',$param['since']);
 		}
+
+		// sorting (sort=asc:[date,name],desc:[user] || sort=desc:date)
+		// if both asc and desc, needs group []
+		if( isset($param['sort']) )
+		{
+			$sortParams = [$param['sort']];
+			if( $pos = strpos($sortParams[0],'],') )
+			{
+				$sortParams = [
+					substr($sortParams[0], 0, $pos+1),
+					substr($sortParams[0], $pos+2)
+				];
+			}
+
+			foreach($sortParams as $s)
+			{
+				$s = explode(':',$s);
+
+				if( count($s) < 2 )
+				{
+					$s[1] = $s[0];
+					$s[0] = 'asc';
+				}
+
+				$sorting[$s[0]] = explode(',',trim($s[1],'[]'));
+			}
+
+			foreach($sorting as $direction => $fields)
+			{
+				foreach($fields as $field)
+				{
+					$collection->orderBy($field,$direction);
+				}
+			}
+
+		}
+
 
 		// set limit
 		$limit = isset($param['limit']) && is_int((int) $param['limit']) ? $param['limit'] : 20;

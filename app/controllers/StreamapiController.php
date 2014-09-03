@@ -1,6 +1,8 @@
 <?php
 
-class StreamapiController extends BaseController {
+use Abstraction\Repositories\ContentRepositoryInterface as Content;
+
+class StreamapiController extends BaseApiontroller {
 
 	protected $models = [];
 
@@ -9,11 +11,11 @@ class StreamapiController extends BaseController {
 	*
 	* @return void
 	*/
-	function __construct()
+	function __construct(Content $content)
 	{
 		$this->models = [
 			'navigation' => new Navigation,
-			'content' => new Content
+			'content' => $content
 		];
 	}
 
@@ -57,7 +59,7 @@ class StreamapiController extends BaseController {
 		$formats = array('json');
 
 		// accepted parameters
-		$parameters = array('limit','offset','fields','level','depth','lang','language','path','stream','until','since');
+		$parameters = array('limit','offset','fields','level','depth','lang','language','path','stream','until','since','sort');
 
 		// explode input at . (dot)
 		$args = explode(".", $item);
@@ -74,7 +76,6 @@ class StreamapiController extends BaseController {
 				$opts[$parameter] = $value;
 			}
 		}
-
 		if( isset($opts['lang']) )
 		{
 			$opts['language'] = $opts['lang'];
@@ -94,7 +95,6 @@ class StreamapiController extends BaseController {
 		{
 			$opts['item'] = urldecode($opts['path']);
 		}
-
 		// navigation
 		if( isset($opts['item']) && $opts['item'] == 'navigation' )
 		{
@@ -149,7 +149,6 @@ class StreamapiController extends BaseController {
 	public function destroy($id)
 	{
 		return Response::json('Yo', 200);
-		//		//['config' => ['secretkey' => 'Lukas']
 	}
 
 
