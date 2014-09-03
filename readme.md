@@ -45,19 +45,3 @@ offset | INT | 0 | defines the starting offset of the returned results
 fields | ... | * | the fields that will be returned from the database
 until | YYYY-MM-DD or false | false | returns results that are older or equal to the given date
 since | YYYY-MM-DD or false | false | returns results that are newer or equal to the given date
-
-'get' => array(
-  'format' => 'json',
-  'language' => Config::get('content.locale', 'en'),
-  'limit' => 20,
-  'offset' => 0,
-  'fields' => '*',
-  'until' => false,
-  'since' => false,
-  'sort' => 'id,pos',
-  'failSilent' => true,
-),
-// accepted parameter values for get requests
-'getAccepted' => array(
-  'format' => array('json'),
-)
