@@ -5,6 +5,7 @@ Data should be cached to minimize render times and the number of request.
 
 The api is divided into multiple parts.
 
+API  |  Description
 -------------  |  ------------- 
 [Pages Api](#pages-api) | to retrieve single pages by `id` or `path`
 [Stream Api](#stream-api) | to retrieve a stream by `stream`-name like `news` or `navigation` which is a collection of pages
