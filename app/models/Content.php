@@ -27,9 +27,7 @@ class Content extends Eloquent{
 	*/
 	function __construct()
 	{
-		$this->models = [
-			'posts' => new Posts
-		];
+
 	}
 
 	/**
@@ -42,43 +40,10 @@ class Content extends Eloquent{
 		return $this->belongsTo('Navigation', 'article_id', 'article_id');
 	}
 
-	function posts()
+	function stream()
 	{
-		return $this->belongsTo('Posts', 'article_id', 'article_id');
+		return $this->belongsTo('Stream', 'article_id', 'article_id');
 	}
-	/**
-	 * Decode data json
-	 *
-	 * @return object
-	 */
-  public function getDataAttribute($value)
-	{
-		$data = json_decode($value);
-		if( is_object($data) || is_array($data) )
-		{
-			return $data;
-		}
-		return $value;
-  }
-
-
-	/**
-	 * GET single page
-	 *
-	 * @return array
-	 */
-	function getPage( $id, $parameters )
-	{
-		return $parameters['language'];
-		if( !is_numeric( $id ) && $data = $this->whereRaw('link = ? and language = ?', array($id, $parameters['language']) )->first() )
-		{
-
-			$id = $data['id'];
-		}
-		// return Item
-		return $this->find($id);
-	}
-
 
 	/**
 	* GET content by parameters

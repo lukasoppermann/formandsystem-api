@@ -17,7 +17,7 @@ class BaseApiController extends Controller {
 				'fields' => '*',
 				'until' => false,
 				'since' => false,
-				'sort' => 'id,pos',
+				'sort' => 'id,position',
 				'failSilent' => true,
 			),
 			// accepted parameter values for get requests

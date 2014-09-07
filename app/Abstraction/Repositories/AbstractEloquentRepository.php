@@ -1,5 +1,7 @@
 <?php namespace Abstraction\Repositories;
 
+use \DateTime;
+
 abstract class AbstractEloquentRepository implements AbstractRepositoryInterface{
 
   /**
@@ -39,6 +41,35 @@ abstract class AbstractEloquentRepository implements AbstractRepositoryInterface
     $query = $this->make($with);
 
     return $query->find($id);
+  }
+
+  /**
+   * Convert json
+   *
+   * @return object / array
+   */
+  public function jsonDecode($value)
+  {
+    if( is_string($value) )
+    {
+      $data = json_decode($value, true);
+      if( is_object($data) || is_array($data) )
+      {
+        return $data;
+      }
+    }
+    return $value;
+  }
+
+  /**
+  * Validate a date to be YYYY-MM-DD
+  *
+  * @return boolean
+  */
+  function _validateDate($date)
+  {
+    $d = DateTime::createFromFormat('Y-m-d', $date);
+    return $d && $d->format('Y-m-d') == $date;
   }
 
   //

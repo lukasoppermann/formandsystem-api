@@ -10,6 +10,10 @@ class AbstractionServiceProvider extends ServiceProvider {
       'Abstraction\Repositories\ContentRepositoryInterface',
       'Abstraction\Repositories\EloquentContentRepository'
     );
+    $this->app->bind(
+      'Abstraction\Repositories\StreamRepositoryInterface',
+      'Abstraction\Repositories\EloquentStreamRepository'
+    );
   }
 
 }

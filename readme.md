@@ -8,9 +8,11 @@ The api is divided into multiple parts.
 API  |  Description
 -------------  |  -------------
 [Pages Api](#pages-api) | to retrieve single pages by `id` or `path`
-[Stream Api](#stream-api) | to retrieve a stream by `stream`-name like `news` or `navigation` which is a collection of pages
+[Streams Api](#stream-api) | to retrieve a stream by `stream`-name like `news` or `navigation` which is a collection of pages
 
 ## Pages Api
+
+A page will be returned as an array.
 
 `http://api.formandsystem.com/v#.#/pages/#?parameter=value[&...]`
 
@@ -32,9 +34,11 @@ pathSeparator | . : :: + | . | character which will be used to separate path el
 
 ## Stream Api
 
-`http://api.formandsystem.com/v#.#/stream/$streamName?parameter=value[&...]`
+A stream will be returned as an array with every page in it being returned as an array as well.
 
-##### Parameters for calls to the stream api
+`http://api.formandsystem.com/v#.#/streams/$streamName?parameter=value[&...]`
+
+##### Parameters for calls to the streams api
 
 Parameter  | value | default |description
 ------------- | ------------- | ------------- | -------------
@@ -45,3 +49,13 @@ offset | INT | 0 | defines the starting offset of the returned results
 fields | ... | * | the fields that will be returned from the database
 until | YYYY-MM-DD or false | false | returns results that are older or equal to the given date
 since | YYYY-MM-DD or false | false | returns results that are newer or equal to the given date
+
+'get' => array(
+
+  'sort' => 'id,pos',
+  'failSilent' => true,
+),
+// accepted parameter values for get requests
+'getAccepted' => array(
+  'format' => array('json'),
+)

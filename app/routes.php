@@ -45,5 +45,5 @@ Route::group(array('prefix' => 'v1', 'before' => array('basic.once')), function(
 	Route::resource('pages', 'PagesapiController', array('except' => array('create', 'edit')));
 
   // stream api for content
-  Route::resource('stream', 'StreamapiController', array('except' => array('create', 'edit')));
+  Route::resource('streams', 'StreamsapiController', array('except' => array('create', 'edit')));
 });
