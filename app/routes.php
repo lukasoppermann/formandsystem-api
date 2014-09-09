@@ -14,6 +14,7 @@
 Route::filter('basic.once', function()
 {
     // login
+    Auth::logout();
     Auth::basic();
     // set db connection
     if ( Auth::check() )
@@ -31,7 +32,7 @@ Route::filter('basic.once', function()
     }
     else
     {
-      Response::make("Page not found", 404);
+      return Response::make("Page not found", 404);
     }
     Auth::logout();
 });
