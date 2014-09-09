@@ -31,7 +31,7 @@ Route::filter('basic.once', function()
     }
     else
     {
-      App::abort('404');
+      Response::make("Page not found", 404);
     }
     Auth::logout();
 });
