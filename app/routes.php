@@ -14,27 +14,31 @@
 Route::filter('basic.once', function()
 {
     // login
-    Auth::logout();
-    Auth::basic();
-    // set db connection
+    Auth::basic(['email' => 'lukas@vea.re', 'password' => 'lukas']);
+    $user = Auth::user();
+
     if ( Auth::check() )
     {
-      Config::set("database.connections.user", array(
+
+      // set db connection
+      $db = array(
         'driver'    => 'mysql',
-        'host'      => Auth::user()->service_host,
-        'database'  => Auth::user()->service_name,
-        'username'  => Auth::user()->service_user,
-        'password'  => Auth::user()->service_key,
+        'host'      => $user->service_host,
+        'database'  => $user->service_name,
+        'username'  => $user->service_user,
+        'password'  => $user->service_key,
         'charset'   => 'utf8',
         'collation' => 'utf8_unicode_ci',
         'prefix'    => '',
-      ));
+      );
+      Config::set("database.connections.user", $db);
     }
     else
     {
-      return Response::make("Page not found", 404);
+
+      return Response::make("Problem loging in", 400);
     }
-    Auth::logout();
+
 });
 
 Route::get('/', function()
