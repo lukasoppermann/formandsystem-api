@@ -15,13 +15,14 @@ Route::filter('basic.once', function()
 {
     // login
     Auth::onceBasic();
+    $user = Auth::user();
     // set db connection
     Config::set("database.connections.user", array(
       'driver'    => 'mysql',
-      'host'      => Auth::user()->service_host,
-      'database'  => Auth::user()->service_name,
-      'username'  => Auth::user()->service_user,
-      'password'  => Auth::user()->service_key,
+      'host'      => $user->service_host,
+      'database'  => $user->service_name,
+      'username'  => $user->service_user,
+      'password'  => $user->service_key,
       'charset'   => 'utf8',
       'collation' => 'utf8_unicode_ci',
       'prefix'    => '',
@@ -46,4 +47,10 @@ Route::group(array('prefix' => 'v1', 'before' => array('basic.once')), function(
 
   // stream api for content
   Route::resource('streams', 'StreamsapiController', array('except' => array('create', 'edit')));
+
+  // catch add
+  Route::any('{path?}', function()
+  {
+    return View::make('docs.index');
+  });
 });
