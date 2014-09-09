@@ -14,19 +14,20 @@
 Route::filter('basic.once', function()
 {
     // login
-    Auth::onceBasic();
-    $user = Auth::user();
+    Auth::basic();
     // set db connection
     Config::set("database.connections.user", array(
       'driver'    => 'mysql',
-      'host'      => $user->service_host,
-      'database'  => $user->service_name,
-      'username'  => $user->service_user,
-      'password'  => $user->service_key,
+      'host'      => Auth::user()->service_host,
+      'database'  => Auth::user()->service_name,
+      'username'  => Auth::user()->service_user,
+      'password'  => Auth::user()->service_key,
       'charset'   => 'utf8',
       'collation' => 'utf8_unicode_ci',
       'prefix'    => '',
     ));
+    // logout
+    Auth::logout();
 });
 
 Route::get('/', function()
