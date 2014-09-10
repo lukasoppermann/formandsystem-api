@@ -14,7 +14,8 @@
 Route::filter('basic.once', function()
 {
     // login
-    Auth::basic(['email' => 'lukas@vea.re', 'password' => 'lukas']);
+    Auth::logout();
+    Auth::once(['email' => 'lukas@vea.re', 'password' => 'lukas']);
     $user = Auth::user();
 
     if ( Auth::check() )
