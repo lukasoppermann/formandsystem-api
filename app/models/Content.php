@@ -35,11 +35,6 @@ class Content extends Eloquent{
 	 *
 	 * @return void
 	 */
-	function navigation()
-	{
-		return $this->belongsTo('Navigation', 'article_id', 'article_id');
-	}
-
 	function stream()
 	{
 		return $this->belongsTo('Stream', 'article_id', 'article_id');

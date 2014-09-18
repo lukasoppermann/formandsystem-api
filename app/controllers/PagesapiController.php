@@ -33,8 +33,7 @@ class PagesapiController extends BaseApiController {
 	 */
 	public function index()
 	{
-		return "return all pages?";
-		// return Response::json($this->models['navigation']->getNested(), 200);
+		return Response::json('Parameter missing item id or path',400);
 	}
 
 
@@ -45,7 +44,7 @@ class PagesapiController extends BaseApiController {
 	 */
 	public function store()
 	{
-		return Response::json('Store page', 200);
+		return Response::json($this->models['content']->getPage($item, $parameters), 200);
 	}
 
 
@@ -59,13 +58,14 @@ class PagesapiController extends BaseApiController {
 	{
 		$parameters = $this->getParameters();
 		// page
-		if( isset($item) )
+		$page = $this->models['content']->getPage($item, $parameters);
+		if( $page )
 		{
-			return Response::json($this->models['content']->getPage($item, $parameters), 200);
+			return Response::json($page, 200);
 		}
 		else
 		{
-			return Response::json('Parameter missing item id/path',400);
+			return Response::json('Page not found. Check your parameters.',404);
 		}
 
 	}
@@ -105,7 +105,22 @@ class PagesapiController extends BaseApiController {
 	 */
 	public function destroy($id)
 	{
-		return Response::json('Yo', 200);
+		if( !is_numeric( $id ) )
+		{
+			return Response::json('A valid ID needs to be provided.',400);
+		}
+
+		// get page data
+		$content = $this->models['content']->getById($id);
+
+		// delete entry
+		$this->models['content']->delete($id);
+
+		// delete stream entry
+		return $this->models['content']->deleteStreamItem($content['article_id']);
+
+
+		return Response::json($content, 200);
 	}
 
 

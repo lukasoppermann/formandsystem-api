@@ -52,14 +52,14 @@ Route::group(array('prefix' => 'v1', 'before' => array('basic.once')), function(
 	// invalid url
 	Route::get('/', function()
 	{
-		return Response::json("This url does not exist.", 404);
+		return View::make('docs.index');
 	});
 
 	// stream api for content
 	Route::resource('pages', 'PagesapiController', array('except' => array('create', 'edit')));
 
   // stream api for content
-  Route::resource('streams', 'StreamsapiController', array('except' => array('create', 'edit')));
+  Route::resource('streams', 'StreamsapiController', array('except' => array('create', 'edit', 'destroy')));
 
   // catch add
   Route::any('{path?}', function()

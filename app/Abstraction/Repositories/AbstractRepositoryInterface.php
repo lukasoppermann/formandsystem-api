@@ -12,6 +12,6 @@ interface AbstractRepositoryInterface {
   //
 	// public function update($id, $input);
 
-	// public function delete($id);
+	public function delete($id);
 
 }

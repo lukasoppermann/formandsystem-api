@@ -44,6 +44,16 @@ abstract class AbstractEloquentRepository implements AbstractRepositoryInterface
   }
 
   /**
+  * delete a database entry
+  *
+  * @return boolean
+  */
+  public function delete($id)
+  {
+     return $this->model->find($id)->delete();
+  }
+
+  /**
    * Convert json
    *
    * @return object / array
@@ -71,9 +81,6 @@ abstract class AbstractEloquentRepository implements AbstractRepositoryInterface
     $d = DateTime::createFromFormat('Y-m-d', $date);
     return $d && $d->format('Y-m-d') == $date;
   }
-
-  //
-  // public function delete($id);
 
   //
   // public function create($input);
