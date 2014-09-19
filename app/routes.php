@@ -61,9 +61,8 @@ Route::group(array('prefix' => 'v1', 'before' => array('basic.once')), function(
   // stream api for content
   Route::resource('streams', 'StreamsapiController', array('except' => array('create', 'edit', 'destroy')));
 
-  // catch add
-  Route::any('{path?}', function()
+  Route::any('{wrong?}/{path?}/{given?}', function()
   {
-    return View::make('docs.index');
+    return Response::json('Wrong request path. For more information read the documentation: http://api.formandsystem.com',404);
   });
 });

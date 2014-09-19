@@ -54,3 +54,5 @@ since | YYYY-MM-DD or false | false | returns results that are newer or equal to
 ##
 
 curl -i -H "Accept: application/json" -X POST -d "stream=news&position=1" http://api.formandsystem.local/v1/streams
+
+curl -i -H "Accept: application/json" -X POST -d "stream=news" http://api.formandsystem.local/v1/streams

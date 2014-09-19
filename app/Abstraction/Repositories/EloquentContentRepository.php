@@ -21,11 +21,20 @@ class EloquentContentRepository extends AbstractEloquentRepository implements Co
    */
   function getPage( $id, $parameters )
   {
-    if( !is_numeric( $id ) && $data = $this->model->whereRaw('link = ? and language = ?', array($id, $parameters['language']) )->first() )
-    {
-      $id = $data['id'];
-    }
 
+    // get id if path is given
+    if( !is_int( $id ) )
+    {
+      $data = $this->model->whereRaw('link = ? and language = ?', array($id, $parameters['language']) )->first();
+      if( $data['id'] )
+      {
+        $id = $data['id'];
+      }
+      else
+      {
+        return false;
+      }
+    }
     // get page
     if( $parameters['withDeleted'] == "true" )
     {
@@ -36,18 +45,16 @@ class EloquentContentRepository extends AbstractEloquentRepository implements Co
       $page = $this->model->find($id)->whereNull('deleted_at');
     }
 
-    if( isset($page->data) )
+    if( isset($page['data']) )
     {
       // decode json
-      $page->data = $this->jsonDecode($page->data);
+      $page['data'] = $this->jsonDecode($page['data']);
       // return Item
       return $page->toArray();
     }
     // missing id or wrong id or delete item
     return false;
   }
-
-
 
   /**
    * Deletes stream item if no entry is connected
@@ -58,7 +65,8 @@ class EloquentContentRepository extends AbstractEloquentRepository implements Co
   {
     if( $this->model->where('article_id', $article_id)->whereNull('deleted_at')->count() == 0)
     {
-      $this->stream->where('article_id', $article_id)->delete();
+      $streamItem = $this->stream->where('article_id', $article_id)->first();
+      $this->stream->delete($streamItem['id']);
     }
   }
 

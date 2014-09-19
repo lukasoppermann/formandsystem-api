@@ -199,7 +199,8 @@ class EloquentStreamRepository extends AbstractEloquentRepository implements Str
     while($this->model->where('stream',$parameters['stream'])->where('position',$pos)->get()->count() > 0){
       $pos++;
     }
-    // get next article id
+
+    // insert with next article id
     $stream = Stream::create([
       'article_id' => $this->model->orderBy('article_id','desc')->first()->article_id+1,
       'parent_id' => $parameters['parent_id'],
@@ -207,7 +208,7 @@ class EloquentStreamRepository extends AbstractEloquentRepository implements Str
       'position' => $pos
     ]);
 
-    return (isset($stream->id) ? $stream->id : false);
+    return (is_int($stream->id) ? $stream->id : "There has been an error storing your data.");
   }
 
 }

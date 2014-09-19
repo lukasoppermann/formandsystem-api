@@ -1,18 +1,18 @@
 <?php
 
-use Abstraction\Repositories\ContentRepositoryInterface as Content;
 use Abstraction\Repositories\StreamRepositoryInterface as Stream;
 
 class StreamsapiController extends BaseApiController {
 
-	protected $models = [];
+	// Repositories
+	protected $stream;
 
 	/**
 	* construct
 	*
 	* @return void
 	*/
-	function __construct(Content $content, Stream $stream)
+	function __construct(Stream $stream)
 	{
 		// call parent constrcutor
 		parent::__construct();
@@ -23,11 +23,8 @@ class StreamsapiController extends BaseApiController {
 		$this->parameters['get']['first'] = 'false';
 		$this->parameters['getAccepted']['first'] = array('true','false');
 
-		// models?
-		$this->models = [
-			'stream' => $stream,
-			'content' => $content
-		];
+		// Repositories
+		$this->stream = $stream;
 	}
 
 	/**
@@ -37,7 +34,7 @@ class StreamsapiController extends BaseApiController {
 	 */
 	public function index()
 	{
-		return Response::json('Missing parameters, please provide a valid stream name.',404);
+		return Response::json('Missing parameters, please provide a valid stream name. For more information read the documentation: http://api.formandsystem.com',404);
 	}
 
 
@@ -49,18 +46,15 @@ class StreamsapiController extends BaseApiController {
 	public function store()
 	{
 		// get parameters
-		$parameters = Input::all();
-		//
-		if( !isset($parameters['parent_id']) || !is_int($parameters['parent_id']) )
-		{
-			$parameters['parent_id'] = 0;
-		}
-		if( !isset($parameters['position']) || !is_int($parameters['position']) )
-		{
-			$parameters['position'] = 0;
-		}
+		$parameters = $this->getParameters('post', ['stream' => null,'position' => 0, 'parent_id' => 0 ]);
 
-		return Response::json(array('article_id',$this->models['stream']->storeStreamItem($parameters)), 200);
+		// check if stored successfully
+		if( is_int($articleId = $this->stream->storeStreamItem($parameters)) )
+		{
+			return Response::json(array('article_id',$articleId), 200);
+		}
+		return Response::json(false, 400);
+
 	}
 
 
@@ -70,19 +64,26 @@ class StreamsapiController extends BaseApiController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($item = null)
+	public function show($stream = null)
 	{
-		$parameters = $this->getParameters();
-		// stream
-		if( isset($item) )
+		// validation for get
+		$this->parameters['get']['accepted'] = array_merge($this->parameters['get']['accepted'], array(
+			'stream' =>'alpha_dash|required',
+			'position' => 'integer',
+			'parent_id' => 'integer'
+		));
+
+		// validate input
+		$parameters = $this->validateParameters('get', array_merge(array('stream' => $stream),Input::all()));
+
+		// if validation fails, return error
+		if( isset($parameters['errors']) )
 		{
-			return Response::json($this->models['stream']->getStream($item, $parameters), 200);
+			return Response::json(array('message' => 'Error while trying to retrieve records.', 'errors' => $parameters['errors']), 400);
 		}
-		// pages
-		else
-		{
-			return Response::json('Parameter missing stream name',400);
-		}
+
+		// return stream
+		return Response::json($this->stream->getStream($parameters['stream'], $parameters), 200);
 
 	}
 
@@ -95,21 +96,39 @@ class StreamsapiController extends BaseApiController {
 	 */
 	public function update($id = null)
 	{
-		if( $id != null )
+		// validation for put
+		$this->parameters['put']['accepted'] = array(
+			'id' => 'integer|required',
+			'stream' =>'alpha_dash',
+			'position' => 'integer',
+			'parent_id' => 'integer'
+		);
+		// get parameters
+		$parameters = $this->validateParameters('put', array_merge(
+			array( 'id' => $id ),
+			Input::all()
+		));
+
+		// if validation fails, return error
+		if( isset($parameters['errors']) )
 		{
-			$content = $this->models['content']->getPage($id);
-
-			$content->title = Input::get('title');
-			$content->data = Input::get('content');
-
-			$content->save();
-
-			return Response::json(array('message' => 'saved'), 200);
+			return Response::json(array('message' => 'Error while trying to update the record.', 'errors' => $parameters['errors']), 400);
 		}
-		else
+
+		// retrieve model
+		$streamItem = $this->stream->getById($id);
+
+		// update all changed values
+		foreach( $parameters as $key => $value )
 		{
-			return Response::json(array('message' => 'ID needed to update content.'), 400);
+			$streamItem->$key = $value;
 		}
+
+		// save model
+		$streamItem->save();
+
+		return Response::json(array('message' => 'saved'), 200);
+
 	}
 
 }
