@@ -50,12 +50,7 @@ fields | ... | * | the fields that will be returned from the database
 until | YYYY-MM-DD or false | false | returns results that are older or equal to the given date
 since | YYYY-MM-DD or false | false | returns results that are newer or equal to the given date
 
-'get' => array(
 
-  'sort' => 'id,pos',
-  'failSilent' => true,
-),
-// accepted parameter values for get requests
-'getAccepted' => array(
-  'format' => array('json'),
-)
+##
+
+curl -i -H "Accept: application/json" -X POST -d "stream=news&position=1" http://api.formandsystem.local/v1/streams

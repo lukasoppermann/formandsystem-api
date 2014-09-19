@@ -71,6 +71,7 @@ abstract class AbstractEloquentRepository implements AbstractRepositoryInterface
     return $value;
   }
 
+
   /**
   * Validate a date to be YYYY-MM-DD
   *

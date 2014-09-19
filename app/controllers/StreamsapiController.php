@@ -37,7 +37,7 @@ class StreamsapiController extends BaseApiController {
 	 */
 	public function index()
 	{
-		return Response::json($this->models['navigation']->getNested(), 200);
+		return Response::json('Missing parameters, please provide a valid stream name.',404);
 	}
 
 
@@ -48,7 +48,19 @@ class StreamsapiController extends BaseApiController {
 	 */
 	public function store()
 	{
-		return Response::json('Storing', 200);
+		// get parameters
+		$parameters = Input::all();
+		//
+		if( !isset($parameters['parent_id']) || !is_int($parameters['parent_id']) )
+		{
+			$parameters['parent_id'] = 0;
+		}
+		if( !isset($parameters['position']) || !is_int($parameters['position']) )
+		{
+			$parameters['position'] = 0;
+		}
+
+		return Response::json(array('article_id',$this->models['stream']->storeStreamItem($parameters)), 200);
 	}
 
 
@@ -99,18 +111,5 @@ class StreamsapiController extends BaseApiController {
 			return Response::json(array('message' => 'ID needed to update content.'), 400);
 		}
 	}
-
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		return Response::json('Yo', 200);
-	}
-
 
 }

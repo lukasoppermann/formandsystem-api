@@ -136,6 +136,7 @@ class EloquentStreamRepository extends AbstractEloquentRepository implements Str
     return $stream;
   }
 
+
   /**
    * nested structure
    *
@@ -152,6 +153,8 @@ class EloquentStreamRepository extends AbstractEloquentRepository implements Str
     // return
     return $nav;
   }
+
+
   /**
    * loop
    *
@@ -182,4 +185,29 @@ class EloquentStreamRepository extends AbstractEloquentRepository implements Str
     }
     return $index;
   }
+
+
+/**
+ * store stream item with stream
+ *
+ * @return int
+ */
+  public function storeStreamItem( $parameters = array() )
+  {
+    // get position
+    $pos = &$parameters['position'];
+    while($this->model->where('stream',$parameters['stream'])->where('position',$pos)->get()->count() > 0){
+      $pos++;
+    }
+    // get next article id
+    $stream = Stream::create([
+      'article_id' => $this->model->orderBy('article_id','desc')->first()->article_id+1,
+      'parent_id' => $parameters['parent_id'],
+      'stream' => $parameters['stream'],
+      'position' => $pos
+    ]);
+
+    return (isset($stream->id) ? $stream->id : false);
+  }
+
 }
