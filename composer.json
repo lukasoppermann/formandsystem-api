@@ -6,7 +6,8 @@
 	"require": {
 		"laravel/framework": "4.2.*",
 		"laravelbook/ardent": "dev-master",
-		"orangehill/iseed": "dev-master"
+		"orangehill/iseed": "dev-master",
+		"lucadegasperi/oauth2-server-laravel": "*"
 	},
 	"autoload": {
 		"psr-4": {

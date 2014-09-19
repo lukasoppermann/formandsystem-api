@@ -120,7 +120,8 @@ return array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		// 'Illuminate\Workbench\WorkbenchServiceProvider',
-		'Abstraction\AbstractionServiceProvider'
+		'Abstraction\AbstractionServiceProvider',
+		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
 	),
 
 	/*
@@ -187,6 +188,8 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
+		'AuthorizationServer' => 'LucaDegasperi\OAuth2Server\Facades\AuthorizationServerFacade',
+		'ResourceServer' => 'LucaDegasperi\OAuth2Server\Facades\ResourceServerFacade',
 
 	),
 
