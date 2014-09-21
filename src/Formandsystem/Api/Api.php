@@ -68,7 +68,7 @@ class Api {
 		}
 		else
 		{
-			return (substr($new_path, 0, 4) == 'http' ? $new_path : trim($this->path,'/').'/'.$new_path);
+			return (substr($new_path, 0, 4) == 'http' ? $new_path : trim($this->path,'/').'/'.trim($new_path,'/'));
 		}
 	}
 	/**
@@ -96,7 +96,7 @@ class Api {
 				Log::error('Wrong credentials for Api call to '.$this->path($path));
 				return false;
 			}
-			
+
 			Log::error($e->getCode().': '.$e->getMessage().' on '.$this->path($path));
 			return false;
 		}
@@ -156,5 +156,4 @@ class Api {
 	{
 		return $this->client;
 	}
-
 }
