@@ -68,7 +68,7 @@ class Api {
 		}
 		else
 		{
-			return (substr($new_path, 0, 4) == 'http' ? $new_path : trim($this->path,'/').'/'.trim($new_path,'/'));
+			return (substr($new_path, 0, 4) == 'http' ? $new_path : trim($this->path,'/').'/'.trim($new_path, '/'));
 		}
 	}
 	/**
