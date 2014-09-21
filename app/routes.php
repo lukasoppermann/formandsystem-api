@@ -31,17 +31,42 @@ Route::filter('basic.once', function()
     }
     else
     {
-
       return Response::make("Problem loging in", 400);
     }
 
 });
 
+/*
+|--------------------------------------------------------------------------
+| oAuth routes
+|--------------------------------------------------------------------------
+*/
+
+Route::post('oauth/access_token', function()
+{
+    return AuthorizationServer::performAccessTokenFlow();
+});
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Generic | docs route
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function()
 {
 	return View::make('docs.index');
 });
+
+
+
+/*
+|--------------------------------------------------------------------------
+| API routes
+|--------------------------------------------------------------------------
+*/
 
 Route::group(array('prefix' => 'v1', 'before' => array('basic.once')), function()
 {
