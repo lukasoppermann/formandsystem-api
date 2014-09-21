@@ -45,8 +45,20 @@ Route::filter('basic.once', function()
 
 Route::post('oauth/access_token', function()
 {
-    return AuthorizationServer::performAccessTokenFlow();
+  return AuthorizationServer::performAccessTokenFlow();
 });
+
+Route::get('/oauth/authorize', array('before' => 'check-authorization-params|auth', function()
+{
+  // get the data from the check-authorization-params filter
+  $params = Session::get('authorize-params');
+
+  // get the user id
+  $params['user_id'] = Auth::user()->id;
+
+  // display the authorization form
+  return View::make('authorization-form', array('params' => $params));
+}));
 
 /*
 |--------------------------------------------------------------------------
