@@ -18,8 +18,8 @@ class PagesapiController extends BaseApiController {
 		parent::__construct();
 
 		// add page specific parameters
-		$this->parameters['get']['pathSeparator'] = '.';
-		$this->parameters['getAccepted']['pathSeparator'] = array('.',':','::','+');
+		$this->parameters['get']['default']['pathSeparator'] = '.';
+		$this->parameters['get']['accepted']['pathSeparator'] = 'in:.,:,::,+';
 
 		// Repositories
 		$this->content = $content;
@@ -57,7 +57,7 @@ class PagesapiController extends BaseApiController {
 	{
 		// validation for get
 		$this->parameters['get']['accepted'] = array_merge($this->parameters['get']['accepted'], array(
-			'id' =>'alpha_dash|required',
+			'id' =>'required',
 			'position' => 'integer',
 			'parent_id' => 'integer'
 		));
@@ -72,7 +72,7 @@ class PagesapiController extends BaseApiController {
 		}
 
 		// retrieve page
-		if( $page = $this->content->getPage($parameters['page'], $parameters) )
+		if( $page = $this->content->getPage($parameters['id'], $parameters) )
 		{
 			return Response::json($page, 200);
 		}
