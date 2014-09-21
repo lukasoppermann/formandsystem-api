@@ -208,7 +208,7 @@ class EloquentStreamRepository extends AbstractEloquentRepository implements Str
       'position' => $pos
     ]);
 
-    return (is_int($stream->id) ? $stream->id : "There has been an error storing your data.");
+    return (is_int($stream->id) ? $stream->id : false);
   }
 
 }

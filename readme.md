@@ -35,11 +35,32 @@ offset* | INT | 0 | defines the starting offset of the returned results
 
 ## Stream Api
 
-A stream will be returned as an array with every page in it being returned as an array as well.
+A stream is a collection of pages like a news stream or a navigation.
 
-`http://api.formandsystem.com/v#.#/streams/$streamName?parameter=value[&...]`
+### Create record
 
-##### Parameters for calls to the streams api
+**URL Scheme used for creating records**
+`POST http://api.formandsystem.com/v#.#/streams`
+
+**Possible Arguments**
+
+Argument  | value | required | description
+------------- | ------------- | ------------- | -------------
+stream  | alphanum and dash | yes | the name of the stream of the new record
+parent_id | INT | no | id of the parent record, defaults to 0 if omitted
+position | INT | no | position of the record, defaults to last position if omitted
+
+**Return value on Success**
+Returns success object with article_id `{success: "true", article_id: INT}`
+
+### Read record
+
+**URL Scheme used for retrieving records**
+`GET http://api.formandsystem.com/v#.#/streams/$streamName?parameter=$value[&...]`
+
+While all parameters are optional, the `$stremName` must be given.
+
+**Parameters for calls to the streams api**
 
 Parameter  | value | default | description
 ------------- | ------------- | ------------- | -------------
@@ -52,8 +73,57 @@ until | YYYY-MM-DD or false | false | returns results that are older or equal to
 since | YYYY-MM-DD or false | false | returns results that are newer or equal to the given date
 first | boolean | false | returns only the first entry
 
-##
+**Return value on Success**
+Returns full record as json.
+
+### Update record
+
+**URL Scheme used for updating records**
+`PUT http://api.formandsystem.com/v#.#/streams/$recordId`
+
+The `$recordId` has to be given. All other parameters are optional and only updated if present.
+
+**Possible Arguments**
+
+Argument  | value | required | description
+------------- | ------------- | ------------- | -------------
+stream  | alphanum and dash | no | the name of the stream of the new record
+parent_id | INT | no | id of the parent record, defaults to 0 if omitted
+position | INT | no | position of the record, defaults to last position if omitted
+
+**Return value on Success**
+Returns success object `{success: "true"}`
+
+### Delete record
+
+Stream records can not be deleted directly.
+
+## Errors & debugging
+
+Whenever possible, the api returns a message indicating success or failure of an action along with an array of error messages.
+
+```javascript
+// result for successful action
+{
+  success: "true",
+  ...
+}
+
+// result for failed action
+{
+  success: "false",
+  errors: {
+    error_name: "error description",
+    ...
+  }
+  ...
+}
+```
+
+## call api via cli for testing
 
 curl -i -H "Accept: application/json" -X POST -d "stream=news&position=1" http://api.formandsystem.local/v1/streams
 
 curl -i -H "Accept: application/json" -X POST -d "stream=news" http://api.formandsystem.local/v1/streams
+
+curl -i -H "Accept: application/json" -X POST -d "stream=news&parent_id=2&position=0" http://api.formandsystem.local/v1/streams

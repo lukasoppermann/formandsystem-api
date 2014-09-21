@@ -19,7 +19,7 @@ class PagesapiController extends BaseApiController {
 
 		// add page specific parameters
 		$this->parameters['get']['default']['pathSeparator'] = '.';
-		$this->parameters['get']['accepted']['pathSeparator'] = 'in:.,:,::,+';
+		$this->parameters['get']['accepted']['pathSeparator'] = 'in:.,:,::';
 
 		// Repositories
 		$this->content = $content;
@@ -43,7 +43,43 @@ class PagesapiController extends BaseApiController {
 	 */
 	public function store()
 	{
-		return Response::json($this->content->getPage($item, $parameters), 200);
+		// validation for post
+		$this->parameters['post']['accepted'] = array(
+			'stream' => 'alpha_dash|required',
+			'article_id' => 'integer',
+			'menu_label' => '',
+			'link' => 'alpha_dash',
+			'status' => 'integer',
+			'language' => 'alpha_dash',
+			'data' => '',
+			'tags' => ''
+		);
+		// defaults for post
+		// $this->parameters['post']['default'] = array(
+		// 	'position' => 1,
+		// 	'parent_id' => 0
+		// );
+
+		// get parameters
+		$parameters = $this->validateParameters('get', Input::all());
+
+		// if validation fails, return error
+		if( isset($parameters['errors']) )
+		{
+			return Response::json(array('success' => 'false', 'errors' => $parameters['errors']), 400);
+		}
+
+		// create page
+		$page = $this->content->storePage($parameters);
+
+		// check if stored successfully
+		if( isset($page['id']) )
+		{
+			return Response::json(array('success' => true, 'id' => $page['id'], 'article_id' => $page['article_id']), 200);
+		}
+
+		// error while storing
+		return Response::json(array('success' => 'false', 'errors' => array('storing' => 'Error while storing record.')), 400);
 	}
 
 
@@ -65,10 +101,12 @@ class PagesapiController extends BaseApiController {
 		// validate input
 		$parameters = $this->validateParameters('get', array_merge(array('id' => $id),Input::all()));
 
+		return $parameters;
+
 		// if validation fails, return error
 		if( isset($parameters['errors']) )
 		{
-			return Response::json(array('message' => 'Error while trying to retrieve records.', 'errors' => $parameters['errors']), 400);
+			return Response::json(array('success' => 'false', 'errors' => $parameters['errors']), 400);
 		}
 
 		// retrieve page
@@ -78,7 +116,7 @@ class PagesapiController extends BaseApiController {
 		}
 
 		// if page is not found
-		return Response::json('Page not found.',404);
+		return Response::json(array('success' => 'false', 'errors' => array('not_found' => 'Page not found')),404);
 
 	}
 
@@ -109,7 +147,7 @@ class PagesapiController extends BaseApiController {
 		// if validation fails, return error
 		if( isset($parameters['errors']) )
 		{
-			return Response::json(array('message' => 'Error while trying to retrieve records.', 'errors' => $parameters['errors']), 400);
+			return Response::json(array('success' => 'false', 'errors' => $parameters['errors']), 400);
 		}
 
 		// get page
@@ -127,7 +165,7 @@ class PagesapiController extends BaseApiController {
 		//save model
 		$page->save();
 
-		return Response::json(array('message' => 'saved'), 200);
+		return Response::json(array('success' => 'true'), 200);
 	}
 
 
@@ -149,7 +187,7 @@ class PagesapiController extends BaseApiController {
 		// if validation fails, return error
 		if( isset($parameters['errors']) )
 		{
-			return Response::json(array('message' => 'Error while trying to delete records.', 'errors' => $parameters['errors']), 400);
+			return Response::json(array('success' => 'false', 'errors' => $parameters['errors']), 400);
 		}
 
 		// get page data
@@ -161,7 +199,7 @@ class PagesapiController extends BaseApiController {
 		// delete stream entry
 		$this->content->deleteStreamItem($content['article_id']);
 
-		return Response::json(array('message' => 'Record deleted succesfully.'), 200);
+		return Response::json(array('success' => 'true'), 200);
 	}
 
 

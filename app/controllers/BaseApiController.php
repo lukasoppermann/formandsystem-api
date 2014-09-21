@@ -64,73 +64,32 @@ class BaseApiController extends Controller {
 
 
 	/**
-	* get the parameters from URL and merge
-	*
-	* @return Array
-	*/
-	function getParameters($type = 'get', $defaults = null, $accepted = null)
-	{
-		if( isset($this->parameters[$type]) )
-		{
-			// get defaults
-			$parameters = (!isset($defaults) ? $this->parameters[$type] : $defaults);
-			$accepted = (!isset($accepted) ? $this->parameters[$type.'Accepted'] : $accepted);
-
-			// check and overwrite
-			foreach(Input::all() as $parameter => $value)
-			{
-				// check for valid parameter key
-				if( array_key_exists($parameter, $parameters) )
-				{
-					// check for valid parameter value if defaults are set
-					if( !isset($accepted[$parameter]) || in_array($value, $accepted[$parameter]) )
-					{
-						$parameters[$parameter] = $value;
-					}
-					else
-					{
-						$errors[] = 'Invalid value given: \''.$value.'\' for parameter \''.$parameter.
-												'\'. Accepted values: \''.implode('|',$accepted[$parameter]).'\'';
-					}
-				}
-				else
-				{
-					$errors[] = 'Invalid parameter given: \''.$parameter.'\' with value \''.$value.'\'';
-				}
-			}
-
-			// check for error reporting
-			if( ( !isset($parameters['failSilent']) || $parameters['failSilent'] === 'false' ) && isset($errors) )
-			{
-				$parameters['errors'] = $errors;
-			}
-
-			return $parameters;
-
-		}
-
-		throw new Exception('Wrong type for parameters given. Type: \''.$type.'\' does not exist.');
-	}
-
-
-	/**
 	* get the validate parameters
 	*
 	* @return Array
 	*/
 	function validateParameters($type = 'get', $tmp_parameters = null)
 	{
+		// make all keys lowercase
+		foreach($tmp_parameters as $k => $v)
+		{
+			$tmp_parameters[strtolower($k)] = $v;
+		}
+
 		// check if nessesary parameters are given
 		if( !isset($this->parameters[$type]) || !isset($tmp_parameters) ){
-			return false;
+			return array('success' => 'false', 'errors' => ['Wrong request type or no parameters given.']);
 		}
+
+		// set parameters to prevent error from Validator
+		$parameters = array();
 
 		// get parameters ONLY accepted items from input
 		foreach($this->parameters[$type]['accepted'] as $key => $validation)
 		{
-			if( isset($tmp_parameters[$key]) )
+			if( isset($tmp_parameters[strtolower($key)]) )
 			{
-				$parameters[$key] = $tmp_parameters[$key];
+				$parameters[$key] = $tmp_parameters[strtolower($key)];
 			}
 			elseif( isset($this->parameters[$type]['default']) && isset($this->parameters[$type]['default'][$key]) )
 			{
@@ -143,11 +102,10 @@ class BaseApiController extends Controller {
 
 		// get validation messages
 		$messages = $validator->messages();
-
 		// if validation fails, return error
 		if( $messages->count() !== 0 )
 		{
-			return array('errors' => $messages);
+			return array('success' => 'false', 'errors' => $messages);
 		}
 		// if validation succeeds, return parameters
 		return $parameters;

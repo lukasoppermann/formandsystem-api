@@ -31,24 +31,18 @@ Route::filter('basic.once', function()
     }
     else
     {
-
-      return Response::make("Problem loging in", 400);
+      return Response::json(array('success' => false, 'errors' => array('login' => 'Could not authenticate. For more information read the documentation: http://api.formandsystem.com')),400);
     }
 
 });
 
 
-Route::get('/', function()
-{
-	return View::make('docs.index');
-});
-
 Route::group(array('prefix' => 'v1', 'before' => array('basic.once')), function()
 {
 	// invalid url
-	Route::get('/', function()
+	Route::any('/', function()
 	{
-		return View::make('docs.index');
+		return Response::json(array('success' => false, 'errors' => array('wrongPath' => 'Wrong request path. For more information read the documentation: http://api.formandsystem.com')),404);
 	});
 
 	// stream api for content
@@ -59,6 +53,11 @@ Route::group(array('prefix' => 'v1', 'before' => array('basic.once')), function(
 
   Route::any('{wrong?}/{path?}/{given?}', function()
   {
-    return Response::json('Wrong request path. For more information read the documentation: http://api.formandsystem.com',404);
+    return Response::json(array('success' => false, 'errors' => array('wrongPath' => 'Wrong request path. For more information read the documentation: http://api.formandsystem.com')),404);
   });
+});
+
+Route::any('/{wrongVersion?}/{wrong?}/{path?}/{given?}', function()
+{
+  return Response::json(array('success' => false, 'errors' => array('wrongPath' => 'Wrong request path. For more information read the documentation: http://api.formandsystem.com')),404);
 });

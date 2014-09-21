@@ -61,6 +61,32 @@ class EloquentContentRepository extends AbstractEloquentRepository implements Co
     return false;
   }
 
+
+  /**
+   * Create a page
+   *
+   * @return array
+   */
+   function storePage( $parameters )
+   {
+
+     // get if article_id is not given, create it an return it
+     if( !isset($parameters['article_id']) )
+     {
+       return "ohhh";
+     }
+
+     // insert with next article id
+     $page = Stream::create([
+       'article_id' => $this->model->orderBy('article_id','desc')->first()->article_id+1,
+       'parent_id' => $parameters['parent_id'],
+       'stream' => $parameters['stream'],
+       'position' => $pos
+     ]);
+
+     return (is_int($page->id) ? $page : false);
+   }
+
   /**
    * Deletes stream item if no entry is connected
    *

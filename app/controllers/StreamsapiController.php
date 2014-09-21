@@ -45,15 +45,35 @@ class StreamsapiController extends BaseApiController {
 	 */
 	public function store()
 	{
+		// validation for post
+		$this->parameters['post']['accepted'] = array(
+			'stream' =>'alpha_dash|required',
+			'position' => 'integer',
+			'parent_id' => 'integer'
+		);
+		// defaults for post
+		$this->parameters['post']['default'] = array(
+			'position' => 1,
+			'parent_id' => 0
+		);
+
 		// get parameters
-		$parameters = $this->getParameters('post', ['stream' => null,'position' => 0, 'parent_id' => 0 ]);
+		$parameters = $this->validateParameters('post', Input::all());
+
+		// if validation fails, return error
+		if( isset($parameters['errors']) )
+		{
+			return Response::json(array('success' => 'false', 'errors' => $parameters['errors']), 400);
+		}
 
 		// check if stored successfully
-		if( is_int($articleId = $this->stream->storeStreamItem($parameters)) )
+		if( is_numeric($articleId = $this->stream->storeStreamItem($parameters)) )
 		{
-			return Response::json(array('article_id',$articleId), 200);
+			return Response::json(array('success' => true, 'article_id' => $articleId), 200);
 		}
-		return Response::json(false, 400);
+
+		// error while storing
+		return Response::json(array('success' => 'false', 'errors' => array('storing' => 'Error while storing record.')), 400);
 
 	}
 
@@ -79,7 +99,7 @@ class StreamsapiController extends BaseApiController {
 		// if validation fails, return error
 		if( isset($parameters['errors']) )
 		{
-			return Response::json(array('message' => 'Error while trying to retrieve records.', 'errors' => $parameters['errors']), 400);
+			return Response::json(array('success' => 'false', 'errors' => $parameters['errors']), 400);
 		}
 
 		// return stream
@@ -112,7 +132,7 @@ class StreamsapiController extends BaseApiController {
 		// if validation fails, return error
 		if( isset($parameters['errors']) )
 		{
-			return Response::json(array('message' => 'Error while trying to update the record.', 'errors' => $parameters['errors']), 400);
+			return Response::json(array('success' => 'false', 'errors' => $parameters['errors']), 400);
 		}
 
 		// retrieve model
@@ -127,7 +147,7 @@ class StreamsapiController extends BaseApiController {
 		// save model
 		$streamItem->save();
 
-		return Response::json(array('message' => 'saved'), 200);
+		return Response::json(array('success' => 'true'), 200);
 
 	}
 
