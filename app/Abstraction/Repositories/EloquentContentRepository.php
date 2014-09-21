@@ -21,21 +21,35 @@ class EloquentContentRepository extends AbstractEloquentRepository implements Co
    */
   function getPage( $id, $parameters )
   {
-    if( !is_numeric( $id ) && $data = $this->model->whereRaw('link = ? and language = ?', array($id, $parameters['language']) )->first() )
+    // get id if path is given
+    if( !is_numeric( $id ) )
     {
+      // get first page that matches link and language
+      $data = $this->model->whereRaw('link = ? and language = ?',
+                  array(str_replace($parameters['pathSeparator'],'/',$id), $parameters['language'])
+              )->first();
+
+      // if data['id'] is not set, return false
+      if( !$data['id'] )
+      {
+        return false;
+      }
+      // set $id to data['id']
       $id = $data['id'];
     }
 
-    // get page
+    // get page including deleted pages
     if( $parameters['withDeleted'] == "true" )
     {
       $page = $this->model->find($id);
     }
+    // get page whitout deleted pages
     else
     {
-      $page = $this->model->find($id)->whereNull('deleted_at');
+      $page = $this->model->whereNull('deleted_at')->find($id);
     }
 
+    // check if resulting page is valid
     if( isset($page->data) )
     {
       // decode json
@@ -47,8 +61,6 @@ class EloquentContentRepository extends AbstractEloquentRepository implements Co
     return false;
   }
 
-
-
   /**
    * Deletes stream item if no entry is connected
    *
@@ -56,10 +68,17 @@ class EloquentContentRepository extends AbstractEloquentRepository implements Co
    */
   function deleteStreamItem( $article_id )
   {
+    // check if another page is connected to stream item
     if( $this->model->where('article_id', $article_id)->whereNull('deleted_at')->count() == 0)
     {
-      $this->stream->where('article_id', $article_id)->delete();
+      // get streamItem that belongs to page
+      $streamItem = $this->stream->where('article_id', $article_id)->first();
+      // delete stream item
+      $this->stream->delete($streamItem['id']);
+      // retrun true
+      return true;
     }
+    return false;
   }
 
 }

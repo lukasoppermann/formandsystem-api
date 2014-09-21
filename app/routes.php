@@ -36,6 +36,7 @@ Route::filter('basic.once', function()
 
 });
 
+
 /*
 |--------------------------------------------------------------------------
 | oAuth routes
@@ -47,8 +48,6 @@ Route::post('oauth/access_token', function()
     return AuthorizationServer::performAccessTokenFlow();
 });
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Generic | docs route
@@ -59,7 +58,6 @@ Route::get('/', function()
 {
 	return View::make('docs.index');
 });
-
 
 
 /*

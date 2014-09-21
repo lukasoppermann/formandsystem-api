@@ -4,7 +4,8 @@ use Abstraction\Repositories\ContentRepositoryInterface as Content;
 
 class PagesapiController extends BaseApiController {
 
-	protected $models = [];
+	// Repositories
+	protected $content;
 
 	/**
 	* construct
@@ -17,13 +18,11 @@ class PagesapiController extends BaseApiController {
 		parent::__construct();
 
 		// add page specific parameters
-		$this->parameters['get']['pathSeparator'] = '.';
-		$this->parameters['getAccepted']['pathSeparator'] = array('.',':','::','+');
+		$this->parameters['get']['default']['pathSeparator'] = '.';
+		$this->parameters['get']['accepted']['pathSeparator'] = 'in:.,:,::,+';
 
-		// models?
-		$this->models = [
-			'content' => $content
-		];
+		// Repositories
+		$this->content = $content;
 	}
 
 	/**
@@ -33,7 +32,7 @@ class PagesapiController extends BaseApiController {
 	 */
 	public function index()
 	{
-		return Response::json('Parameter missing item id or path',400);
+		return Response::json('Parameter missing: id or path. For more information read the documentation: http://api.formandsystem.com',400);
 	}
 
 
@@ -44,29 +43,42 @@ class PagesapiController extends BaseApiController {
 	 */
 	public function store()
 	{
-		return Response::json($this->models['content']->getPage($item, $parameters), 200);
+		return Response::json($this->content->getPage($item, $parameters), 200);
 	}
 
 
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  int  $id
+	 * @param  int $id || string (path)
 	 * @return Response
 	 */
-	public function show($item = null)
+	public function show($id = null)
 	{
-		$parameters = $this->getParameters();
-		// page
-		$page = $this->models['content']->getPage($item, $parameters);
-		if( $page )
+		// validation for get
+		$this->parameters['get']['accepted'] = array_merge($this->parameters['get']['accepted'], array(
+			'id' =>'required',
+			'position' => 'integer',
+			'parent_id' => 'integer'
+		));
+
+		// validate input
+		$parameters = $this->validateParameters('get', array_merge(array('id' => $id),Input::all()));
+
+		// if validation fails, return error
+		if( isset($parameters['errors']) )
+		{
+			return Response::json(array('message' => 'Error while trying to retrieve records.', 'errors' => $parameters['errors']), 400);
+		}
+
+		// retrieve page
+		if( $page = $this->content->getPage($parameters['id'], $parameters) )
 		{
 			return Response::json($page, 200);
 		}
-		else
-		{
-			return Response::json('Page not found. Check your parameters.',404);
-		}
+
+		// if page is not found
+		return Response::json('Page not found.',404);
 
 	}
 
@@ -77,23 +89,45 @@ class PagesapiController extends BaseApiController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id = null)
+	public function update($id)
 	{
-		if( $id != null )
+		// validation for get
+		$this->parameters['get']['accepted'] = array(
+			'id' =>'integer|required',
+			'article_id' => 'integer',
+			'menu_label' => '',
+			'link' => 'alpha_dash',
+			'status' => 'integer',
+			'language' => 'alpha_dash',
+			'data' => '',
+			'tags' => ''
+		);
+
+		// validate input
+		$parameters = $this->validateParameters('get', array_merge(array('id' => $id),Input::all()));
+
+		// if validation fails, return error
+		if( isset($parameters['errors']) )
 		{
-			$content = $this->models['content']->getPage($id);
-
-			$content->title = Input::get('title');
-			$content->data = Input::get('content');
-
-			$content->save();
-
-			return Response::json(array('message' => 'saved'), 200);
+			return Response::json(array('message' => 'Error while trying to retrieve records.', 'errors' => $parameters['errors']), 400);
 		}
-		else
+
+		// get page
+		$page = $this->content->getById($id);
+
+		// restore if deleted
+		$page->restore();
+
+		// update all changed values
+		foreach( $parameters as $key => $value )
 		{
-			return Response::json(array('message' => 'ID needed to update content.'), 400);
+			$page->$key = $value;
 		}
+
+		//save model
+		$page->save();
+
+		return Response::json(array('message' => 'saved'), 200);
 	}
 
 
@@ -105,22 +139,29 @@ class PagesapiController extends BaseApiController {
 	 */
 	public function destroy($id)
 	{
-		if( !is_numeric( $id ) )
+		// validation for get
+		$this->parameters['get']['accepted'] = array(
+			'id' =>'integer|required',
+		);
+		// validate input
+		$parameters = $this->validateParameters('get', array('id' => $id) );
+
+		// if validation fails, return error
+		if( isset($parameters['errors']) )
 		{
-			return Response::json('A valid ID needs to be provided.',400);
+			return Response::json(array('message' => 'Error while trying to delete records.', 'errors' => $parameters['errors']), 400);
 		}
 
 		// get page data
-		$content = $this->models['content']->getById($id);
+		$content = $this->content->getById($id);
 
 		// delete entry
-		$this->models['content']->delete($id);
+		$this->content->delete($id);
 
 		// delete stream entry
-		return $this->models['content']->deleteStreamItem($content['article_id']);
+		$this->content->deleteStreamItem($content['article_id']);
 
-
-		return Response::json($content, 200);
+		return Response::json(array('message' => 'Record deleted succesfully.'), 200);
 	}
 
 

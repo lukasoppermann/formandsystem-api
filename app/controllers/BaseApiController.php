@@ -10,22 +10,33 @@ class BaseApiController extends Controller {
 		$this->parameters = array(
 			// parameters for get requests & defaults
 			'get' => array(
-				'format' => 'json',
-				'language' => 'en',
-				'limit' => 20,
-				'offset' => 0,
-				'fields' => '*',
-				'status' => '1',
-				'until' => false,
-				'since' => false,
-				'withDeleted' => false,
-				'sort' => 'id,position',
-				'failSilent' => true,
+				'default' => array(
+					'format' => 'json',
+					'language' => 'en',
+					'limit' => 20,
+					'offset' => 0,
+					'fields' => '*',
+					'status' => '1',
+					'until' => false,
+					'since' => false,
+					'withDeleted' => false,
+					'sort' => 'id,position',
+					'first' => false,
+				),
+				'accepted' => array(
+					'format' => 'in:json',
+					'language' => 'alpha',
+					'limit' => 'integer',
+					'offset' => 'integer',
+					'fields' => '',
+					'status' => 'integer',
+					'until' => '',
+					'since' => '',
+					'withDeleted' => '',
+					'sort' => '',
+					'first' => '',
+				)
 			),
-			// accepted parameter values for get requests
-			'getAccepted' => array(
-				'format' => array('json'),
-			)
 		);
 
 
@@ -57,13 +68,13 @@ class BaseApiController extends Controller {
 	*
 	* @return Array
 	*/
-	function getParameters($type = 'get')
+	function getParameters($type = 'get', $defaults = null, $accepted = null)
 	{
 		if( isset($this->parameters[$type]) )
 		{
 			// get defaults
-			$parameters = $this->parameters[$type];
-			$accepted = $this->parameters[$type.'Accepted'];
+			$parameters = (!isset($defaults) ? $this->parameters[$type] : $defaults);
+			$accepted = (!isset($accepted) ? $this->parameters[$type.'Accepted'] : $accepted);
 
 			// check and overwrite
 			foreach(Input::all() as $parameter => $value)
@@ -89,7 +100,7 @@ class BaseApiController extends Controller {
 			}
 
 			// check for error reporting
-			if( $parameters['failSilent'] === 'false' && isset($errors) )
+			if( ( !isset($parameters['failSilent']) || $parameters['failSilent'] === 'false' ) && isset($errors) )
 			{
 				$parameters['errors'] = $errors;
 			}
@@ -100,5 +111,49 @@ class BaseApiController extends Controller {
 
 		throw new Exception('Wrong type for parameters given. Type: \''.$type.'\' does not exist.');
 	}
+
+
+	/**
+	* get the validate parameters
+	*
+	* @return Array
+	*/
+	function validateParameters($type = 'get', $tmp_parameters = null)
+	{
+		// check if nessesary parameters are given
+		if( !isset($this->parameters[$type]) || !isset($tmp_parameters) ){
+			return false;
+		}
+
+		// get parameters ONLY accepted items from input
+		foreach($this->parameters[$type]['accepted'] as $key => $validation)
+		{
+			if( isset($tmp_parameters[$key]) )
+			{
+				$parameters[$key] = $tmp_parameters[$key];
+			}
+			elseif( isset($this->parameters[$type]['default']) && isset($this->parameters[$type]['default'][$key]) )
+			{
+				$parameters[$key] = $this->parameters[$type]['default'][$key];
+			}
+		}
+
+		// validate input
+		$validator = Validator::make($parameters,$this->parameters[$type]['accepted']);
+
+		// get validation messages
+		$messages = $validator->messages();
+
+		// if validation fails, return error
+		if( $messages->count() !== 0 )
+		{
+			return array('errors' => $messages);
+		}
+		// if validation succeeds, return parameters
+		return $parameters;
+
+	}
+
+
 
 }
