@@ -67,9 +67,9 @@ class StreamsapiController extends BaseApiController {
 		}
 
 		// check if stored successfully
-		if( is_numeric($articleId = $this->stream->storeStreamItem($parameters)) )
+		if( $stream = $this->stream->storeStreamItem($parameters) )
 		{
-			return Response::json(array('success' => true, 'article_id' => $articleId), 200);
+			return Response::json(array('success' => true, 'article_id' => $stream->article_id), 200);
 		}
 
 		// error while storing

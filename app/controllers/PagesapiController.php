@@ -45,23 +45,31 @@ class PagesapiController extends BaseApiController {
 	{
 		// validation for post
 		$this->parameters['post']['accepted'] = array(
-			'stream' => 'alpha_dash|required',
-			'article_id' => 'integer',
+			'stream' => 'alpha_dash|required_without:article_id',
+			'parent_id' => 'integer|required',
+			'position' => 'integer|required',
+			'article_id' => 'integer|required_without:stream',
 			'menu_label' => '',
 			'link' => 'alpha_dash',
-			'status' => 'integer',
-			'language' => 'alpha_dash',
+			'status' => 'integer|required',
+			'language' => 'alpha_dash|required',
 			'data' => '',
 			'tags' => ''
 		);
 		// defaults for post
-		// $this->parameters['post']['default'] = array(
-		// 	'position' => 1,
-		// 	'parent_id' => 0
-		// );
+		$this->parameters['post']['default'] = array(
+			'parent_id' => 0,
+			'position' => 1,
+			'menu_label' => '',
+			'link' => '',
+			'status' => 2,
+			'language' => 'en',
+			'data' => '',
+			'tags' => '',
+		);
 
 		// get parameters
-		$parameters = $this->validateParameters('get', Input::all());
+		$parameters = $this->validateParameters('post', Input::all());
 
 		// if validation fails, return error
 		if( isset($parameters['errors']) )

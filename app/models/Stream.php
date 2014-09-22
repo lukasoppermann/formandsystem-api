@@ -9,8 +9,9 @@ class Stream extends Eloquent{
 	 */
 	protected $connection = 'user';
 	protected $table = 'fs_stream';
+	protected $fillable = array('parent_id','article_id','stream','position');
+	protected $primaryKey = 'id';
 	public $timestamps = false;
-	public $fillable = ['parent_id','article_id','stream','position'];
 
 	/**
 	 * Define relationships

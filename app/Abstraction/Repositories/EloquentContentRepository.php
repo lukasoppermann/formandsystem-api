@@ -1,7 +1,7 @@
 <?php namespace Abstraction\Repositories;
 
 use Content;
-use Stream;
+use Abstraction\Repositories\StreamRepositoryInterface as Stream;
 
 class EloquentContentRepository extends AbstractEloquentRepository implements ContentRepositoryInterface {
 
@@ -73,15 +73,20 @@ class EloquentContentRepository extends AbstractEloquentRepository implements Co
      // get if article_id is not given, create it an return it
      if( !isset($parameters['article_id']) )
      {
-       return "ohhh";
+       $parameters['article_id'] = $this->stream->storeStreamItem($parameters)->article_id;
      }
 
+
      // insert with next article id
-     $page = Stream::create([
-       'article_id' => $this->model->orderBy('article_id','desc')->first()->article_id+1,
-       'parent_id' => $parameters['parent_id'],
-       'stream' => $parameters['stream'],
-       'position' => $pos
+     $page = Content::create([
+       'article_id' => $parameters['article_id'],
+       'menu_label' => $parameters['menu_label'],
+       'link' => $parameters['link'],
+       'status' => $parameters['status'],
+       'language' => $parameters['language'],
+       'data' => $parameters['data'],
+       'tags' => $parameters['tags'],
+       'created_at' => date("Y-m-d h:i:s"),
      ]);
 
      return (is_int($page->id) ? $page : false);

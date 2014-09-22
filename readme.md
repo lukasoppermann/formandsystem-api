@@ -127,3 +127,5 @@ curl -i -H "Accept: application/json" -X POST -d "stream=news&position=1" http:/
 curl -i -H "Accept: application/json" -X POST -d "stream=news" http://api.formandsystem.local/v1/streams
 
 curl -i -H "Accept: application/json" -X POST -d "stream=news&parent_id=2&position=0" http://api.formandsystem.local/v1/streams
+
+curl -i -H "Accept: application/json" -X POST -d "stream=news" http://api.formandsystem.local/v1/pages

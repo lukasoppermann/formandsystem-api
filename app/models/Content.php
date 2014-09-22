@@ -11,6 +11,7 @@ class Content extends Eloquent{
 	 */
 	protected $connection = 'user';
 	protected $table = 'fs_content';
+	protected $guarded = ['id'];
 	/**
 	 * Enable soft deleteing
 	 *
