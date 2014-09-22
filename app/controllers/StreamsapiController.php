@@ -7,7 +7,7 @@ class StreamsapiController extends BaseApiController {
 	// Repositories
 	protected $stream;
 
-	/**
+	/**return
 	* construct
 	*
 	* @return void
@@ -103,7 +103,7 @@ class StreamsapiController extends BaseApiController {
 		}
 
 		// return stream
-		return Response::json($this->stream->getStream($parameters['stream'], $parameters), 200);
+		return Response::json(array_merge(array('success' => 'true'), $this->stream->getStream($parameters['stream'], $parameters)), 200);
 
 	}
 

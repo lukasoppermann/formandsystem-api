@@ -101,8 +101,6 @@ class PagesapiController extends BaseApiController {
 		// validate input
 		$parameters = $this->validateParameters('get', array_merge(array('id' => $id),Input::all()));
 
-		return $parameters;
-
 		// if validation fails, return error
 		if( isset($parameters['errors']) )
 		{
@@ -112,7 +110,7 @@ class PagesapiController extends BaseApiController {
 		// retrieve page
 		if( $page = $this->content->getPage($parameters['id'], $parameters) )
 		{
-			return Response::json($page, 200);
+			return Response::json(array_merge(array('success' => 'true'), $page), 200);
 		}
 
 		// if page is not found
