@@ -36,9 +36,13 @@ abstract class AbstractEloquentRepository implements AbstractRepositoryInterface
    *
    * @return Illuminate\Database\Eloquent\Collection
    */
-  public function getById($id, array $with = array())
+  public function getById($id, $withTrashed = false)
   {
-    $query = $this->make($with);
+    $query = $this->model;
+    if( $withTrashed === true )
+    {
+      $query = $query->withTrashed();
+    }
 
     return $query->find($id);
   }
@@ -50,7 +54,11 @@ abstract class AbstractEloquentRepository implements AbstractRepositoryInterface
   */
   public function delete($id)
   {
-     return $this->model->find($id)->delete();
+    if($record = $this->model->find($id))
+    {
+      return $record->delete();
+    }
+    return false;
   }
 
   /**

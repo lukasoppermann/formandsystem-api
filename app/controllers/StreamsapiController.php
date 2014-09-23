@@ -17,12 +17,6 @@ class StreamsapiController extends BaseApiController {
 		// call parent constrcutor
 		parent::__construct();
 
-		// add stream specific parameters
-		$this->parameters['get']['nested'] = 'false';
-		$this->parameters['getAccepted']['nested'] = array('true','false');
-		$this->parameters['get']['first'] = 'false';
-		$this->parameters['getAccepted']['first'] = array('true','false');
-
 		// Repositories
 		$this->stream = $stream;
 	}
@@ -90,12 +84,14 @@ class StreamsapiController extends BaseApiController {
 		$this->parameters['get']['accepted'] = array_merge($this->parameters['get']['accepted'], array(
 			'stream' =>'alpha_dash|required',
 			'position' => 'integer',
-			'parent_id' => 'integer'
+			'parent_id' => 'integer',
+			'nested' => '',
+			'first' => ''
 		));
 
 		// validate input
 		$parameters = $this->validateParameters('get', array_merge(array('stream' => $stream),Input::all()));
-
+		
 		// if validation fails, return error
 		if( isset($parameters['errors']) )
 		{
@@ -103,7 +99,7 @@ class StreamsapiController extends BaseApiController {
 		}
 
 		// return stream
-		return Response::json(array_merge(array('success' => 'true'), $this->stream->getStream($parameters['stream'], $parameters)), 200);
+		return Response::json( array('success' => 'true', 'content' => $this->stream->getStream($parameters['stream'], $parameters)), 200);
 
 	}
 
@@ -137,6 +133,9 @@ class StreamsapiController extends BaseApiController {
 
 		// retrieve model
 		$streamItem = $this->stream->getById($id);
+
+		// restore
+		$streamItem->restore();
 
 		// update all changed values
 		foreach( $parameters as $key => $value )

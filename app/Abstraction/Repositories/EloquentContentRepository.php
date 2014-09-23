@@ -102,12 +102,8 @@ class EloquentContentRepository extends AbstractEloquentRepository implements Co
     // check if another page is connected to stream item
     if( $this->model->where('article_id', $article_id)->whereNull('deleted_at')->count() == 0)
     {
-      // get streamItem that belongs to page
-      $streamItem = $this->stream->where('article_id', $article_id)->first();
       // delete stream item
-      $this->stream->delete($streamItem['id']);
-      // retrun true
-      return true;
+      return $this->stream->deleteByArticleId($article_id);
     }
     return false;
   }

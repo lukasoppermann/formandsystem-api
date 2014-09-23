@@ -73,7 +73,12 @@ class BaseApiController extends Controller {
 		// make all keys lowercase
 		foreach($tmp_parameters as $k => $v)
 		{
-			$tmp_parameters[strtolower($k)] = $v;
+			$tmp_parameters[trim(strtolower($k))] = trim($v);
+			// remove empty parameters
+			if( trim($v) === "")
+			{
+				unset($tmp_parameters[trim(strtolower($k))]);
+			}
 		}
 
 		// check if nessesary parameters are given

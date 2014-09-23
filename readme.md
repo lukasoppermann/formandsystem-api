@@ -74,7 +74,8 @@ since | YYYY-MM-DD or false | false | returns results that are newer or equal to
 first | boolean | false | returns only the first entry
 
 **Return value on Success**
-Returns full record as json.
+
+Returns success object `{success: "true", content: {records as json}}`
 
 ### Update record
 

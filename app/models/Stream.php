@@ -14,6 +14,14 @@ class Stream extends Eloquent{
 	public $timestamps = false;
 
 	/**
+	* Enable soft deleteing
+	*
+	* @var string
+	*/
+	use SoftDeletingTrait;
+	protected $dates = ['deleted_at'];
+
+	/**
 	 * Define relationships
 	 *
 	 * @return void

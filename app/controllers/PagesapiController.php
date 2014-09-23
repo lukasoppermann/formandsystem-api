@@ -1,6 +1,7 @@
 <?php
 
 use Abstraction\Repositories\ContentRepositoryInterface as Content;
+use Abstraction\Repositories\StreamRepositoryInterface as Stream;
 
 class PagesapiController extends BaseApiController {
 
@@ -12,7 +13,7 @@ class PagesapiController extends BaseApiController {
 	*
 	* @return void
 	*/
-	function __construct(Content $content)
+	function __construct(Content $content, Stream $stream)
 	{
 		// call parent constrcutor
 		parent::__construct();
@@ -23,6 +24,7 @@ class PagesapiController extends BaseApiController {
 
 		// Repositories
 		$this->content = $content;
+		$this->stream = $stream;
 	}
 
 	/**
@@ -112,6 +114,8 @@ class PagesapiController extends BaseApiController {
 		// if validation fails, return error
 		if( isset($parameters['errors']) )
 		{
+			// return Response::make('darn', 400)->header('Content-Type', 'text/plain');
+
 			return Response::json(array('success' => 'false', 'errors' => $parameters['errors']), 400);
 		}
 
@@ -157,10 +161,12 @@ class PagesapiController extends BaseApiController {
 		}
 
 		// get page
-		$page = $this->content->getById($id);
+		$page = $this->content->getById($id, true);
 
 		// restore if deleted
 		$page->restore();
+
+		$this->stream->restoreByArticleId($page['article_id']);
 
 		// update all changed values
 		foreach( $parameters as $key => $value )
@@ -200,12 +206,12 @@ class PagesapiController extends BaseApiController {
 		$content = $this->content->getById($id);
 
 		// delete entry
-		$this->content->delete($id);
+		$success = $this->content->delete($id);
 
 		// delete stream entry
 		$this->content->deleteStreamItem($content['article_id']);
 
-		return Response::json(array('success' => 'true'), 200);
+		return Response::json(array('success' => $success), 200);
 	}
 
 

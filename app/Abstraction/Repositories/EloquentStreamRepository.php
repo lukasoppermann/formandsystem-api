@@ -76,55 +76,60 @@ class EloquentStreamRepository extends AbstractEloquentRepository implements Str
 
       }
       // apply limit, offset & fields
-    )->select($parameters['fields'])->skip($offset)->take($limit)->get()->toArray();
+    )->select($parameters['fields'])->skip($offset)->take($limit)->get();
+
+
+    // Unpack content
+    $stream = $stream->map(function($item){
+      $c = $item->content[0];
+      unset($item->content);
+
+      return array_merge((array) $item->toArray(), (array) $c->toArray());
+    });
 
     // sorting (sort=asc:[date,name],desc:[user] || sort=desc:date)
     // if both asc and desc, needs group []
-    // if( isset($parameters['sort']) && $parameters['sort'] != "false" )
-    // {
-    //   $sortParams = [$parameters['sort']];
-    //   if( $pos = strpos($sortParams[0],'],') )
-    //   {
-    //     $sortParams = [
-    //       substr($sortParams[0], 0, $pos+1),
-    //       substr($sortParams[0], $pos+2)
-    //     ];
-    //   }
-    //
-    //   foreach($sortParams as $s)
-    //   {
-    //     $s = explode(':',$s);
-    //
-    //     if( count($s) < 2 )
-    //     {
-    //       $s[1] = $s[0];
-    //       $s[0] = 'asc';
-    //     }
-    //
-    //     $sorting[$s[0]] = explode(',',trim($s[1],'[]'));
-    //   }
-    //
-    //   foreach($sorting as $direction => $fields)
-    //   {
-    //     foreach($fields as $field)
-    //     {
-    //       $stream->orderBy($field,$direction);
-    //     }
-    //   }
-    // }
-    //
-    // return $stream->sortBy(function($item){
-    //   return $item->id;
-    // });
-
-    foreach($stream as $key => $item)
+    if( isset($parameters['sort']) && $parameters['sort'] != "false" )
     {
-      // merge content
-      $stream[$key] = array_merge($stream[$key], $stream[$key]['content'][key($stream[$key]['content'])]);
-      // remove old content
-      unset($stream[$key]['content']);
-      // decode json
-      $stream[$key]['data'] = $this->jsonDecode($stream[$key]['data']);
+      $sortParams = [$parameters['sort']];
+      if( $pos = strpos($sortParams[0],'],') )
+      {
+        $sortParams = [
+          substr($sortParams[0], 0, $pos+1),
+          substr($sortParams[0], $pos+2)
+        ];
+      }
+
+      foreach($sortParams as $s)
+      {
+        $s = explode(':',$s);
+
+        if( count($s) < 2 )
+        {
+          $s[1] = $s[0];
+          $s[0] = 'asc';
+        }
+
+        $sorting[$s[0]] = explode(',',trim($s[1],'[]'));
+      }
+
+      foreach($sorting as $direction => $fields)
+      {
+        if( $direction == 'desc' )
+        {
+          foreach($fields as $field)
+          {
+            $stream = $stream->sortByDesc($field);
+          }
+        }
+        else
+        {
+          foreach($fields as $field)
+          {
+            $stream = $stream->sortBy($field);
+          }
+        }
+      }
     }
 
     // nest items in tree structure
@@ -209,6 +214,49 @@ class EloquentStreamRepository extends AbstractEloquentRepository implements Str
     ]);
 
     return (is_int($stream->id) ? $stream : false);
+  }
+
+
+  /**
+  * get the specified resource in storage.
+  *
+  * @param  int  $article_id
+  * @return Response
+  */
+  public function getByArticleId($article_id, $withTrashed = false)
+  {
+    $query = $this->model->where('article_id', $article_id);
+    if( $withTrashed === true )
+    {
+      return $query->withTrashed();
+    }
+
+    return $query;
+  }
+
+
+  /**
+  * delete the specified resource in storage.
+  *
+  * @param  int  $article_id
+  * @return Response
+  */
+  public function deleteByArticleId($article_id)
+  {
+    return $this->getByArticleId($article_id)->delete();
+
+  }
+
+
+  /**
+  * restore the specified resource in storage.
+  *
+  * @param  int  $article_id
+  * @return Response
+  */
+  public function restoreByArticleId($article_id)
+  {
+    return $this->getByArticleId($article_id, true)->restore();
   }
 
 }
