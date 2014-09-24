@@ -63,7 +63,7 @@ class StreamsapiController extends BaseApiController {
 		// check if stored successfully
 		if( $stream = $this->stream->storeStreamItem($parameters) )
 		{
-			return Response::json(array('success' => true, 'article_id' => $stream->article_id), 200);
+			return Response::json(array('success' => 'true', 'article_id' => $stream->article_id), 200);
 		}
 
 		// error while storing
@@ -91,7 +91,7 @@ class StreamsapiController extends BaseApiController {
 
 		// validate input
 		$parameters = $this->validateParameters('get', array_merge(array('stream' => $stream),Input::all()));
-		
+
 		// if validation fails, return error
 		if( isset($parameters['errors']) )
 		{

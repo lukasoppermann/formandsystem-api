@@ -31,7 +31,7 @@ Route::filter('basic.once', function()
     }
     else
     {
-      return Response::json(array('success' => false, 'errors' => array('login' => 'Could not authenticate. For more information read the documentation: http://api.formandsystem.com')),400);
+      return Response::json(array('success' => false, 'errors' => array('login' => ['Could not authenticate. For more information read the documentation: http://api.formandsystem.com'])),400);
     }
 
 });

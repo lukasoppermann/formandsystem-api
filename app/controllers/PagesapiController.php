@@ -85,7 +85,7 @@ class PagesapiController extends BaseApiController {
 		// check if stored successfully
 		if( isset($page['id']) )
 		{
-			return Response::json(array('success' => true, 'id' => $page['id'], 'article_id' => $page['article_id']), 200);
+			return Response::json(array('success' => 'true', 'id' => $page['id'], 'article_id' => $page['article_id']), 200);
 		}
 
 		// error while storing

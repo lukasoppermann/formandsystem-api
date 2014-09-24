@@ -213,7 +213,7 @@ class EloquentStreamRepository extends AbstractEloquentRepository implements Str
       'position' => $pos
     ]);
 
-    return (is_int($stream->id) ? $stream : false);
+    return (is_numeric($stream->id) ? $stream : false);
   }
 
 

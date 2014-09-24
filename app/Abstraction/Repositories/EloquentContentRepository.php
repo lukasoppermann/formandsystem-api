@@ -22,7 +22,7 @@ class EloquentContentRepository extends AbstractEloquentRepository implements Co
   function getPage( $id, $parameters )
   {
     // get id if path is given
-    if( !is_int( $id ) )
+    if( !is_numeric( $id ) )
     {
       // get first page that matches link and language
       $data = $this->model->whereRaw('link = ? and language = ?',
@@ -89,7 +89,7 @@ class EloquentContentRepository extends AbstractEloquentRepository implements Co
        'created_at' => date("Y-m-d h:i:s"),
      ]);
 
-     return (is_int($page->id) ? $page : false);
+     return (is_numeric($page->id) ? $page : false);
    }
 
   /**
