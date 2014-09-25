@@ -1,5 +1,10 @@
 # Form&System API Documentation
 
+**Info:**
+http://code.tutsplus.com/tutorials/laravel-4-a-start-at-a-restful-api-updated--net-29785
+http://maxoffsky.com/code-blog/building-restful-api-in-laravel-start-here/
+https://github.com/dingo/api/wiki/Basic-Tutorial
+
 The Form&System API is used to retrieve items from the clients database (and return data when in a context of the cms).
 Data should be cached to minimize render times and the number of request.
 
