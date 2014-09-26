@@ -1,6 +1,6 @@
 <?php
 
-use Abstraction\Repositories\StreamRepositoryInterface as Stream;
+use Formandsystem\Repositories\Stream\StreamRepositoryInterface as Stream;
 
 class StreamsapiController extends BaseApiController {
 

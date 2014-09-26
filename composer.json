@@ -16,7 +16,7 @@
 			"app/commands",
 			"app/controllers",
 			"app/models",
-			"app/Abstraction",
+			"app/Formandsystem",
 			"app/database/migrations",
 			"app/database/seeds"
 		]

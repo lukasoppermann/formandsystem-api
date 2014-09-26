@@ -121,7 +121,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		// 'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Orangehill\Iseed\IseedServiceProvider',
-		'Abstraction\AbstractionServiceProvider'
+		'Formandsystem\Providers\RepositoryServiceProvider',
 	),
 
 	/*

@@ -4,7 +4,7 @@ suites:
 
   formandsystemapi_suite:
 
-    namespace: Formandsystem\Api
+    namespace: Formandsystem\Repositories
 
     src_path: src
 

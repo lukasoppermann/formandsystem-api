@@ -1,7 +1,7 @@
 <?php
 
-use Abstraction\Repositories\ContentRepositoryInterface as Content;
-use Abstraction\Repositories\StreamRepositoryInterface as Stream;
+use Formandsystem\Repositories\Content\ContentRepositoryInterface as Content;
+use Formandsystem\Repositories\Stream\StreamRepositoryInterface as Stream;
 
 class PagesapiController extends BaseApiController {
 
