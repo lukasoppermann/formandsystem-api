@@ -1,8 +1,6 @@
-<?php
+<?php namespace Formandsystemapi\Repositories\Content;
 
-namespace Formandsystemapi\Repositories\Content;
-
-class ContentRepositoryInterface
+interface ContentRepositoryInterface
 {
-  
+
 }

@@ -104,7 +104,7 @@ return [
 		'Formandsystemapi\Providers\FilterServiceProvider',
 		'Formandsystemapi\Providers\LogServiceProvider',
 		'Formandsystemapi\Providers\RouteServiceProvider',
-
+		'Formandsystemapi\Providers\RepositoryServiceProvider',
 		/*
 		 * Laravel Framework Service Providers...
 		 */
