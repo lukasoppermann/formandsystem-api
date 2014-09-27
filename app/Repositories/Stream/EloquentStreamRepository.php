@@ -1,16 +1,17 @@
 <?php namespace Formandsystemapi\Repositories\Stream;
 
+use Formandsystemapi\Models\Stream;
 use Formandsystemapi\Repositories\EloquentAbstractRepository;
 
 class EloquentStreamRepository extends EloquentAbstractRepository implements StreamRepositoryInterface
 {
+  protected $model;
   /**
-  * construct
-  *
-  * @return void
+  * Constructor
   */
-  function __construct()
+  public function __construct(Stream $model)
   {
-
+    $this->model = $model;
   }
+
 }
