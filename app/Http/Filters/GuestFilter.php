@@ -1,4 +1,4 @@
-<?php namespace App\Http\Filters;
+<?php namespace Formandsystem\Http\Filters;
 
 use Illuminate\Contracts\Auth\Authenticator;
 use Illuminate\Http\RedirectResponse;

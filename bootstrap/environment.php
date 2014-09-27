@@ -13,6 +13,6 @@
 
 $env = $app->detectEnvironment([
 
-	'local' => ['homestead'],
+	'local' => ['lukass-mbp.fritz.box','Lukass-MacBook-Pro.local'],
 
 ]);

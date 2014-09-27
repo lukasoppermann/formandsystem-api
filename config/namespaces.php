@@ -13,7 +13,7 @@ return [
 	|
 	*/
 
-	'root' => 'App\\',
+	'root' => 'Formandsystem\\',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -26,14 +26,14 @@ return [
 	|
 	*/
 
-	'console' => 'App\Console\\',
+	'console' => 'Formandsystem\Console\\',
 
-	'controllers' => 'App\Http\Controllers\\',
+	'controllers' => 'Formandsystem\Http\Controllers\\',
 
-	'filters' => 'App\Http\Filters\\',
+	'filters' => 'Formandsystem\Http\Filters\\',
 
-	'providers' => 'App\Providers\\',
+	'providers' => 'Formandsystem\Providers\\',
 
-	'requests' => 'App\Http\Requests\\',
+	'requests' => 'Formandsystem\Http\Requests\\',
 
 ];

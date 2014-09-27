@@ -17,10 +17,6 @@ files/
 node_modules/
 bower_components/
 
-# db files #
-############
-database.php
-
 # laravel #
 ############
 vendor/
@@ -28,7 +24,8 @@ composer.lock
 CONTRIBUTING.md
 storage/
 database/seeds/
-.env.local.php
+.env.*.php
+.env.php
 
 # Packages #
 ############

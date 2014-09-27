@@ -2,13 +2,46 @@
 
 /*
 |--------------------------------------------------------------------------
-| Application Routes
+| Define API v1 routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the Closure to execute when that URI is requested.
-|
 */
+Route::group(array('prefix' => 'v1', 'before' => array('api.auth')), function()
+{
+	/*
+   * Invalid URL /
+   */
+	Route::any('/', function()
+	{
+		return Response::json(array('success' => false, 'errors' => array('wrongPath' =>
+                          'Wrong request path. For more information read the documentation: http://api.formandsystem.com')),404);
+	});
 
-$router->get('/', 'HomeController@index');
+  /*
+   * Pages resource
+   */
+	Route::resource('pages', 'PagesapiController', array('except' => array('create', 'edit')));
+
+  /*
+   * Stream resource
+   */
+  Route::resource('streams', 'StreamsapiController', array('except' => array('create', 'edit', 'destroy')));
+
+  /*
+   * Wrong paths
+   */
+  Route::any('{wrong?}/{path?}/{given?}', function()
+  {
+    return Response::json(array('success' => false, 'errors' => array('wrongPath' => 'Wrong request path. For more information read the documentation: http://api.formandsystem.com')),404);
+  });
+});
+
+/*
+|--------------------------------------------------------------------------
+| Path with wrong version number
+|--------------------------------------------------------------------------
+*/
+Route::any('/{wrongVersion?}/{wrong?}/{path?}/{given?}', function()
+{
+  return Response::json(array('success' => false, 'errors' => array('wrongPath' =>
+          'Wrong request path. For more information read the documentation: http://api.formandsystem.com')),404);
+});
