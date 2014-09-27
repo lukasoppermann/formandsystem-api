@@ -1,4 +1,4 @@
-<?php namespace Formandsystem\Providers;
+<?php namespace Formandsystemapi\Providers;
 
 use Illuminate\Routing\Router;
 use Illuminate\Contracts\Routing\UrlGenerator;

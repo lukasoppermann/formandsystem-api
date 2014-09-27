@@ -1,4 +1,4 @@
-<?php namespace Formandsystem\Http\Filters;
+<?php namespace Formandsystemapi\Http\Filters;
 
 use Illuminate\Contracts\Auth\Authenticator;
 

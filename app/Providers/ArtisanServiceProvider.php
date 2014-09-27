@@ -1,4 +1,4 @@
-<?php namespace Formandsystem\Providers;
+<?php namespace Formandsystemapi\Providers;
 
 use InspireCommand;
 use Illuminate\Support\ServiceProvider;
@@ -19,7 +19,7 @@ class ArtisanServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->commands('Formandsystem\Console\InspireCommand');
+		$this->commands('Formandsystemapi\Console\InspireCommand');
 	}
 
 	/**
@@ -29,7 +29,7 @@ class ArtisanServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return ['Formandsystem\Console\InspireCommand'];
+		return ['Formandsystemapi\Console\InspireCommand'];
 	}
 
 }

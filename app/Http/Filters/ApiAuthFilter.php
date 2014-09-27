@@ -1,4 +1,4 @@
-<?php namespace Formandsystem\Http\Filters;
+<?php namespace Formandsystemapi\Http\Filters;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -35,7 +35,7 @@ class ApiAuthFilter {
 	public function filter(Route $route, Request $request)
 	{
 		$this->auth->logout();
-    $this->auth->once(['email' => 'lukas@vea.res', 'password' => 'lukas']);
+    $this->auth->once(['email' => 'lukas@vea.re', 'password' => 'lukas']);
     $user = $this->auth->user();
 
     if ( $this->auth->check() )
@@ -52,9 +52,8 @@ class ApiAuthFilter {
         'collation' => 'utf8_unicode_ci',
         'prefix'    => '',
       );
-      Config::set("database.connections.user", $db);
+      \Config::set("database.connections.user", $db);
 
-			return true;
     }
     else
     {

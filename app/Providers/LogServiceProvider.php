@@ -1,4 +1,4 @@
-<?php namespace Formandsystem\Providers;
+<?php namespace Formandsystemapi\Providers;
 
 use Illuminate\Contracts\Logging\Log;
 use Illuminate\Support\ServiceProvider;

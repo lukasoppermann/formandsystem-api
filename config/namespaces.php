@@ -13,7 +13,7 @@ return [
 	|
 	*/
 
-	'root' => 'Formandsystem\\',
+	'root' => 'Formandsystemapi\\',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -26,14 +26,14 @@ return [
 	|
 	*/
 
-	'console' => 'Formandsystem\Console\\',
+	'console' => 'Formandsystemapi\Console\\',
 
-	'controllers' => 'Formandsystem\Http\Controllers\\',
+	'controllers' => 'Formandsystemapi\Http\Controllers\\',
 
-	'filters' => 'Formandsystem\Http\Filters\\',
+	'filters' => 'Formandsystemapi\Http\Filters\\',
 
-	'providers' => 'Formandsystem\Providers\\',
+	'providers' => 'Formandsystemapi\Providers\\',
 
-	'requests' => 'Formandsystem\Http\Requests\\',
+	'requests' => 'Formandsystemapi\Http\Requests\\',
 
 ];

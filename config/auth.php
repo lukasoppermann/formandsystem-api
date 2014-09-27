@@ -28,7 +28,7 @@ return [
 	|
 	*/
 
-	'model' => 'Formandsystem\User',
+	'model' => 'Formandsystemapi\User',
 
 	/*
 	|--------------------------------------------------------------------------

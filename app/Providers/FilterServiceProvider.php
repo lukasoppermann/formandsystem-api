@@ -1,4 +1,4 @@
-<?php namespace Formandsystem\Providers;
+<?php namespace Formandsystemapi\Providers;
 
 use Illuminate\Routing\FilterServiceProvider as ServiceProvider;
 
@@ -10,7 +10,7 @@ class FilterServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $before = [
-		'Formandsystem\Http\Filters\MaintenanceFilter',
+		'Formandsystemapi\Http\Filters\MaintenanceFilter',
 	];
 
 	/**
@@ -28,11 +28,11 @@ class FilterServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $filters = [
-		'auth' => 'Formandsystem\Http\Filters\AuthFilter',
-		'auth.basic' => 'Formandsystem\Http\Filters\BasicAuthFilter',
-		'csrf' => 'Formandsystem\Http\Filters\CsrfFilter',
-		'guest' => 'Formandsystem\Http\Filters\GuestFilter',
-		'api.auth' => 'Formandsystem\Http\Filters\ApiAuthFilter',
+		'auth' => 'Formandsystemapi\Http\Filters\AuthFilter',
+		'auth.basic' => 'Formandsystemapi\Http\Filters\BasicAuthFilter',
+		'csrf' => 'Formandsystemapi\Http\Filters\CsrfFilter',
+		'guest' => 'Formandsystemapi\Http\Filters\GuestFilter',
+		'api.auth' => 'Formandsystemapi\Http\Filters\ApiAuthFilter',
 	];
 
 }

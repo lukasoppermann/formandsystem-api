@@ -1,4 +1,4 @@
-<?php namespace Formandsystem\Console;
+<?php namespace Formandsystemapi\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Inspiring;

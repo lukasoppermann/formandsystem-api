@@ -2,14 +2,14 @@ formatter.name: pretty
 
 suites:
 
-  formandsystemapi_suite:
+  repositories_suite:
 
-    namespace: Formandsystem\Repositories
+    namespace: Formandsystemapi\Repositories
 
-    src_path: src
+    psr4_prefix: Formandsystemapi\Repositories
+
+    src_path: app/Repositories
 
     spec_path: tests
 
     spec_prefix: spec
-
-    formatter_name: pretty

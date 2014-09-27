@@ -1,4 +1,4 @@
-<?php namespace Formandsystem;
+<?php namespace Formandsystemapi;
 
 use Illuminate\Auth\UserTrait;
 use Illuminate\Database\Eloquent\Model;

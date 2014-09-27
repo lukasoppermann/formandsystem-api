@@ -98,12 +98,12 @@ return [
 		/*
 		 * Application Service Providers...
 		 */
-		'Formandsystem\Providers\AppServiceProvider',
-		'Formandsystem\Providers\ArtisanServiceProvider',
-		'Formandsystem\Providers\ErrorServiceProvider',
-		'Formandsystem\Providers\FilterServiceProvider',
-		'Formandsystem\Providers\LogServiceProvider',
-		'Formandsystem\Providers\RouteServiceProvider',
+		'Formandsystemapi\Providers\AppServiceProvider',
+		'Formandsystemapi\Providers\ArtisanServiceProvider',
+		'Formandsystemapi\Providers\ErrorServiceProvider',
+		'Formandsystemapi\Providers\FilterServiceProvider',
+		'Formandsystemapi\Providers\LogServiceProvider',
+		'Formandsystemapi\Providers\RouteServiceProvider',
 
 		/*
 		 * Laravel Framework Service Providers...

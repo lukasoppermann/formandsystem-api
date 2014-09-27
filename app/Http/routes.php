@@ -1,4 +1,14 @@
 <?php
+/*
+|--------------------------------------------------------------------------
+| Define api.formandsystem.com
+|--------------------------------------------------------------------------
+*/
+Route::any('/', function()
+{
+  return Response::json(array('success' => false, 'errors' => array('wrongPath' =>
+                        'Wrong request path. For more information read the documentation: http://dev.formandsystem.com')),404);
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -13,25 +23,26 @@ Route::group(array('prefix' => 'v1', 'before' => array('api.auth')), function()
 	Route::any('/', function()
 	{
 		return Response::json(array('success' => false, 'errors' => array('wrongPath' =>
-                          'Wrong request path. For more information read the documentation: http://api.formandsystem.com')),404);
+                          'Wrong request path. For more information read the documentation: http://dev.formandsystem.com')),404);
 	});
 
   /*
    * Pages resource
    */
-	Route::resource('pages', 'PagesapiController', array('except' => array('create', 'edit')));
+	Route::resource('pages', 'PagesApiController', array('except' => array('create', 'edit')));
 
   /*
    * Stream resource
    */
-  Route::resource('streams', 'StreamsapiController', array('except' => array('create', 'edit', 'destroy')));
+  Route::resource('streams', 'StreamsApiController', array('except' => array('create', 'edit', 'destroy')));
 
   /*
    * Wrong paths
    */
   Route::any('{wrong?}/{path?}/{given?}', function()
   {
-    return Response::json(array('success' => false, 'errors' => array('wrongPath' => 'Wrong request path. For more information read the documentation: http://api.formandsystem.com')),404);
+    return Response::json(array('success' => false, 'errors' => array('wrongPath' =>
+                          'Wrong request path. For more information read the documentation: http://dev.formandsystem.com')),404);
   });
 });
 
@@ -40,8 +51,8 @@ Route::group(array('prefix' => 'v1', 'before' => array('api.auth')), function()
 | Path with wrong version number
 |--------------------------------------------------------------------------
 */
-Route::any('/{wrongVersion?}/{wrong?}/{path?}/{given?}', function()
+Route::any('/{version}/{wrong?}/{path?}/{given?}', function()
 {
   return Response::json(array('success' => false, 'errors' => array('wrongPath' =>
-          'Wrong request path. For more information read the documentation: http://api.formandsystem.com')),404);
+                        'Wrong request path. For more information read the documentation: http://dev.formandsystem.com')),404);
 });
