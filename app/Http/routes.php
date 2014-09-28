@@ -12,10 +12,23 @@ Route::any('/', function()
 
 /*
 |--------------------------------------------------------------------------
+| Define API oAuth routes
+|--------------------------------------------------------------------------
+*/
+/*
+ * access_token
+ */
+Route::post('oauth/access_token', function()
+{
+    return Authorizer::issueAccessToken();
+});
+
+/*
+|--------------------------------------------------------------------------
 | Define API v1 routes
 |--------------------------------------------------------------------------
 */
-Route::group(array('prefix' => 'v1', 'before' => array('api.auth')), function()
+Route::group(array('prefix' => 'v1', 'before' => ['oauth']), function()
 {
 	/*
    * Invalid URL /

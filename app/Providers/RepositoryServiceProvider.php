@@ -21,13 +21,22 @@ class RepositoryServiceProvider extends ServiceProvider {
    */
   public function register()
   {
+    // Content Repository
     $this->app->bind(
       'Formandsystemapi\Repositories\Content\ContentRepositoryInterface',
       'Formandsystemapi\Repositories\Content\EloquentContentRepository'
     );
+
+    // Stream Repository
     $this->app->bind(
       'Formandsystemapi\Repositories\Stream\StreamRepositoryInterface',
       'Formandsystemapi\Repositories\Stream\EloquentStreamRepository'
+    );
+
+    // User Repository
+    $this->app->bind(
+      'Formandsystemapi\Repositories\User\UserRepositoryInterface',
+      'Formandsystemapi\Repositories\User\EloquentUserRepository'
     );
   }
 

@@ -2,10 +2,13 @@
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use LucaDegasperi\OAuth2Server\Authorizer;
+use Formandsystemapi\Repositories\User\UserRepositoryInterface as UserRepository;
 
 class BasicRequest extends FormRequest {
+
+	protected $scopes = [];
 
 	/**
 	 * Get the validation rules that apply to the request.
@@ -24,30 +27,31 @@ class BasicRequest extends FormRequest {
 	 *
 	 * @return bool
 	 */
-	public function authorize()
+	public function authorize(Authorizer $authorizer, UserRepository $userRepository)
 	{
-		Auth::once(['email' => 'lukas@vea.re', 'password' => 'lukas']);
 
-		if ( ! Auth::check() )
+		// varify correct scopes
+		if ( !empty($this->scopes) and !$authorizer->hasScope($this->scopes) )
 		{
 			return false;
 		}
 
-		$user = Auth::user();
+		$owner = $userRepository->getByOwnerId( $authorizer->getResourceOwnerId() );
+
 		// set db connection
 		$db = array(
 			'driver'    => 'mysql',
-			'host'      => $user->service_host,
-			'database'  => $user->service_name,
-			'username'  => $user->service_user,
-			'password'  => $user->service_key,
+			'host'      => $owner->service_host,
+			'database'  => $owner->service_name,
+			'username'  => $owner->service_user,
+			'password'  => $owner->service_key,
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
 		);
 
 		Config::set("database.connections.user", $db);
-		
+
 		return true;
 	}
 

@@ -1,8 +1,11 @@
 <?php namespace Formandsystemapi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use LucaDegasperi\OAuth2Server\Authorizer;
 
 class showPageRequest extends BasicRequest {
+
+	protected $scopes = ['pages.read'];
 
 	/**
 	 * Get the validation rules that apply to the request.
@@ -14,16 +17,6 @@ class showPageRequest extends BasicRequest {
 		return [
 			//
 		];
-	}
-
-	/**
-	 * Determine if the user is authorized to make this request.
-	 *
-	 * @return bool
-	 */
-	public function authorize()
-	{
-		return parent::authorize();
 	}
 
 }

@@ -73,7 +73,7 @@ class PagesApiController extends BaseApiController {
 	 */
 	public function show($id, showPageRequest $request)
 	{
-		dd($request->messages());
+		return "yo";
 	}
 
 	/**

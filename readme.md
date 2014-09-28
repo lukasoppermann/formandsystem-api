@@ -3,8 +3,12 @@
 # Laravel 5.0 branch
 
 **Info:**
-http://code.tutsplus.com/tutorials/laravel-4-a-start-at-a-restful-api-updated--net-29785
+http://www.slideshare.net/landlessness/teach-a-dog-to-rest  
+
+http://code.tutsplus.com/tutorials/laravel-4-a-start-at-a-restful-api-updated--net-29785  
+
 http://maxoffsky.com/code-blog/building-restful-api-in-laravel-start-here/
+
 https://github.com/dingo/api/wiki/Basic-Tutorial
 
 The Form&System API is used to retrieve items from the clients database (and return data when in a context of the cms).
@@ -137,3 +141,10 @@ curl -i -H "Accept: application/json" -X POST -d "stream=news" http://api.forman
 curl -i -H "Accept: application/json" -X POST -d "stream=news&parent_id=2&position=0" http://api.formandsystem.local/v1/streams
 
 curl -i -H "Accept: application/json" -X POST -d "stream=news" http://api.formandsystem.local/v1/pages
+
+curl -i -X POST -d "grant_type=client_credentials&client_id=2imkqYRPPBOxbbnK&client_secret=qA2Wgg9bwPWXwlTnvyWKcnmOcS6KXwGQ&scope=pages.read" http://newapi.formandsystem.local/oauth/access_token
+
+curl -i -X GET http://newapi.formandsystem.local/v1/pages/1?access_token=CHkBRhdrWbcE2cDBl9sgHXNWqqzeRWfIKF5pMSBQ
+curl -i -H "Accept: application/json" -X POST -d "status=1&language=en&stream=news&position=1&parent_id=0&access_token=0OX5FQwiFd24OS9fgY1EKHbXe9b76xXiYNML5Nii" http://newapi.formandsystem.local/v1/pages
+
+curl -i -H "Accept: application/json" -X POST -d "status=1&language=en&stream=news&position=1&parent_id=0&access_token=aqe4DJOC3NwM5h7BE7EKTBcu1x7ohLRnQ956boEx" http://newapi.formandsystem.local/v1/pages
