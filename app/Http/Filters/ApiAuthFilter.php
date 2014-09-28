@@ -34,6 +34,8 @@ class ApiAuthFilter {
 	 */
 	public function filter(Route $route, Request $request)
 	{
+		$this->auth->once(['email' => 'lukas@vea.re', 'password' => 'lukas']);
+		\Log::error($this->auth->user());
 		$this->auth->logout();
     $this->auth->once(['email' => 'lukas@vea.re', 'password' => 'lukas']);
     $user = $this->auth->user();
