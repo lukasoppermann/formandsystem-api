@@ -9,6 +9,8 @@ use Formandsystemapi\Http\Requests\BasicRequest;
 use Formandsystemapi\Http\Requests\getPagesRequest;
 use Formandsystemapi\Http\Requests\storePageRequest;
 use Formandsystemapi\Http\Requests\showPageRequest;
+use Formandsystemapi\Http\Requests\updatePageRequest;
+use Formandsystemapi\Http\Requests\deletePageRequest;
 
 class PagesApiController extends BaseApiController {
 
@@ -105,7 +107,7 @@ class PagesApiController extends BaseApiController {
 		}
 
 		// return errors
-		$errors = array_merge(['Code 404' => 'Page not found'], $request->messages());
+		$errors = array_merge(['error_404' => 'Page not found'], $request->messages());
 
 		return Response::json(array('success' => 'false', 'errors' => $errors), 400);
 
@@ -117,9 +119,24 @@ class PagesApiController extends BaseApiController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id, updatePageRequest $request)
 	{
-		//
+		// if validation passes
+		if( !$request->messages() )
+		{
+			$input = $request->only('status','language','article_id','data','tags','menu_label','link');
+
+			$page = $this->contentRepository->updatePage($id, $input);
+
+			$this->streamRepository->updateRecord($page['stream_record_id']);
+
+			return Response::json(array('success' => 'true'), 200);
+		}
+
+		// return errors
+		$errors = array_merge(['updating' => 'Error while updating record.'], $request->messages());
+
+		return Response::json(array('success' => 'false', 'errors' => $errors), 400);
 	}
 
 	/**
@@ -128,9 +145,15 @@ class PagesApiController extends BaseApiController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($id, deletePageRequest $request)
 	{
-		//
+		// if validation passes
+		if( !$request->messages() )
+		{
+			$this->streamRepository->deleteRecord($id);
+			$this->contentRepository->deletePage($id);
+			return "yo";
+		}
 	}
 
 }

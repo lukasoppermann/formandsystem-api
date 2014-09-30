@@ -6,7 +6,9 @@ interface ContentRepositoryInterface
 
   public function getPageById($id, $withTrashed);
 
-  public function storePage($parameters);
+  public function storePage($input);
 
-  public function deletePage($id, $parameters);
+  public function updatePage($id, $input);
+
+  public function deletePage($id);
 }

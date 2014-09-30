@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Response;
 use LucaDegasperi\OAuth2Server\Authorizer;
 use Formandsystemapi\Repositories\User\UserRepositoryInterface as UserRepository;
 
@@ -31,6 +32,11 @@ class BasicRequest extends FormRequest{
 			'position' => 'integer',
 			'parent_id' => 'integer',
 			'link' => 'alpha_dash',
+			'article_id' => 'integer',
+			'menu_label' => '',
+			'data' => '',
+			'tags' => '',
+			'stream' => 'alpha_dash',
 		];
 	}
 

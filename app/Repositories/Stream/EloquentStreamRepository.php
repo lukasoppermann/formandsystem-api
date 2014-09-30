@@ -32,10 +32,46 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
     return $query;
   }
 
-  public function storeRecord($parameters){}
+  public function storeRecord($input){}
 
-  public function updateRecord($id, $parameters){}
+  /**
+  * update the specified resource in storage
+  *
+  * @param  int  $article_id
+  * @return record | bool
+  */
+  public function updateRecord($id, $input = [])
+  {
+    if( $record = $this->getById($id, true) )
+    {
+      // restore if deleted
+      $record->restore();
 
-  public function deleteRecord($id){}
+      // update all changed values
+      foreach( array_filter($input) as $key => $value )
+      {
+        $record->$key = $value;
+      }
+
+      //save model
+      $record->save();
+
+      return $record;
+    }
+
+    return false;
+  }
+
+
+  /**
+  * delete the specified resource in storage
+  *
+  * @param  int  $article_id
+  * @return bool
+  */
+  public function deleteRecord($id)
+  {
+    return $this->getById($id)->delete();
+  }
 
 }

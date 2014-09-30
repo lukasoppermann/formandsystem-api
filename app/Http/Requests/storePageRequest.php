@@ -1,8 +1,5 @@
 <?php namespace Formandsystemapi\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use LucaDegasperi\OAuth2Server\Authorizer;
-
 class storePageRequest extends BasicRequest {
 
 	protected $scopes = ['pages.read','pages.write'];

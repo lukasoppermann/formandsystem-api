@@ -48,35 +48,71 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
     if( $page = $this->getById($id, $withTrashed) )
     {
       $stream = $page->stream()->first();
+      $stream['stream_record_id'] = $stream->id;
 
       return array_merge($stream->toArray(), $page->toArray());
     }
-    
+
     return false;
   }
 
   /**
   * store a new page and return page id
   */
-  public function storePage($parameters)
+  public function storePage($input)
   {
      // insert with next article id
      $page = Content::create([
-       'article_id' => $parameters['article_id'],
-       'menu_label' => $parameters['menu_label'],
-       'link' => $parameters['link'],
-       'status' => $parameters['status'],
-       'language' => $parameters['language'],
-       'data' => $parameters['data'],
-       'tags' => $parameters['tags'],
-       'created_at' => date("Y-m-d h:i:s"),
+       'article_id' => $input['article_id'],
+       'menu_label' => $input['menu_label'],
+       'link' => $input['link'],
+       'status' => $input['status'],
+       'language' => $input['language'],
+       'data' => $input['data'],
+       'tags' => $input['tags'],
+       'created_at' => Carbon::now(),
      ]);
 
      return (is_numeric($page->id) ? $page : false);
   }
 
-  public function deletePage($id, $parameters)
-  {
+  /**
+   * Update the specified page
+   *
+   * @param  int  $id
+   * @return array | bool
+   */
 
+   public function updatePage($id, $input = [])
+   {
+      if( $page = $this->getById($id, true) )
+      {
+        // restore if deleted
+        $page->restore();
+
+        // update all changed values
+        foreach( array_filter($input) as $key => $value )
+        {
+          $page->$key = $value;
+        }
+
+        //save model
+        $page->save();
+
+        return $page;
+      }
+
+      return false;
+   }
+
+  /**
+   * delete the specified page
+   *
+   * @param  int  $id
+   * @return bool
+   */
+  public function deletePage($id)
+  {
+    return $this->getById($id)->delete();
   }
 }
