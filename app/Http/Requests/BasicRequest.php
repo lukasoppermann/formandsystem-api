@@ -1,12 +1,11 @@
 <?php namespace Formandsystemapi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Config;
 use LucaDegasperi\OAuth2Server\Authorizer;
 use Formandsystemapi\Repositories\User\UserRepositoryInterface as UserRepository;
 
-class BasicRequest extends FormRequest {
+class BasicRequest extends FormRequest{
 
 	protected $scopes = [];
 
@@ -18,7 +17,20 @@ class BasicRequest extends FormRequest {
 	public function rules()
 	{
 		return [
-			//
+			'format' => 'in:json',
+			'language' => 'alpha',
+			'limit' => 'integer',
+			'offset' => 'integer',
+			'fields' => '',
+			'status' => 'integer',
+			'until' => '',
+			'since' => '',
+			'withDeleted' => 'string',
+			'sort' => '',
+			'first' => 'string',
+			'position' => 'integer',
+			'parent_id' => 'integer',
+			'link' => 'alpha_dash',
 		];
 	}
 
@@ -52,6 +64,7 @@ class BasicRequest extends FormRequest {
 
 		Config::set("database.connections.user", $db);
 
+		// return true to make authorize pass
 		return true;
 	}
 

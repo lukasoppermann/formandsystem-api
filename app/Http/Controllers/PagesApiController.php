@@ -4,26 +4,30 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Foundation\Http\FormRequest;
 use Formandsystemapi\Repositories\Content\ContentRepositoryInterface as ContentRepository;
+use Formandsystemapi\Repositories\Stream\StreamRepositoryInterface as StreamRepository;
 use Formandsystemapi\Http\Requests\BasicRequest;
+use Formandsystemapi\Http\Requests\getPagesRequest;
 use Formandsystemapi\Http\Requests\storePageRequest;
 use Formandsystemapi\Http\Requests\showPageRequest;
 
 class PagesApiController extends BaseApiController {
 
-	protected $ContentRepository;
+	protected $contentRepository;
+	protected $streamRepository;
 
 	/**
 	* construct
 	*
 	* @return void
 	*/
-	function __construct(ContentRepository $ContentRepository)
+	function __construct(ContentRepository $contentRepository, StreamRepository $streamRepository)
 	{
 		// call parent constrcutor
 		parent::__construct();
 
 		// Repositories
-		$this->ContentRepository = $ContentRepository;
+		$this->contentRepository 	= $contentRepository;
+		$this->streamRepository 	= $streamRepository;
 	}
 
 	/**
@@ -31,7 +35,7 @@ class PagesApiController extends BaseApiController {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(getPagesRequest $request)
 	{
 		return Response::json('Parameter missing: id or path. For more information read the documentation: http://dev.formandsystem.com',200);
 	}
@@ -44,12 +48,23 @@ class PagesApiController extends BaseApiController {
 	public function store(storePageRequest $request)
 	{
 		// if validation passes
-		if( !$request->fails() )
+		if( !$request->messages() )
 		{
-
+			// get accepted fields
 			$input = $request->only('stream', 'parent_id', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags');
 
-			$page = $this->ContentRepository->storePage($input);
+			// create stream record and get article_id if needed
+			if( !isset($input['article_id']) )
+			{
+				$input['article_id'] = $this->streamRepository->storeRecord([
+					'stream' => $input['stream'],
+					'parent_id' => $input['parent_id'],
+					'position' => $input['position']
+				]);
+			}
+
+			// store page
+			$page = $this->contentRepository->storePage($input);
 
 			// check if stored successfully
 			if( isset($page['id']) )
@@ -73,7 +88,27 @@ class PagesApiController extends BaseApiController {
 	 */
 	public function show($id, showPageRequest $request)
 	{
-		return "yo";
+		// if validation passes
+		if( !$request->messages() )
+		{
+			$parameters = array_merge(
+											array('status' => 1,'language' => 'en', 'pathSeparator' => '.'),
+											array_filter($request->only('status','language','pathSeparator'))
+			);
+
+			// retrieve page
+			if( $page = $this->contentRepository->getPageByLink( str_replace($parameters['pathSeparator'],'/',$id), $parameters['language'] ) )
+			{
+				return Response::json(array_merge(array('success' => 'true'), $page), 200);
+			}
+
+		}
+
+		// return errors
+		$errors = array_merge(['Code 404' => 'Page not found'], $request->messages());
+
+		return Response::json(array('success' => 'false', 'errors' => $errors), 400);
+
 	}
 
 	/**

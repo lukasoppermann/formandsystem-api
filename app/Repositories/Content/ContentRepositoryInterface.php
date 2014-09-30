@@ -1,11 +1,10 @@
 <?php namespace Formandsystemapi\Repositories\Content;
 
-use Formandsystemapi\Models\Content;
-
 interface ContentRepositoryInterface
 {
+  public function getPageByLink($link, $language, $withTrashed);
 
-  public function getPage($id, $parameters);
+  public function getPageById($id, $withTrashed);
 
   public function storePage($parameters);
 

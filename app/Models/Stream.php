@@ -31,7 +31,7 @@ class Stream extends Model{
 	 */
 	function content()
 	{
-		return $this->hasMany('Content', 'article_id', 'article_id');
+		return $this->hasMany('Formandsystemapi\Models\Content', 'article_id', 'article_id');
 	}
 
 }

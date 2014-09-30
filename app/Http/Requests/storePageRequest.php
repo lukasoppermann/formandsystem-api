@@ -14,15 +14,14 @@ class storePageRequest extends BasicRequest {
 	 */
 	public function rules()
 	{
-		return [
+		return array_merge( parent::rules(), [
 			'stream' => 'alpha_dash|required_without:article_id',
 			'parent_id' => 'integer|required',
 			'position' => 'integer|required',
 			'article_id' => 'integer|required_without:stream',
-			'link' => 'alpha_dash',
 			'status' => 'integer|required',
 			'language' => 'alpha_dash|required',
-		];
+		]);
 	}
 
 }

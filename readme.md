@@ -144,7 +144,7 @@ curl -i -H "Accept: application/json" -X POST -d "stream=news" http://api.forman
 
 curl -i -X POST -d "grant_type=client_credentials&client_id=2imkqYRPPBOxbbnK&client_secret=qA2Wgg9bwPWXwlTnvyWKcnmOcS6KXwGQ&scope=pages.read" http://newapi.formandsystem.local/oauth/access_token
 
-curl -i -X GET http://newapi.formandsystem.local/v1/pages/1?access_token=CHkBRhdrWbcE2cDBl9sgHXNWqqzeRWfIKF5pMSBQ
+curl -i -X GET http://newapi.formandsystem.local/v1/pages/1?access_token=zBRks3eNtwDGYheW7pGTD1LCeERlDSNr58LTiBpI
 curl -i -H "Accept: application/json" -X POST -d "status=1&language=en&stream=news&position=1&parent_id=0&access_token=0OX5FQwiFd24OS9fgY1EKHbXe9b76xXiYNML5Nii" http://newapi.formandsystem.local/v1/pages
 
-curl -i -H "Accept: application/json" -X POST -d "status=1&language=en&stream=news&position=1&parent_id=0&access_token=aqe4DJOC3NwM5h7BE7EKTBcu1x7ohLRnQ956boEx" http://newapi.formandsystem.local/v1/pages
+curl -i -H "Accept: application/json" -X POST -d "status=1&language=en&stream=news&position=1&parent_id=0&access_token=RV4YoQPret4lL2KS5yYsIC2s34AqkjW7KiyjmQCl" http://newapi.formandsystem.local/v1/pages
