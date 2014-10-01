@@ -2,6 +2,7 @@
 
 use Formandsystemapi\Models\Content;
 use Formandsystemapi\Repositories\EloquentAbstractRepository;
+use \Carbon\Carbon;
 
 class EloquentContentRepository extends EloquentAbstractRepository implements ContentRepositoryInterface
 {
@@ -48,10 +49,13 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
   {
     if( $page = $this->getById($id, $withTrashed) )
     {
-      $stream = $page->stream()->withTrashed()->first();
-      $stream['stream_record_id'] = $stream->id;
+      if( $stream = $page->stream()->withTrashed()->first() )
+      {
+        $stream = $page->stream()->withTrashed()->first();
+        $stream['stream_record_id'] = $stream->id;
 
-      return array_merge($stream->toArray(), $page->toArray());
+        return array_merge($stream->toArray(), $page->toArray());
+      }
     }
 
     return false;
@@ -90,7 +94,7 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
      // insert with next article id
      $page = Content::create([
        'article_id' => $input['article_id'],
-       'menu_label' => $input['menu_label'],
+       'menu_label' => (isset($input['menu_label']) ? $input['menu_label'] : ""),
        'link' => $input['link'],
        'status' => $input['status'],
        'language' => $input['language'],

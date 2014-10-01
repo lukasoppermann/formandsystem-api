@@ -36,7 +36,7 @@ Parameter  | value | default |description
 format  | json | json | format in which the resulting data will be returned
 language | [en,de,...] | en | language for which the results will be returned
 fields | SQL-compatible fields listing | * | the fields that will be returned from the database
-pathSeparator | . : :: + | . | character which will be used to separate path elements instead of /
+pathSeparator | . : :: + |ï¿½. | character which will be used to separate path elements instead of /
 until* | YYYY-MM-DD or false | false | returns results that are older or equal to the given date
 since* | YYYY-MM-DD or false | false | returns results that are newer or equal to the given date
 limit* | INT | 20 | max amount of results returned
@@ -145,6 +145,8 @@ curl -i -H "Accept: application/json" -X POST -d "stream=news" http://api.forman
 curl -i -H "Accept: application/json" -X PUT -d "status=2&access_token=dpk5yvtSTnfj2pTGsCbBHVdQa2rVnH2Kn7eUbePV" http://newapi.formandsystem.local/v1/pages/1
 
 curl -i -H "Accept: application/json" -X DELETE -d "status=2&access_token=3DuwLvWByGwI3ZlFyg1zgJ0DLWxMr2cladUpMTpF" http://newapi.formandsystem.local/v1/pages/1
+
+curl -i -H "Accept: application/json" -X POST -d "access_token=8EvrLSO5vGiJ6d8TT38NlQag577P76BjYzziJ7nD&article_id=1&language=en&status=1&parent_id=0&position=0" http://newapi.formandsystem.local/v1/pages
 
 curl -i -X POST -d "grant_type=client_credentials&client_id=2imkqYRPPBOxbbnK&client_secret=qA2Wgg9bwPWXwlTnvyWKcnmOcS6KXwGQ&scope=pages.read,pages.write,pages.delete" http://newapi.formandsystem.local/oauth/access_token
 

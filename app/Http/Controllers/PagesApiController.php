@@ -49,9 +49,6 @@ class PagesApiController extends BaseApiController {
 	 */
 	public function store(storePageRequest $request)
 	{
-		// if validation passes
-		if( !$request->messages() )
-		{
 			// get accepted fields
 			$input = $request->only('stream', 'parent_id', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags');
 
@@ -66,20 +63,10 @@ class PagesApiController extends BaseApiController {
 			}
 
 			// store page
-			$page = $this->contentRepository->storeModel($input);
-
-			// check if stored successfully
-			if( isset($page['id']) )
+			if( $page = $this->contentRepository->storeModel($input) )
 			{
 				return Response::json(array('success' => 'true', 'id' => $page['id'], 'article_id' => $page['article_id']), 200);
 			}
-
-		}
-
-		// return errors
-		$errors = array_merge(['storing' => 'Error while storing record.'], $request->messages());
-
-		return Response::json(array('success' => 'false', 'errors' => $errors), 400);
 	}
 
 	/**
@@ -90,27 +77,18 @@ class PagesApiController extends BaseApiController {
 	 */
 	public function show($id, showPageRequest $request)
 	{
-		// if validation passes
-		if( !$request->messages() )
+		$parameters = array_merge(
+										array('status' => 1,'language' => 'en', 'pathSeparator' => '.'),
+										array_filter($request->only('status','language','pathSeparator'))
+		);
+
+		// retrieve page
+		if( $page = $this->contentRepository->getArrayByLink( str_replace($parameters['pathSeparator'],'/',$id), $parameters['language'] ) )
 		{
-			$parameters = array_merge(
-											array('status' => 1,'language' => 'en', 'pathSeparator' => '.'),
-											array_filter($request->only('status','language','pathSeparator'))
-			);
-
-			// retrieve page
-			if( $page = $this->contentRepository->getArrayByLink( str_replace($parameters['pathSeparator'],'/',$id), $parameters['language'] ) )
-			{
-				return Response::json(array_merge(array('success' => 'true'), $page), 200);
-			}
-
+			return Response::json(array_merge(array('success' => 'true'), $page), 200);
 		}
 
-		// return errors
-		$errors = array_merge(['error_404' => 'Page not found'], $request->messages());
-
-		return Response::json(array('success' => 'false', 'errors' => $errors), 400);
-
+		return Response::json(array_merge(array('success' => 'true'), ['not_found' => 'Page not found']), 200);
 	}
 
 	/**
@@ -166,5 +144,4 @@ class PagesApiController extends BaseApiController {
 
 		return Response::json(array('success' => 'false', 'errors' => $errors), 400);
 	}
-
 }

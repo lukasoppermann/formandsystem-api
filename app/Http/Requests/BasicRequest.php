@@ -81,7 +81,13 @@ class BasicRequest extends FormRequest{
 	*/
 	public function forbiddenResponse()
 	{
-		return Response::Json('Unauthorized',401);
+		return Response::Json(array('success' => 'false', 'errors' => ['Unauthorized' => 'Unauthorized']), 401);
 	}
+
+	public function response(array $errors)
+	{
+		return Response::Json(array('success' => 'false', 'errors' => $errors), 422);
+	}
+
 
 }
