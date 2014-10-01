@@ -153,7 +153,7 @@ class PagesApiController extends BaseApiController {
 			$page = $this->contentRepository->deleteModel($id);
 
 			// check if no other item is connected to the stream record
-			if( $this->model->where('article_id', $page['article_id'])->whereNull('deleted_at')->count() == 0)
+			if( count($this->contentRepository->getArrayWhere(['article_id' => $page['article_id']], false)) == 0)
     	{
 				$this->streamRepository->deleteModel($page['stream_record_id']);
 			}

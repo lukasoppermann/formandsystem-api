@@ -6,6 +6,8 @@ interface ContentRepositoryInterface
 
   public function getArrayById($id, $withTrashed);
 
+  public function getArrayWhere($whereArray, $withTrashed);
+
   public function storeModel($input);
 
   public function updateModel($id, $input);

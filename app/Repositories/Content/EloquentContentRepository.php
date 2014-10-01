@@ -38,6 +38,7 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
 
     return $this->getArrayById($link, $withTrashed);
   }
+
   /**
    * get a page by id and include stream info
    *
@@ -54,6 +55,31 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
     }
 
     return false;
+  }
+
+  /**
+   * get a page by id and include stream info
+   *
+   * @return array
+   */
+  public function getArrayWhere($whereArray, $withTrashed = false)
+  {
+    $query = $this->withTrashed($withTrashed);
+
+    foreach ($whereArray as $key => $value)
+    {
+      $operator = "=";
+
+      if( is_array($value) )
+      {
+        $operator = $value[0];
+        $value = $value[1];
+      }
+
+      $query = $query->where($key, $operator, $value);
+    }
+
+    return $query->get()->toArray();
   }
 
   /**
@@ -114,7 +140,10 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
    */
   public function deleteModel($id)
   {
-    $this->getById($id)->delete();
+    if( $page = $this->getById($id) )
+    {
+      $page->delete();
+    }
 
     return $this->getArrayById($id, true);
   }
