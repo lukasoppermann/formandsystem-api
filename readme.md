@@ -144,6 +144,8 @@ curl -i -H "Accept: application/json" -X POST -d "stream=news" http://api.forman
 
 curl -i -H "Accept: application/json" -X PUT -d "status=2&access_token=dpk5yvtSTnfj2pTGsCbBHVdQa2rVnH2Kn7eUbePV" http://newapi.formandsystem.local/v1/pages/1
 
+curl -i -H "Accept: application/json" -X DELETE -d "status=2&access_token=dpk5yvtSTnfj2pTGsCbBHVdQa2rVnH2Kn7eUbePV" http://newapi.formandsystem.local/v1/pages/1
+
 curl -i -X POST -d "grant_type=client_credentials&client_id=2imkqYRPPBOxbbnK&client_secret=qA2Wgg9bwPWXwlTnvyWKcnmOcS6KXwGQ&scope=pages.read,pages.write,pages.delete" http://newapi.formandsystem.local/oauth/access_token
 
 curl -i -X GET http://newapi.formandsystem.local/v1/pages/1?access_token=zBRks3eNtwDGYheW7pGTD1LCeERlDSNr58LTiBpI

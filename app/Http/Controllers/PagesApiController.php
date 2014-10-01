@@ -58,7 +58,7 @@ class PagesApiController extends BaseApiController {
 			// create stream record and get article_id if needed
 			if( !isset($input['article_id']) )
 			{
-				$input['article_id'] = $this->streamRepository->storeRecord([
+				$input['article_id'] = $this->streamRepository->storeModel([
 					'stream' => $input['stream'],
 					'parent_id' => $input['parent_id'],
 					'position' => $input['position']
@@ -66,7 +66,7 @@ class PagesApiController extends BaseApiController {
 			}
 
 			// store page
-			$page = $this->contentRepository->storePage($input);
+			$page = $this->contentRepository->storeModel($input);
 
 			// check if stored successfully
 			if( isset($page['id']) )
@@ -99,7 +99,7 @@ class PagesApiController extends BaseApiController {
 			);
 
 			// retrieve page
-			if( $page = $this->contentRepository->getPageByLink( str_replace($parameters['pathSeparator'],'/',$id), $parameters['language'] ) )
+			if( $page = $this->contentRepository->getArrayByLink( str_replace($parameters['pathSeparator'],'/',$id), $parameters['language'] ) )
 			{
 				return Response::json(array_merge(array('success' => 'true'), $page), 200);
 			}
@@ -126,9 +126,9 @@ class PagesApiController extends BaseApiController {
 		{
 			$input = $request->only('status','language','article_id','data','tags','menu_label','link');
 
-			$page = $this->contentRepository->updatePage($id, $input);
+			$page = $this->contentRepository->updateModel($id, $input);
 
-			$this->streamRepository->updateRecord($page['stream_record_id']);
+			$this->streamRepository->updateModel($page['stream_record_id']);
 
 			return Response::json(array('success' => 'true'), 200);
 		}
@@ -150,10 +150,21 @@ class PagesApiController extends BaseApiController {
 		// if validation passes
 		if( !$request->messages() )
 		{
-			$this->streamRepository->deleteRecord($id);
-			$this->contentRepository->deletePage($id);
-			return "yo";
+			$page = $this->contentRepository->deleteModel($id);
+
+			// check if no other item is connected to the stream record
+			if( $this->model->where('article_id', $page['article_id'])->whereNull('deleted_at')->count() == 0)
+    	{
+				$this->streamRepository->deleteModel($page['stream_record_id']);
+			}
+
+			return Response::json(array('success' => 'true'), 200);
 		}
+
+		// return errors
+		$errors = array_merge(['deleting' => 'Error while deleting record.'], $request->messages());
+
+		return Response::json(array('success' => 'false', 'errors' => $errors), 400);
 	}
 
 }

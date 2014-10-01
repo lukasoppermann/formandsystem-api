@@ -32,7 +32,7 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
     return $query;
   }
 
-  public function storeRecord($input){}
+  public function storeModel($input){}
 
   /**
   * update the specified resource in storage
@@ -40,7 +40,7 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
   * @param  int  $article_id
   * @return record | bool
   */
-  public function updateRecord($id, $input = [])
+  public function updateModel($id, $input = [])
   {
     if( $record = $this->getById($id, true) )
     {
@@ -69,7 +69,7 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
   * @param  int  $article_id
   * @return bool
   */
-  public function deleteRecord($id)
+  public function deleteModel($id)
   {
     return $this->getById($id)->delete();
   }

@@ -22,7 +22,7 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
    *
    * @return array
    */
-  public function getPageByLink($link, $language, $withTrashed = false)
+  public function getArrayByLink($link, $language, $withTrashed = false)
   {
     if( !is_numeric($link) )
     {
@@ -36,18 +36,18 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
       $link = $link->id;
     }
 
-    return $this->getPageById($link, $withTrashed);
+    return $this->getArrayById($link, $withTrashed);
   }
   /**
    * get a page by id and include stream info
    *
    * @return array
    */
-  public function getPageById($id, $withTrashed = false)
+  public function getArrayById($id, $withTrashed = false)
   {
     if( $page = $this->getById($id, $withTrashed) )
     {
-      $stream = $page->stream()->first();
+      $stream = $page->stream()->withTrashed()->first();
       $stream['stream_record_id'] = $stream->id;
 
       return array_merge($stream->toArray(), $page->toArray());
@@ -59,7 +59,7 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
   /**
   * store a new page and return page id
   */
-  public function storePage($input)
+  public function storeModel($input)
   {
      // insert with next article id
      $page = Content::create([
@@ -83,7 +83,7 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
    * @return array | bool
    */
 
-   public function updatePage($id, $input = [])
+   public function updateModel($id, $input = [])
    {
       if( $page = $this->getById($id, true) )
       {
@@ -99,7 +99,8 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
         //save model
         $page->save();
 
-        return $page;
+        // return page (including stream data = array)
+        return $this->getArrayById($id, true);
       }
 
       return false;
@@ -111,8 +112,10 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
    * @param  int  $id
    * @return bool
    */
-  public function deletePage($id)
+  public function deleteModel($id)
   {
-    return $this->getById($id)->delete();
+    $this->getById($id)->delete();
+
+    return $this->getArrayById($id, true);
   }
 }

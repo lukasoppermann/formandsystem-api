@@ -4,9 +4,9 @@ interface StreamRepositoryInterface
 {
   public function getByArticleId($article_id, $withTrashed);
 
-  public function storeRecord($input);
+  public function storeModel($input);
 
-  public function updateRecord($id, $input);
+  public function updateModel($id, $input);
 
-  public function deleteRecord($id);
+  public function deleteModel($id);
 }
