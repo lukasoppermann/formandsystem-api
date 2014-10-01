@@ -94,7 +94,7 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
      // insert with next article id
      $page = Content::create([
        'article_id' => $input['article_id'],
-       'menu_label' => (isset($input['menu_label']) ? $input['menu_label'] : ""),
+       'menu_label' => $input['menu_label'],
        'link' => $input['link'],
        'status' => $input['status'],
        'language' => $input['language'],

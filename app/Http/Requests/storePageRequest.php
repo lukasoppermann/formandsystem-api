@@ -16,8 +16,7 @@ class storePageRequest extends BasicRequest {
 	public function rules()
 	{
 		return array_merge( parent::rules(), [
-			'stream' => 'alpha_dash|required_without:article_id',
-			'article_id' => 'integer|required_without:stream',
+			'article_id' => 'integer|required',
 			'position' => 'integer|required',
 			'parent_id' => 'integer|required',
 			'status' => 'integer|required',

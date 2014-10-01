@@ -50,17 +50,7 @@ class PagesApiController extends BaseApiController {
 	public function store(storePageRequest $request)
 	{
 			// get accepted fields
-			$input = $request->only('stream', 'parent_id', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags');
-
-			// create stream record and get article_id if needed
-			if( !isset($input['article_id']) )
-			{
-				$input['article_id'] = $this->streamRepository->storeModel([
-					'stream' => $input['stream'],
-					'parent_id' => $input['parent_id'],
-					'position' => $input['position']
-				]);
-			}
+			$input = $request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags');
 
 			// store page
 			if( $page = $this->contentRepository->storeModel($input) )
@@ -77,6 +67,7 @@ class PagesApiController extends BaseApiController {
 	 */
 	public function show($id, showPageRequest $request)
 	{
+		// merge parameters with defaults
 		$parameters = array_merge(
 										array('status' => 1,'language' => 'en', 'pathSeparator' => '.'),
 										array_filter($request->only('status','language','pathSeparator'))
@@ -88,6 +79,7 @@ class PagesApiController extends BaseApiController {
 			return Response::json(array_merge(array('success' => 'true'), $page), 200);
 		}
 
+		// return 404 if no page exists
 		return Response::json(array_merge(array('success' => 'true'), ['not_found' => 'Page not found']), 200);
 	}
 
@@ -99,22 +91,16 @@ class PagesApiController extends BaseApiController {
 	 */
 	public function update($id, updatePageRequest $request)
 	{
-		// if validation passes
-		if( !$request->messages() )
-		{
-			$input = $request->only('status','language','article_id','data','tags','menu_label','link');
+		// get input
+		$input = $request->only('status','language','article_id','data','tags','menu_label','link');
 
-			$page = $this->contentRepository->updateModel($id, $input);
+		// update model with input & restore if deleted
+		$page = $this->contentRepository->updateModel($id, $input);
 
-			$this->streamRepository->updateModel($page['stream_record_id']);
+		// update stream just to restore if deleted
+		$this->streamRepository->updateModel($page['stream_record_id']);
 
-			return Response::json(array('success' => 'true'), 200);
-		}
-
-		// return errors
-		$errors = array_merge(['updating' => 'Error while updating record.'], $request->messages());
-
-		return Response::json(array('success' => 'false', 'errors' => $errors), 400);
+		return Response::json(array('success' => 'true'), 200);
 	}
 
 	/**
@@ -125,23 +111,15 @@ class PagesApiController extends BaseApiController {
 	 */
 	public function destroy($id, deletePageRequest $request)
 	{
-		// if validation passes
-		if( !$request->messages() )
-		{
-			$page = $this->contentRepository->deleteModel($id);
+		$page = $this->contentRepository->deleteModel($id);
 
-			// check if no other item is connected to the stream record
-			if( count($this->contentRepository->getArrayWhere(['article_id' => $page['article_id']], false)) == 0)
-    	{
-				$this->streamRepository->deleteModel($page['stream_record_id']);
-			}
-
-			return Response::json(array('success' => 'true'), 200);
+		// check if no other item is connected to the stream record
+		if( count($this->contentRepository->getArrayWhere(['article_id' => $page['article_id']], false)) == 0)
+  	{
+			$this->streamRepository->deleteModel($page['stream_record_id']);
 		}
 
-		// return errors
-		$errors = array_merge(['deleting' => 'Error while deleting record.'], $request->messages());
-
-		return Response::json(array('success' => 'false', 'errors' => $errors), 400);
+		return Response::json(array('success' => 'true'), 200);
 	}
+
 }
