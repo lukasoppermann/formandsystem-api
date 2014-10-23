@@ -33,13 +33,24 @@ class PagesApiController extends BaseApiController {
 	}
 
 	/**
-	 * Display a listing of the resource.
-	 *
+	 * Display a listing
+	 * @method index
+	 * @param  getPagesRequest $request
 	 * @return Response
 	 */
 	public function index(getPagesRequest $request)
 	{
-		return Response::json('Parameter missing: id or path. For more information read the documentation: http://dev.formandsystem.com',200);
+		// get accepted fields
+		$input = $request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags');
+		// retrieve page
+		return $this->contentRepository->getArrayWhere(array_filter($input));
+		if( $page = $this->contentRepository->getArrayWhere( array_filter($input) ) )
+		{
+			return Response::json(array_merge(array('success' => 'true'), $page), 200);
+		}
+
+		// return 404 if no page exists
+		return Response::json(array_merge(array('success' => 'true'), ['not_found' => 'No pages found']), 200);
 	}
 
 	/**
@@ -97,8 +108,9 @@ class PagesApiController extends BaseApiController {
 		// update model with input & restore if deleted
 		$page = $this->contentRepository->updateModel($id, $input);
 
-		// update stream just to restore if deleted
-		$this->streamRepository->updateModel($page['stream_record_id']);
+		// // update stream just to restore if deleted
+		// TODO: should this be done in the api?
+		// $this->streamRepository->updateModel($page['stream_record_id']);
 
 		return Response::json(array('success' => 'true'), 200);
 	}
@@ -114,10 +126,11 @@ class PagesApiController extends BaseApiController {
 		$page = $this->contentRepository->deleteModel($id);
 
 		// check if no other item is connected to the stream record
-		if( count($this->contentRepository->getArrayWhere(['article_id' => $page['article_id']], false)) == 0)
-  	{
-			$this->streamRepository->deleteModel($page['stream_record_id']);
-		}
+		// TODO: should this be done in the api?
+		// if( count($this->contentRepository->getArrayWhere(['article_id' => $page['article_id']], false)) == 0)
+  	// {
+		// 	$this->streamRepository->deleteModel($page['stream_record_id']);
+		// }
 
 		return Response::json(array('success' => 'true'), 200);
 	}

@@ -142,11 +142,11 @@ curl -i -H "Accept: application/json" -X POST -d "stream=news&parent_id=2&positi
 
 curl -i -H "Accept: application/json" -X POST -d "stream=news" http://api.formandsystem.local/v1/pages
 
-curl -i -H "Accept: application/json" -X PUT -d "status=2&access_token=dpk5yvtSTnfj2pTGsCbBHVdQa2rVnH2Kn7eUbePV" http://newapi.formandsystem.local/v1/pages/1
+curl -i -H "Accept: application/json" -X PUT -d "status=2&access_token=vgzAvEmnaV5JU3EwXsrkq6lPNlNkhqCa2UU7Xe8L" http://newapi.formandsystem.local/v1/pages/1
 
 curl -i -H "Accept: application/json" -X DELETE -d "status=2&access_token=3DuwLvWByGwI3ZlFyg1zgJ0DLWxMr2cladUpMTpF" http://newapi.formandsystem.local/v1/pages/1
 
-curl -i -H "Accept: application/json" -X POST -d "access_token=8EvrLSO5vGiJ6d8TT38NlQag577P76BjYzziJ7nD&language=en&status=1&parent_id=0&position=0&stream=news" http://newapi.formandsystem.local/v1/pages
+curl -i -H "Accept: application/json" -X POST -d "access_token=vgzAvEmnaV5JU3EwXsrkq6lPNlNkhqCa2UU7Xe8L&language=en&status=1&parent_id=0&position=0&stream=news" http://newapi.formandsystem.local/v1/pages
 
 curl -i -X POST -d "grant_type=client_credentials&client_id=2imkqYRPPBOxbbnK&client_secret=qA2Wgg9bwPWXwlTnvyWKcnmOcS6KXwGQ&scope=pages.read,pages.write,pages.delete" http://newapi.formandsystem.local/oauth/access_token
 

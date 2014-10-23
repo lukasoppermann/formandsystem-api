@@ -32,7 +32,22 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
     return $query;
   }
 
-  public function storeModel($input){}
+  /**
+   * Update the specified record
+   *
+   * @param  int  $id
+   * @return array | bool
+   */
+  public function storeModel($input)
+  {
+    // insert with next article id
+    return Content::create([
+      'parent_id' => $input['parent_id'],
+      'article_id' => $input['article_id'],
+      'stream' => $input['stream'],
+      'position' => $input['position']
+    ]);
+  }
 
   /**
   * update the specified resource in storage

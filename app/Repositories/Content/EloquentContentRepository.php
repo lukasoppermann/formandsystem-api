@@ -66,24 +66,21 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
    *
    * @return array
    */
-  public function getArrayWhere($whereArray, $withTrashed = false)
+  public function getArrayWhere($whereArray = [], $withTrashed = false)
   {
-    $query = $this->withTrashed($withTrashed);
+    $pages = $this->queryWhere($whereArray, $withTrashed)->with('stream')->get()->toArray();
 
-    foreach ($whereArray as $key => $value)
+    foreach($pages as $key => $value)
     {
-      $operator = "=";
-
-      if( is_array($value) )
+      if( isset($value['stream']) )
       {
-        $operator = $value[0];
-        $value = $value[1];
+        $pages[$key]['stream_record_id'] = $value['stream']['id'];
+        $pages[$key] = array_merge($value['stream'], $pages[$key]);
       }
-
-      $query = $query->where($key, $operator, $value);
+      unset($pages[$key]['stream']);
     }
 
-    return $query->get()->toArray();
+    return $pages;
   }
 
   /**
@@ -92,7 +89,7 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
   public function storeModel($input)
   {
      // insert with next article id
-     $page = Content::create([
+     return Content::create([
        'article_id' => $input['article_id'],
        'menu_label' => $input['menu_label'],
        'link' => $input['link'],
@@ -102,8 +99,6 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
        'tags' => $input['tags'],
        'created_at' => Carbon::now(),
      ]);
-
-     return (is_numeric($page->id) ? $page : false);
   }
 
   /**
@@ -112,7 +107,6 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
    * @param  int  $id
    * @return array | bool
    */
-
    public function updateModel($id, $input = [])
    {
       if( $page = $this->getById($id, true) )

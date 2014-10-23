@@ -30,14 +30,32 @@ abstract class EloquentAbstractRepository implements AbstractRepositoryInterface
    */
   public function getById($id, $withTrashed = false)
   {
-    $query = $this->model;
+    return $this->withTrashed($withTrashed)->find($id);
+  }
 
-    if( $withTrashed === true )
+  /**
+   * add wheres to query
+   *
+   * @return array
+   */
+  public function queryWhere($whereArray = [], $withTrashed = false)
+  {
+    $query = $this->withTrashed($withTrashed);
+
+    foreach ($whereArray as $key => $value)
     {
-      $query = $query->withTrashed();
+      $operator = "=";
+
+      if( is_array($value) )
+      {
+        $operator = $value[0];
+        $value = $value[1];
+      }
+
+      $query = $query->where($key, $operator, $value);
     }
 
-    return $query->find($id);
+    return $query;
   }
 
   /**
