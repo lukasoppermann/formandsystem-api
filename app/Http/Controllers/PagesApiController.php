@@ -1,7 +1,5 @@
 <?php namespace Formandsystemapi\Http\Controllers;
 
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Foundation\Http\FormRequest;
 use Formandsystemapi\Repositories\Content\ContentRepositoryInterface as ContentRepository;
 use Formandsystemapi\Repositories\Stream\StreamRepositoryInterface as StreamRepository;
@@ -11,25 +9,35 @@ use Formandsystemapi\Http\Requests\storePageRequest;
 use Formandsystemapi\Http\Requests\showPageRequest;
 use Formandsystemapi\Http\Requests\updatePageRequest;
 use Formandsystemapi\Http\Requests\deletePageRequest;
+use Formandsystemapi\Transformers\PageTransformer;
+use Formandsystemapi\Http\respond;
 
 class PagesApiController extends BaseApiController {
 
 	protected $contentRepository;
 	protected $streamRepository;
+	protected $pageTransformer;
+	protected $respond;
 
 	/**
 	* construct
 	*
 	* @return void
 	*/
-	function __construct(ContentRepository $contentRepository, StreamRepository $streamRepository)
+	function __construct(ContentRepository $contentRepository, StreamRepository $streamRepository, PageTransformer $pageTransformer, respond $respond)
 	{
 		// call parent constrcutor
 		parent::__construct();
 
 		// Repositories
-		$this->contentRepository 	= $contentRepository;
-		$this->streamRepository 	= $streamRepository;
+		$this->contentRepository = $contentRepository;
+		$this->streamRepository = $streamRepository;
+
+		// Transformer
+		$this->pageTransformer = $pageTransformer;
+
+		// respond
+		$this->respond = $respond;
 	}
 
 	/**
@@ -42,15 +50,15 @@ class PagesApiController extends BaseApiController {
 	{
 		// get accepted fields
 		$input = $request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags');
-		
+
 		// retrieve page
 		if( $page = $this->contentRepository->getArrayWhere( array_filter($input) ) )
 		{
-			return $this->respondOk($page);
+			return $this->respond->ok($page);
 		}
 
 		// return 404 if no page exists
-		return $this->respondNotFound();
+		return $this->respond->notFound();
 	}
 
 	/**
@@ -66,7 +74,7 @@ class PagesApiController extends BaseApiController {
 			// store page
 			if( $page = $this->contentRepository->storeModel($input) )
 			{
-				return $this->respondOk(['id' => $page['id'], 'article_id' => $page['article_id']]);
+				return $this->respond->ok(['id' => $page['id'], 'article_id' => $page['article_id']]);
 			}
 	}
 
@@ -87,11 +95,11 @@ class PagesApiController extends BaseApiController {
 		// retrieve page
 		if( $page = $this->contentRepository->getArrayByLink( str_replace($parameters['pathSeparator'],'/',$id), $parameters['language'] ) )
 		{
-			return $this->respondOk($page);
+			return $this->respond->ok($page, 'pages#get');
 		}
 
 		// return 404 if no page exists
-		return $this->respondNotFound();
+		return $this->respond->notFound();
 	}
 
 	/**
@@ -108,11 +116,7 @@ class PagesApiController extends BaseApiController {
 		// update model with input & restore if deleted
 		$page = $this->contentRepository->updateModel($id, $input);
 
-		// // update stream just to restore if deleted
-		// TODO: should this be done in the api?
-		// $this->streamRepository->updateModel($page['stream_record_id']);
-
-		return $this->respondNoContent();
+		return $this->respond->noContent();
 	}
 
 	/**
@@ -125,14 +129,7 @@ class PagesApiController extends BaseApiController {
 	{
 		$page = $this->contentRepository->deleteModel($id);
 
-		// check if no other item is connected to the stream record
-		// TODO: should this be done in the api?
-		// if( count($this->contentRepository->getArrayWhere(['article_id' => $page['article_id']], false)) == 0)
-  	// {
-		// 	$this->streamRepository->deleteModel($page['stream_record_id']);
-		// }
-
-		return $this->respondNoContent();
+		return $this->respond->noContent();
 	}
 
 }

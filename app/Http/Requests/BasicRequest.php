@@ -2,13 +2,20 @@
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Response;
+use Formandsystemapi\Http\respond;
 use LucaDegasperi\OAuth2Server\Authorizer;
 use Formandsystemapi\Repositories\User\UserRepositoryInterface as UserRepository;
 
 class BasicRequest extends FormRequest{
 
 	protected $scopes = [];
+	protected $respond;
+
+
+	public function __construct(respond $respond)
+	{
+		$this->respond = $respond;
+	}
 
 	/**
 	 * Get the validation rules that apply to the request.
@@ -81,22 +88,17 @@ class BasicRequest extends FormRequest{
 	*/
 	public function forbiddenResponse()
 	{
-		return Response::json([
-			'success' => false,
-			'status_code' => 401,
-			'error_message' => 'Unauthorized',
-			'more_info' => $this->error_docs_url.'#401'
-		], 401);
+		return $this->respond->respond->Unauthorized();
 	}
 
 	public function response(array $errors)
 	{
-		return Response::json([
-			'success' => false,
-			'status_code' => 422,
-			'error_message' => $errors,
-			'more_info' => $this->error_docs_url.'#422'
-		], 422);
+		foreach($errors as $key => $err)
+		{
+			$errs[] = implode($err);
+		}
+
+		return $this->respond->unprocessableContent( implode($errs) );
 	}
 
 
