@@ -69,7 +69,9 @@ class PagesApiController extends BaseApiController {
 	public function store(storePageRequest $request)
 	{
 			// get accepted fields
-			$input = $this->pageTransformer->transformPostData( $request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags'));
+			$input = $this->pageTransformer->transformPostData(
+					$request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags')
+			);
 
 			// store page
 			if( $page = $this->contentRepository->storeModel($input) )
@@ -114,9 +116,12 @@ class PagesApiController extends BaseApiController {
 		$input = $this->pageTransformer->transformPostData( $request->only('status','language','article_id','data','tags','menu_label','link') );
 
 		// update model with input & restore if deleted
-		$page = $this->contentRepository->updateModel($id, $input);
+		if( $this->contentRepository->updateModel($id, $input) )
+		{
+			return $this->respond->noContent();
+		}
 
-		return $this->respond->noContent();
+		return $this->respond->notFound();
 	}
 
 	/**
@@ -127,9 +132,13 @@ class PagesApiController extends BaseApiController {
 	 */
 	public function destroy($id, deletePageRequest $request)
 	{
-		$page = $this->contentRepository->deleteModel($id);
+		if( $this->contentRepository->deleteModel($id) )
+		{
+			return $this->respond->noContent();
+		}
 
-		return $this->respond->noContent();
+		return $this->respond->notFound();
+
 	}
 
 }

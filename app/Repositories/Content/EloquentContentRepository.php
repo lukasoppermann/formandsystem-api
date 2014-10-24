@@ -89,16 +89,7 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
   public function storeModel($input)
   {
      // insert with next article id
-     return Content::create([
-       'article_id' => $input['article_id'],
-       'menu_label' => $input['menu_label'],
-       'link'       => $input['link'],
-       'status'     => $input['status'],
-       'language'   => $input['language'],
-       'data'        => $input['data'],
-       'tags'       => $input['tags'],
-       'created_at' => Carbon::now(),
-     ]);
+     return Content::create( array_merge($input, ['created_at' => Carbon::now()]) );
   }
 
   /**
@@ -124,7 +115,7 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
         $page->save();
 
         // return page (including stream data = array)
-        return $this->getArrayById($id, true);
+        return true;
       }
 
       return false;
@@ -141,8 +132,10 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
     if( $page = $this->getById($id) )
     {
       $page->delete();
+
+      return true;
     }
 
-    return $this->getArrayById($id, true);
+    return false;
   }
 }

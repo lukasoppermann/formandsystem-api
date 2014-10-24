@@ -30,7 +30,7 @@ abstract class EloquentAbstractRepository implements AbstractRepositoryInterface
    */
   public function getById($id, $withTrashed = false)
   {
-    return $this->withTrashed($withTrashed)->findOrFail($id);
+    return $this->withTrashed($withTrashed)->find($id);
   }
 
   /**
@@ -65,7 +65,7 @@ abstract class EloquentAbstractRepository implements AbstractRepositoryInterface
   */
   public function delete($id)
   {
-    if( $record = $this->model->findOrFail($id) )
+    if( $record = $this->model->find($id) )
     {
       return $record->delete();
     }

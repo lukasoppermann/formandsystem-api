@@ -50,7 +50,7 @@ class PageTransformer extends Transformer{
     }
 
     // transform tags
-    if( is_array($output['tags']) )
+    if( isset($output['tags']) )
     {
       $output['tags'] = implode(', ',$output['tags']);
     }
