@@ -16,7 +16,7 @@ class EloquentStreamRepositorySpec extends ObjectBehavior
         $this->shouldHaveType('Formandsystemapi\Repositories\Stream\EloquentStreamRepository');
     }
 
-    function it_implements_Interface()
+    function it_implements_Interface_StreamRepositoryInterface()
     {
         $this->shouldImplement('Formandsystemapi\Repositories\Stream\StreamRepositoryInterface');
     }

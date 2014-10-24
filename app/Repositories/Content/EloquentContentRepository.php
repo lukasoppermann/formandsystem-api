@@ -92,11 +92,11 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
      return Content::create([
        'article_id' => $input['article_id'],
        'menu_label' => $input['menu_label'],
-       'link' => $input['link'],
-       'status' => $input['status'],
-       'language' => $input['language'],
-       'data' => $input['data'],
-       'tags' => $input['tags'],
+       'link'       => $input['link'],
+       'status'     => $input['status'],
+       'language'   => $input['language'],
+       'data'        => $input['data'],
+       'tags'       => $input['tags'],
        'created_at' => Carbon::now(),
      ]);
   }

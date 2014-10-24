@@ -54,7 +54,7 @@ class PagesApiController extends BaseApiController {
 		// retrieve page
 		if( $page = $this->contentRepository->getArrayWhere( array_filter($input) ) )
 		{
-			return $this->respond->ok($page);
+			return $this->respond->ok( $this->pageTransformer->transformArray($page) );
 		}
 
 		// return 404 if no page exists
@@ -69,7 +69,7 @@ class PagesApiController extends BaseApiController {
 	public function store(storePageRequest $request)
 	{
 			// get accepted fields
-			$input = $request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags');
+			$input = $this->pageTransformer->transformPostData( $request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags'));
 
 			// store page
 			if( $page = $this->contentRepository->storeModel($input) )
@@ -95,7 +95,7 @@ class PagesApiController extends BaseApiController {
 		// retrieve page
 		if( $page = $this->contentRepository->getArrayByLink( str_replace($parameters['pathSeparator'],'/',$id), $parameters['language'] ) )
 		{
-			return $this->respond->ok($page, 'pages#get');
+			return $this->respond->ok($this->pageTransformer->transform($page), 'pages#get');
 		}
 
 		// return 404 if no page exists
@@ -111,7 +111,7 @@ class PagesApiController extends BaseApiController {
 	public function update($id, updatePageRequest $request)
 	{
 		// get input
-		$input = $request->only('status','language','article_id','data','tags','menu_label','link');
+		$input = $this->pageTransformer->transformPostData( $request->only('status','language','article_id','data','tags','menu_label','link') );
 
 		// update model with input & restore if deleted
 		$page = $this->contentRepository->updateModel($id, $input);

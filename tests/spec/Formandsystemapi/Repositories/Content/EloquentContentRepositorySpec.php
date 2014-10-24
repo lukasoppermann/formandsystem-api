@@ -17,7 +17,7 @@ class EloquentContentRepositorySpec extends ObjectBehavior
         $this->shouldHaveType('Formandsystemapi\Repositories\Content\EloquentContentRepository');
     }
 
-    function it_implements_Interface()
+    function it_implements_Interface_ContentRepositoryInterface()
     {
         $this->shouldImplement('Formandsystemapi\Repositories\Content\ContentRepositoryInterface');
     }
