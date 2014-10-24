@@ -78,6 +78,8 @@ class PagesApiController extends BaseApiController {
 			{
 				return $this->respond->ok(['id' => $page['id'], 'article_id' => $page['article_id']]);
 			}
+
+			return $this->respond->internalError();
 	}
 
 	/**
