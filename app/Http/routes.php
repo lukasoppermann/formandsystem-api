@@ -1,17 +1,6 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| Define api.formandsystem.com
-|--------------------------------------------------------------------------
-*/
-Route::any('/', function()
-{
-  return Response::json(array('success' => false, 'errors' => array('wrongPath' =>
-                        'Wrong request path. For more information read the documentation: http://dev.formandsystem.com')),404);
-});
-
-/*
-|--------------------------------------------------------------------------
 | Define API oAuth routes
 |--------------------------------------------------------------------------
 */
@@ -30,15 +19,6 @@ Route::post('oauth/access_token', function()
 */
 Route::group(array('prefix' => 'v1', 'before' => ['oauth']), function()
 {
-	/*
-   * Invalid URL /
-   */
-	Route::any('/', function()
-	{
-		return Response::json(array('success' => false, 'errors' => array('wrongPath' =>
-                          'Wrong request path. For more information read the documentation: http://dev.formandsystem.com')),404);
-	});
-
   /*
    * Pages resource
    */
@@ -52,11 +32,7 @@ Route::group(array('prefix' => 'v1', 'before' => ['oauth']), function()
   /*
    * Wrong paths
    */
-  Route::any('{wrong?}/{path?}/{given?}', function()
-  {
-    return Response::json(array('success' => false, 'errors' => array('wrongPath' =>
-                          'Wrong request path. For more information read the documentation: http://dev.formandsystem.com')),404);
-  });
+   Route::any('/', 'BaseApiController@invalidPath');
 });
 
 /*
@@ -64,8 +40,4 @@ Route::group(array('prefix' => 'v1', 'before' => ['oauth']), function()
 | Path with wrong version number
 |--------------------------------------------------------------------------
 */
-Route::any('/{version}/{wrong?}/{path?}/{given?}', function()
-{
-  return Response::json(array('success' => false, 'errors' => array('wrongPath' =>
-                        'Wrong request path. For more information read the documentation: http://dev.formandsystem.com')),404);
-});
+Route::any('/{version?}/{wrong?}/{path?}/{given?}', 'BaseApiController@invalidPath');

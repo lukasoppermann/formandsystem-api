@@ -1,6 +1,7 @@
 <?php namespace Formandsystemapi\Http\Controllers;
 
 use Illuminate\Routing\Controller;
+use Formandsystemapi\Http\respond;
 
 class BaseApiController extends Controller {
 
@@ -17,6 +18,12 @@ class BaseApiController extends Controller {
 		header('Access-Control-Allow-Credentials: true');
 		header('Access-Control-Max-Age: 86400');    // cache for 1 day
 		header("Access-Control-Allow-Methods: GET, POST, DELETE, PUT, OPTIONS");
+	}
+
+
+	function invalidPath(respond $respond)
+	{
+		return $respond->notFound('Invalid request url');
 	}
 
 }
