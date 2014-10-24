@@ -42,15 +42,15 @@ class PagesApiController extends BaseApiController {
 	{
 		// get accepted fields
 		$input = $request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags');
+		
 		// retrieve page
-		return $this->contentRepository->getArrayWhere(array_filter($input));
 		if( $page = $this->contentRepository->getArrayWhere( array_filter($input) ) )
 		{
-			return Response::json(array_merge(array('success' => 'true'), $page), 200);
+			return $this->respondOk($page);
 		}
 
 		// return 404 if no page exists
-		return Response::json(array_merge(array('success' => 'true'), ['not_found' => 'No pages found']), 200);
+		return $this->respondNotFound();
 	}
 
 	/**
@@ -66,7 +66,7 @@ class PagesApiController extends BaseApiController {
 			// store page
 			if( $page = $this->contentRepository->storeModel($input) )
 			{
-				return Response::json(array('success' => 'true', 'id' => $page['id'], 'article_id' => $page['article_id']), 200);
+				return $this->respondOk(['id' => $page['id'], 'article_id' => $page['article_id']]);
 			}
 	}
 
@@ -87,11 +87,11 @@ class PagesApiController extends BaseApiController {
 		// retrieve page
 		if( $page = $this->contentRepository->getArrayByLink( str_replace($parameters['pathSeparator'],'/',$id), $parameters['language'] ) )
 		{
-			return Response::json(array_merge(array('success' => 'true'), $page), 200);
+			return $this->respondOk($page);
 		}
 
 		// return 404 if no page exists
-		return Response::json(array_merge(array('success' => 'true'), ['not_found' => 'Page not found']), 200);
+		return $this->respondNotFound();
 	}
 
 	/**
@@ -112,7 +112,7 @@ class PagesApiController extends BaseApiController {
 		// TODO: should this be done in the api?
 		// $this->streamRepository->updateModel($page['stream_record_id']);
 
-		return Response::json(array('success' => 'true'), 200);
+		return $this->respondNoContent();
 	}
 
 	/**
@@ -132,7 +132,7 @@ class PagesApiController extends BaseApiController {
 		// 	$this->streamRepository->deleteModel($page['stream_record_id']);
 		// }
 
-		return Response::json(array('success' => 'true'), 200);
+		return $this->respondNoContent();
 	}
 
 }

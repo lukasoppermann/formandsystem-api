@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Response;
 
 class BaseApiController extends Controller {
 
-	protected statusCode;
+	protected $statusCode;
+	protected $error_docs_url = "http://dev.formandsystem.com/errors";
 
 	/**
 	* construct
@@ -27,7 +28,7 @@ class BaseApiController extends Controller {
 	 *
 	 * @method getStatusCode
 	 */
-	function getStatusCode()
+	public function getStatusCode()
 	{
 		return $this->statusCode;
 	}
@@ -41,7 +42,7 @@ class BaseApiController extends Controller {
 	 *
 	 * return $this
 	 */
-	function setStatusCode( $statusCode )
+	public function setStatusCode( $statusCode )
 	{
 		$this->statusCode = $statusCode;
 
@@ -58,7 +59,7 @@ class BaseApiController extends Controller {
 	 *
 	 * @return Illuminate\Support\Facades\Response
 	 */
-	function respond($data, $headers = [])
+	public function respond($data, $headers = [])
 	{
 		return Response::json($data, $this->getStatusCode(), $headers);
 	}
@@ -72,14 +73,13 @@ class BaseApiController extends Controller {
 	 *
 	 * @return $this->respond
 	 */
-	function responeWithError($message)
+	public function respondWithError($message)
 	{
 		return $this->respond([
 			'success' => false,
-			'error' => [
-				'message' => $message,
-				'status_code' => $this->getStatusCode()
-			]
+			'status_code' => $this->getStatusCode(),
+			'error_message' => $message,
+			'more_info' => $this->error_docs_url.'#'.$this->getStatusCode()
 		]);
 	}
 
@@ -88,12 +88,61 @@ class BaseApiController extends Controller {
 	 *
 	 * @method respondNotFound
 	 *
-	 * @param  string          $message
+	 * @param  string $message
 	 */
-	function respondNotFound( $message = "Not Found" )
+	public function respondNotFound( $message = "Not Found" )
 	{
 		return $this->setStatusCode(404)->respondWithError($message);
 	}
 
+	/**
+	 * respond with interal error
+	 *
+	 * @method respondInternalError
+	 *
+	 * @param  string $message
+	 */
+	public function respondInternalError( $message = "Internal Error" )
+	{
+		return $this->setStatusCode(500)->respondWithError($message);
+	}
+
+	/**
+	 * respond with result data
+	 *
+	 * @method respondWithData
+	 *
+	 * @param  array $data
+	 */
+	public function respondWithData( $data = "" )
+	{
+		return $this->respond([
+			'success' => true,
+			'status_code' => $this->getStatusCode(),
+			'data' => $data
+		]);
+	}
+
+	/**
+	 * respond with resulted data when ok
+	 *
+	 * @method respondOk
+	 *
+	 * @param  array $data
+	 */
+	public function respondOk( $data = "" )
+	{
+		return $this->setStatusCode(200)->respondWithData( $data );
+	}
+
+	/**
+	 * respond without content
+	 *
+	 * @method respondNoContent
+	 */
+	public function respondNoContent()
+	{
+		return $this->setStatusCode(204)->respondWithData();
+	}
 
 }
