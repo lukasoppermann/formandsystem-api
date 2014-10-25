@@ -3,12 +3,7 @@
 use Illuminate\Foundation\Http\FormRequest;
 use Formandsystemapi\Repositories\Content\ContentRepositoryInterface as ContentRepository;
 use Formandsystemapi\Repositories\Stream\StreamRepositoryInterface as StreamRepository;
-use Formandsystemapi\Http\Requests\BasicRequest;
-use Formandsystemapi\Http\Requests\getPagesRequest;
-use Formandsystemapi\Http\Requests\storePageRequest;
-use Formandsystemapi\Http\Requests\showPageRequest;
-use Formandsystemapi\Http\Requests\updatePageRequest;
-use Formandsystemapi\Http\Requests\deletePageRequest;
+use Formandsystemapi\Http\Requests\pages as Request;
 use Formandsystemapi\Transformers\PageTransformer;
 use Formandsystemapi\Http\respond;
 
@@ -46,7 +41,7 @@ class PagesApiController extends BaseApiController {
 	 * @param  getPagesRequest $request
 	 * @return Response
 	 */
-	public function index(getPagesRequest $request)
+	public function index(Request\getPagesRequest $request)
 	{
 		// get accepted fields
 		$input = $request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags');
@@ -66,7 +61,7 @@ class PagesApiController extends BaseApiController {
 	 *
 	 * @return Response
 	 */
-	public function store(storePageRequest $request)
+	public function store(Request\storePageRequest $request)
 	{
 			// get accepted fields
 			$input = $this->pageTransformer->transformPostData(
@@ -88,7 +83,7 @@ class PagesApiController extends BaseApiController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id, showPageRequest $request)
+	public function show($id, Request\showPageRequest $request)
 	{
 		// merge parameters with defaults
 		$parameters = array_merge(
@@ -112,7 +107,7 @@ class PagesApiController extends BaseApiController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id, updatePageRequest $request)
+	public function update($id, Request\updatePageRequest $request)
 	{
 		// get input
 		$input = $this->pageTransformer->transformPostData( $request->only('status','language','article_id','data','tags','menu_label','link') );
@@ -132,7 +127,7 @@ class PagesApiController extends BaseApiController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id, deletePageRequest $request)
+	public function destroy($id, Request\deletePageRequest $request)
 	{
 		if( $this->contentRepository->deleteModel($id) )
 		{
