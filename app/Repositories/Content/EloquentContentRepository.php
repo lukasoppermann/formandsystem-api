@@ -17,7 +17,6 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
     $this->model = $model;
   }
 
-
   /**
    * get a page id by link & language
    *
@@ -106,15 +105,8 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
         $page->restore();
 
         // update all changed values
-        foreach( array_filter($input) as $key => $value )
-        {
-          $page->$key = $value;
-        }
+        $page->update($input);
 
-        //save model
-        $page->save();
-
-        // return page (including stream data = array)
         return true;
       }
 
