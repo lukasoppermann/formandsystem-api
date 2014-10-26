@@ -74,9 +74,9 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
       if( isset($value['stream']) )
       {
         $pages[$key]['stream_record_id'] = $value['stream']['id'];
-        $pages[$key] = array_merge($value['stream'], $pages[$key]);
+        $pages[$key]['stream'] = $value['stream']['stream'];
+        $pages[$key]['position'] = $value['stream']['position'];
       }
-      unset($pages[$key]['stream']);
     }
 
     return $pages;

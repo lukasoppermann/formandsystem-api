@@ -2,6 +2,7 @@
 
 use Formandsystemapi\Models\Stream;
 use Formandsystemapi\Repositories\EloquentAbstractRepository;
+use Illuminate\Support\Collection;
 
 class EloquentStreamRepository extends EloquentAbstractRepository implements StreamRepositoryInterface
 {
@@ -30,6 +31,16 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
     }
 
     return $query;
+  }
+
+  /**
+   * get all different stream names
+   *
+   * @method getStreamsArray
+   */
+  public function getStreamsArray()
+  {
+    return array_keys($this->model->get(['stream'])->groupBy('stream')->toArray());
   }
 
   /**

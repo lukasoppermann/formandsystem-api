@@ -1,6 +1,6 @@
 <?php namespace Formandsystemapi\Transformers;
 
-class PageTransformer extends Transformer{
+class StreamTransformer extends Transformer{
 
   /**
    * transform data
@@ -14,20 +14,12 @@ class PageTransformer extends Transformer{
   public function transform($item)
   {
     return [
-      'id'                => (int) $item['id'],
-      'article_id'        => (int) $item['article_id'],
-      'stream_record_id'  => isset($item['stream_record_id']) ? (int) $item['stream_record_id'] : NULL,
-      'stream'            => isset($item['stream']) ? $item['stream'] : null,
-      'position'          => isset($item['position']) ? (int) $item['position'] : 0,
-      'menu_label'        => $item['menu_label'],
-      'link'              => $item['link'],
-      'status'            => (int) $item['status'],
-      'language'          => $item['language'],
-      'data'              => json_decode($item['data'], true),
-      'tags'              => array_map("trim", array_filter(explode(',', $item['tags']))),
-      'created_at'        => $item['created_at'],
-      'updated_at'        => $item['updated_at'],
-      'deleted_at'        => $item['deleted_at']
+      'id'          => (int) $item['id'],
+      'parent_id'   => (int) $item['parent_id'],
+      'article_id'  => (int) $item['article_id'],
+      'stream'      => $item['stream'],
+      'position'    => (int) $item['position'],
+      'deleted_at'  => $item['deleted_at']
     ];
   }
 
