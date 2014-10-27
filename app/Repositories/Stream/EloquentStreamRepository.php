@@ -76,12 +76,7 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
   public function storeModel($input)
   {
     // insert with next article id
-    return Content::create([
-      'parent_id' => $input['parent_id'],
-      'article_id' => $input['article_id'],
-      'stream' => $input['stream'],
-      'position' => $input['position']
-    ]);
+    return $this->model->create( array_merge($input, ['article_id' => $this->model->orderBy('article_id','desc')->first()->article_id+1]) );
   }
 
   /**

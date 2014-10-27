@@ -63,18 +63,18 @@ class PagesApiController extends BaseApiController {
 	 */
 	public function store(Request\storePageRequest $request)
 	{
-			// get accepted fields
-			$input = $this->pageTransformer->transformPostData(
-					$request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags')
-			);
+		// get accepted fields
+		$input = $this->pageTransformer->transformPostData(
+				$request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags')
+		);
 
-			// store page
-			if( $page = $this->contentRepository->storeModel($input) )
-			{
-				return $this->respond->ok(['id' => $page['id'], 'article_id' => $page['article_id']]);
-			}
+		// store page
+		if( $page = $this->contentRepository->storeModel($input) )
+		{
+			return $this->respond->ok(['id' => $page['id'], 'article_id' => $page['article_id']]);
+		}
 
-			return $this->respond->internalError();
+		return $this->respond->internalError();
 	}
 
 	/**

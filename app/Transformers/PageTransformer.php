@@ -23,6 +23,7 @@ class PageTransformer extends Transformer{
       'stream_record_id'  => isset($item['id']) ? (int) $item['id'] : NULL,
       'stream'            => isset($item['stream']) ? $item['stream'] : null,
       'position'          => isset($item['position']) ? (int) $item['position'] : 0,
+      'parent_id'         => isset($item['parent_id']) ? (int) $item['parent_id'] : 0,
       'content'           => $item['content']
     ];
   }

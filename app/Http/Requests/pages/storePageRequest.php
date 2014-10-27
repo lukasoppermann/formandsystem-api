@@ -4,10 +4,6 @@ class storePageRequest extends basicPageRequest {
 
 	protected $scopes = ['content.read','content.write'];
 
-	// protected $redirectRoute = "v1.pages.store";
-
-	// protected $redirectAction = "Formandsystemapi\Http\Controllers\PagesApiController@error";
-
 	/**
 	 * Get the validation rules that apply to the request.
 	 *

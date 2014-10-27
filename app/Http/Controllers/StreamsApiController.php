@@ -62,7 +62,18 @@ class StreamsApiController extends BaseApiController {
    */
   public function store(Request\storeStreamRequest $request)
   {
+    // get accepted fields
+    $input = $this->streamTransformer->transformPostData(
+        $request->only('parent_id', 'position', 'stream')
+    );
 
+    // store page
+    if( $stream = $this->streamRepository->storeModel($input) )
+    {
+      return $this->respond->ok(['article_id' => $stream['article_id']]);
+    }
+
+    return $this->respond->internalError();
   }
 
   /**
@@ -73,11 +84,6 @@ class StreamsApiController extends BaseApiController {
    */
   public function show($stream, Request\showStreamRequest $request)
   {
-    // // merge parameters with defaults
-    // $parameters = array_merge(
-    //                 array('status' => 1,'language' => 'en', 'pathSeparator' => '.'),
-    //                 array_filter()
-    // );
 
     // retrieve page
     if( $stream = $this->streamRepository->getArrayWhere( ['stream' => $stream] ) )

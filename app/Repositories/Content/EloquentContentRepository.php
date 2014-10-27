@@ -105,7 +105,7 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
   public function storeModel($input)
   {
      // insert with next article id
-     return Content::create( array_merge($input, ['created_at' => Carbon::now()]) );
+     return $this->model->create( array_merge($input, ['created_at' => Carbon::now()]) );
   }
 
   /**

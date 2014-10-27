@@ -20,22 +20,13 @@ class StreamTransformer extends Transformer{
 
   public function transformPostData($data)
   {
-    // assign names
-    $names = [
-      'language'    => 'language',
-      'parent_id'   => 'parent_id',
-      'article_id'  => 'article_id',
-      'stream'      => 'stream',
-      'position'    => 'position'
+
+    return [
+      'stream'            => isset($data['stream']) ? $data['stream'] : null,
+      'position'          => isset($data['position']) ? (int) $data['position'] : 0,
+      'parent_id'         => isset($data['parent_id']) ? (int) $data['parent_id'] : 0
     ];
 
-    // transform given data
-    foreach( array_filter( $data ) as $key => $value )
-    {
-      $output[$names[$key]] = $value;
-    }
-
-    return $output;
   }
 
 
