@@ -54,7 +54,6 @@ abstract class EloquentAbstractRepository implements AbstractRepositoryInterface
 
       $query = $query->where($key, $operator, $value);
     }
-
     return $query;
   }
 

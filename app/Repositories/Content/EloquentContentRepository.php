@@ -22,21 +22,27 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
    *
    * @return array
    */
-  public function getArrayByLink($link, $language, $withTrashed = false)
+  public function getArrayByLinkOrId($link, $language, $withTrashed = false)
   {
     if( !is_numeric($link) )
     {
-      $link = $this->model->whereRaw('link = ? and language = ?', array($link, $language) )->first();
-
-      if( is_null($link) )
-      {
-        return false;
-      }
-
-      $link = $link->id;
+      return $this->getArrayWhere(['link' => $link, 'language' => $language ], $withTrashed);
     }
 
-    return $this->getArrayById($link, $withTrashed);
+    return $this->getArrayWhere(['id' => $link], $withTrashed);
+    // if( !is_numeric($link) )
+    // {
+    //   $link = $this->model->whereRaw('link = ? and language = ?', array($link, $language) )->first();
+    //
+    //   if( is_null($link) )
+    //   {
+    //     return false;
+    //   }
+    //
+    //   $link = $link->article_id;
+    // }
+    //
+    // return $this->getArrayById($link, $withTrashed);
   }
 
   /**
@@ -61,7 +67,7 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
   }
 
   /**
-   * get a page by id and include stream info
+   * get a pages and include stream info
    *
    * @return array
    */
@@ -69,17 +75,28 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
   {
     $pages = $this->queryWhere($whereArray, $withTrashed)->with('stream')->get()->toArray();
 
-    foreach($pages as $key => $value)
+    if( is_null($pages) )
     {
-      if( isset($value['stream']) )
-      {
-        $pages[$key]['stream_record_id'] = $value['stream']['id'];
-        $pages[$key]['stream'] = $value['stream']['stream'];
-        $pages[$key]['position'] = $value['stream']['position'];
-      }
+      return false;
     }
 
-    return $pages;
+    foreach( $pages as $page )
+    {
+      $content = null;
+      foreach($this->queryWhere(['article_id' => $page['article_id']], $withTrashed)->get()->toArray() as $cont)
+      {
+        $content[$cont['language']] = $cont;
+      }
+
+      $result[] = array_merge(array_merge([
+        'article_id' => $page['article_id'],
+        'id' => null,
+        'stream' => null,
+        'position' => null,
+      ], (array) $page['stream']), ['content' => $content]);
+    }
+
+    return $result;
   }
 
   /**

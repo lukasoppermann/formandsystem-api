@@ -47,9 +47,9 @@ class PagesApiController extends BaseApiController {
 		$input = $request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags');
 
 		// retrieve page
-		if( $page = $this->contentRepository->getArrayWhere( array_filter($input) ) )
+		if( $pages = $this->contentRepository->getArrayWhere( array_filter($input) ) )
 		{
-			return $this->respond->ok( $this->pageTransformer->transformArray($page) );
+			return $this->respond->ok( $this->pageTransformer->transformArray($pages) );
 		}
 
 		// return 404 if no page exists
@@ -92,9 +92,9 @@ class PagesApiController extends BaseApiController {
 		);
 
 		// retrieve page
-		if( $page = $this->contentRepository->getArrayByLink( str_replace($parameters['pathSeparator'],'/',$id), $parameters['language'] ) )
+		if( $page = $this->contentRepository->getArrayByLinkOrId( str_replace($parameters['pathSeparator'],'/',$id), $parameters['language'] ) )
 		{
-			return $this->respond->ok($this->pageTransformer->transform($page), 'pages#get');
+			return $this->respond->ok($this->pageTransformer->transform($page[0]), 'pages#get');
 		}
 
 		// return 404 if no page exists

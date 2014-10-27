@@ -2,7 +2,7 @@
 
 interface ContentRepositoryInterface
 {
-  public function getArrayByLink($link, $language, $withTrashed);
+  public function getArrayByLinkOrId($link, $language, $withTrashed);
 
   public function getArrayById($id, $withTrashed);
 

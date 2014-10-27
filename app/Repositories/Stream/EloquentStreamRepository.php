@@ -44,6 +44,30 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
   }
 
   /**
+   * get a streams and include page info
+   *
+   * @return array
+   */
+  public function getArrayWhere($whereArray = [], $withTrashed = false)
+  {
+    $streams = $this->queryWhere($whereArray, $withTrashed)->orderBy('position')->with('content')->get()->toArray();
+
+    foreach($streams as $key => $value)
+    {
+      if( isset($value['content']) )
+      {
+        unset($streams[$key]['content']);
+        foreach($value['content'] as $cont)
+        {
+          $streams[$key]['content'][$cont['language']] = $cont;
+        }
+      }
+    }
+
+    return $streams;
+  }
+
+  /**
    * Update the specified record
    *
    * @param  int  $id
