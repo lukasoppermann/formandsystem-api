@@ -2,7 +2,7 @@
 
 interface StreamRepositoryInterface
 {
-  public function getByArticleId($article_id, $withTrashed);
+  public function getByArticleId($article_id);
 
   public function storeModel($input);
 

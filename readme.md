@@ -144,7 +144,10 @@ curl -i -H "Accept: application/json" -X POST -d "stream=news" http://api.forman
 
 curl -i -H "Accept: application/json" -X PUT -d "status=4&access_token=yj2goW4knZrkwuWd9YS9PW6jl9HCeOxCWy6YhbtZ" http://newapi.formandsystem.local/v1/pages/1
 
-curl -i -H "Accept: application/json" -X DELETE -d "status=2&access_token=3DuwLvWByGwI3ZlFyg1zgJ0DLWxMr2cladUpMTpF" http://newapi.formandsystem.local/v1/pages/1
+curl -i -H "Accept: application/json" -X DELETE -d "access_token=pH52c48RBzbwnn1OwPkJ1iensOcXZQ2NWKTnnst4" http://newapi.formandsystem.local/v1/streams/56
+
+
+
 
 Add Page:
 curl -i -H "Accept: application/json" -X POST -d "access_token=jGwXiN0Ou2gvOsc797dcptOkrJECUzyWBRca7xkI&language=en&status=1&parent_id=0&position=0&stream=news" http://newapi.formandsystem.local/v1/pages
@@ -152,7 +155,10 @@ curl -i -H "Accept: application/json" -X POST -d "access_token=jGwXiN0Ou2gvOsc79
 Add Stream:
 curl -i -H "Accept: application/json" -X POST -d "access_token=jGwXiN0Ou2gvOsc797dcptOkrJECUzyWBRca7xkI&stream=test&parent_id=2&position=0" http://newapi.formandsystem.local/v1/streams
 
+Update Stream:
+curl -i -H "Accept: application/json" -X PUT -d "access_token=pH52c48RBzbwnn1OwPkJ1iensOcXZQ2NWKTnnst4&position=99" http://newapi.formandsystem.local/v1/stream/54
 
+GET Token:
 curl -i -X POST -d "grant_type=client_credentials&client_id=2imkqYRPPBOxbbnK&client_secret=qA2Wgg9bwPWXwlTnvyWKcnmOcS6KXwGQ&scope=content.read,content.write,content.delete" http://newapi.formandsystem.local/oauth/access_token
 
 curl -i -X GET http://newapi.formandsystem.local/v1/pages/1?access_token=zBRks3eNtwDGYheW7pGTD1LCeERlDSNr58LTiBpI

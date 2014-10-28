@@ -13,9 +13,7 @@ class StreamTransformer extends Transformer{
    */
   public function transform($item)
   {
-    return [
-
-    ];
+    return array_keys($item);
   }
 
   public function transformPostData($data)

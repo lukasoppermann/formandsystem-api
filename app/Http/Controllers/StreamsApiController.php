@@ -48,7 +48,7 @@ class StreamsApiController extends BaseApiController {
     // retrieve page
     if( $streams = $this->streamRepository->getStreamsArray() )
     {
-      return $this->respond->ok( $streams );
+      return $this->respond->ok( $this->streamTransformer->transform($streams) );
     }
 
     // return 404 if no page exists
@@ -101,9 +101,23 @@ class StreamsApiController extends BaseApiController {
    * @param  int  $id
    * @return Response
    */
-  public function update($id, Request\updateStreamRequest $request)
+  public function update($article_id, Request\updateStreamRequest $request)
   {
+    // get input
+    $input = array_filter($request->only('stream','parent_id','position'));
 
+    if( count($input) == 0 )
+    {
+      return $this->respond->badRequest();
+    }
+
+    // update model with input & restore if deleted
+    if( $this->streamRepository->updateModel($article_id, $input) )
+    {
+      return $this->respond->noContent();
+    }
+
+    return $this->respond->notFound();
   }
 
   /**
@@ -112,9 +126,14 @@ class StreamsApiController extends BaseApiController {
    * @param  int  $id
    * @return Response
    */
-  public function destroy($id, Request\deleteStreamRequest $request)
+  public function destroy($article_id, Request\deleteStreamRequest $request)
   {
+    if( $this->streamRepository->deleteModel($article_id) )
+    {
+      return $this->respond->noContent();
+    }
 
+    return $this->respond->notFound();
   }
 
 }

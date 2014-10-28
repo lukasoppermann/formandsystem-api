@@ -96,54 +96,6 @@ class respond{
   }
 
   /**
-   * respond with not found error
-   *
-   * @method notFound
-   *
-   * @param  string $message
-   */
-  public function notFound( $message = "Not Found" )
-  {
-    return $this->setStatusCode(404)->respondWithError($message);
-  }
-
-  /**
-   * respond with internal error
-   *
-   * @method internalError
-   *
-   * @param  string $message
-   */
-  public function internalError( $message = "Internal Error" )
-  {
-    return $this->setStatusCode(500)->respondWithError($message);
-  }
-
-  /**
-   * respond with unauthorized
-   *
-   * @method unauthorized
-   *
-   * @param  string $message
-   */
-  public function unauthorized( $message = "Unauthorized" )
-  {
-    return $this->setStatusCode(401)->respondWithError($message);
-  }
-
-  /**
-   * respond with unprocessable content
-   *
-   * @method unprocessableContent
-   *
-   * @param  string $message
-   */
-  public function unprocessableContent( $message = "The request was well-formed but was unable to be followed due to semantic errors." )
-  {
-    return $this->setStatusCode(422)->respondWithError($message);
-  }
-
-  /**
    * respond with result data
    *
    * @method respondWithData
@@ -180,6 +132,66 @@ class respond{
   public function noContent()
   {
     return $this->setStatusCode(204)->respondWithData();
+  }
+
+  /**
+   * respond with nad request
+   *
+   * @method badRequest
+   *
+   * @param  string $message
+   */
+  public function badRequest( $message = "Bad Request" )
+  {
+    return $this->setStatusCode(400)->respondWithError($message);
+  }
+
+  /**
+   * respond with unauthorized
+   *
+   * @method unauthorized
+   *
+   * @param  string $message
+   */
+  public function unauthorized( $message = "Unauthorized" )
+  {
+    return $this->setStatusCode(401)->respondWithError($message);
+  }
+
+  /**
+   * respond with not found error
+   *
+   * @method notFound
+   *
+   * @param  string $message
+   */
+  public function notFound( $message = "Not Found" )
+  {
+    return $this->setStatusCode(404)->respondWithError($message);
+  }
+
+  /**
+   * respond with unprocessable content
+   *
+   * @method unprocessableContent
+   *
+   * @param  string $message
+   */
+  public function unprocessableContent( $message = "The request was well-formed but was unable to be followed due to semantic errors." )
+  {
+    return $this->setStatusCode(422)->respondWithError($message);
+  }
+
+  /**
+   * respond with internal error
+   *
+   * @method internalError
+   *
+   * @param  string $message
+   */
+  public function internalError( $message = "Internal Error" )
+  {
+    return $this->setStatusCode(500)->respondWithError($message);
   }
 
 }

@@ -21,16 +21,9 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
   * @param  int  $article_id
   * @return Response
   */
-  public function getByArticleId($article_id, $withTrashed = false)
+  public function getByArticleId($article_id)
   {
-    $query = $this->model->where('article_id', $article_id);
-
-    if( $withTrashed === true )
-    {
-      return $query->withTrashed();
-    }
-
-    return $query;
+    return $this->model->where('article_id', $article_id);
   }
 
   /**
@@ -40,7 +33,7 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
    */
   public function getStreamsArray()
   {
-    return array_keys($this->model->get(['stream'])->groupBy('stream')->toArray());
+    return $this->model->get()->groupBy('stream')->toArray();
   }
 
   /**
@@ -48,9 +41,9 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
    *
    * @return array
    */
-  public function getArrayWhere($whereArray = [], $withTrashed = false)
+  public function getArrayWhere($whereArray = [])
   {
-    $streams = $this->queryWhere($whereArray, $withTrashed)->orderBy('position')->with('content')->get()->toArray();
+    $streams = $this->queryWhere($whereArray, false)->orderBy('position')->with('content')->get()->toArray();
 
     foreach($streams as $key => $value)
     {
@@ -85,23 +78,14 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
   * @param  int  $article_id
   * @return record | bool
   */
-  public function updateModel($id, $input = [])
+  public function updateModel($article_id, $input = [])
   {
-    if( $record = $this->getById($id, true) )
+    if( $record = $this->getByArticleId($article_id, true) )
     {
-      // restore if deleted
-      $record->restore();
-
       // update all changed values
-      foreach( array_filter($input) as $key => $value )
-      {
-        $record->$key = $value;
-      }
+      $record->update($input);
 
-      //save model
-      $record->save();
-
-      return $record;
+      return true;
     }
 
     return false;
@@ -114,9 +98,9 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
   * @param  int  $article_id
   * @return bool
   */
-  public function deleteModel($id)
+  public function deleteModel($article_id)
   {
-    return $this->getById($id)->delete();
+    return $this->getByArticleId($article_id)->delete();
   }
 
 }

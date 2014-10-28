@@ -27,7 +27,7 @@ Route::group(array('prefix' => 'v1', 'before' => ['oauth']), function()
   /*
    * Stream resource
    */
-  Route::resource('streams', 'StreamsApiController', array('except' => array('create', 'edit', 'destroy')));
+  Route::resource('streams', 'StreamsApiController', array('except' => array('create', 'edit')));
 
   /*
    * Wrong paths

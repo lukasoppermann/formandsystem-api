@@ -21,8 +21,8 @@ class Stream extends Model{
 	*
 	* @var string
 	*/
-	use SoftDeletingTrait;
-	protected $dates = ['deleted_at'];
+	// use SoftDeletingTrait;
+	// protected $dates = ['deleted_at'];
 
 	/**
 	 * Define relationships

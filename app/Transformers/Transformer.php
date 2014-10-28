@@ -25,15 +25,4 @@ abstract class Transformer {
    */
   public abstract function transform($item);
 
-  /**
-   * transforms a single item for inserting
-   *
-   * @method transformPost
-   *
-   * @param  array $item
-   *
-   * @return array
-   */
-  public abstract function transformPostData($data);
-
 }
