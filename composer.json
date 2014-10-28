@@ -6,7 +6,6 @@
 	"type": "project",
 	"require": {
 		"laravel/framework": "5.0.*@dev",
-		"league/oauth2-server": "4.0.x-dev",
 		"lucadegasperi/oauth2-server-laravel": "3.0.*@dev"
 	},
 	"require-dev": {

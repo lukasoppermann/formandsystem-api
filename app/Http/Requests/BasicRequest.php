@@ -26,12 +26,16 @@ class BasicRequest extends FormRequest{
 	{
 
 		// varify correct scopes
-		if ( !empty($this->scopes) and !$authorizer->hasScope($this->scopes) )
+		if ( !is_object($authorizer) OR (!empty($this->scopes) and !$authorizer->hasScope($this->scopes)) )
 		{
 			return false;
 		}
 
-		$owner = $userRepository->getByOwnerId( $authorizer->getResourceOwnerId() );
+		// varify owner exists
+		if( !$owner = $userRepository->getByOwnerId( $authorizer->getResourceOwnerId() ) )
+		{
+			return false;
+		}
 
 		// set db connection
 		$db = array(
@@ -58,7 +62,7 @@ class BasicRequest extends FormRequest{
 	*/
 	public function forbiddenResponse()
 	{
-		return $this->respond->respond->Unauthorized();
+		return $this->respond->Unauthorized();
 	}
 
 	public function response(array $errors)

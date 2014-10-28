@@ -156,10 +156,10 @@ Add Stream:
 curl -i -H "Accept: application/json" -X POST -d "access_token=jGwXiN0Ou2gvOsc797dcptOkrJECUzyWBRca7xkI&stream=test&parent_id=2&position=0" http://newapi.formandsystem.local/v1/streams
 
 Update Stream:
-curl -i -H "Accept: application/json" -X PUT -d "access_token=pH52c48RBzbwnn1OwPkJ1iensOcXZQ2NWKTnnst4&position=99" http://newapi.formandsystem.local/v1/stream/54
+curl -i -H "Accept: application/json" -X PUT -d "access_token=pFgsLyW7VFoacu4Fe9bsWaUYBuyNyd4KMimABaPJ&position=99" http://newapi.formandsystem.local/v1/stream/54
 
 GET Token:
-curl -i -X POST -d "grant_type=client_credentials&client_id=2imkqYRPPBOxbbnK&client_secret=qA2Wgg9bwPWXwlTnvyWKcnmOcS6KXwGQ&scope=content.read,content.write,content.delete" http://newapi.formandsystem.local/oauth/access_token
+curl -i -X POST -d "grant_type=client_credentials&client_id=uraXRboY9ijqHWjO&client_secret=hGD49fqKswpQbPpIFrUrEXsONlp06cdv&scope=content.read,content.write,content.delete" http://newapi.formandsystem.local/oauth/access_token
 
 curl -i -X GET http://newapi.formandsystem.local/v1/pages/1?access_token=zBRks3eNtwDGYheW7pGTD1LCeERlDSNr58LTiBpI
 curl -i -H "Accept: application/json" -X POST -d "status=1&language=en&stream=news&position=1&parent_id=0&access_token=0OX5FQwiFd24OS9fgY1EKHbXe9b76xXiYNML5Nii" http://newapi.formandsystem.local/v1/pages

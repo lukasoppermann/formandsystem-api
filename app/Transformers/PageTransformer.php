@@ -14,8 +14,11 @@ class PageTransformer extends Transformer{
   public function transform($item)
   {
 
-    foreach($item['content'] as $key => $content){
-      $item['content'][$key]['data'] = json_decode($content['data'], true);
+    if( isset($item['content']) )
+    {
+      foreach($item['content'] as $key => $content){
+        $item['content'][$key]['data'] = json_decode($content['data'], true);
+      }
     }
 
     return [
@@ -24,7 +27,7 @@ class PageTransformer extends Transformer{
       'stream'            => isset($item['stream']) ? $item['stream'] : null,
       'position'          => isset($item['position']) ? (int) $item['position'] : 0,
       'parent_id'         => isset($item['parent_id']) ? (int) $item['parent_id'] : 0,
-      'content'           => $item['content']
+      'content'           => isset($item['content']) ? $item['content'] : []
     ];
   }
 

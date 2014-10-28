@@ -12,24 +12,8 @@ class basicStreamRequest extends BasicRequest {
   public function rules()
   {
     return [
-      'format' => 'in:json',
-      'language' => 'alpha',
-      'limit' => 'integer',
-      'offset' => 'integer',
-      'fields' => '',
-      'status' => 'integer',
-      'until' => '',
-      'since' => '',
-      'withDeleted' => 'string',
-      'sort' => '',
-      'first' => 'string',
       'position' => 'integer',
       'parent_id' => 'integer',
-      'link' => 'alpha_dash',
-      'article_id' => 'integer',
-      'menu_label' => '',
-      'data' => '',
-      'tags' => '',
       'stream' => 'alpha_dash',
     ];
   }
