@@ -7,6 +7,7 @@ abstract class EloquentAbstractRepository implements AbstractRepositoryInterface
   * @var Model
   */
   protected $model;
+  protected $limit;
 
   /**
    * Include trashed records in query
@@ -21,6 +22,17 @@ abstract class EloquentAbstractRepository implements AbstractRepositoryInterface
       return $this->model->withTrashed();
     }
     return $this->model;
+  }
+
+
+  public function limit($limit)
+  {
+    if( isset($limit) && is_int((int) $limit) && (int) $limit > 0 )
+    {
+      $this->limit = $limit;
+    }
+
+    return $this;
   }
 
   /**

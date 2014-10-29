@@ -11,11 +11,9 @@ class getStreamsRequest extends basicStreamRequest {
 	*/
 	public function rules()
 	{
-		return array_merge( parent::rules(), [
+		return [
 			'limit' 			=> 'integer',
-			'parent_id' 	=> 'integer',
-			'stream' 			=> 'required'
-		]);
+		];
 	}
 
 }

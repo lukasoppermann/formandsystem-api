@@ -84,9 +84,8 @@ class StreamsApiController extends BaseApiController {
    */
   public function show($stream, Request\showStreamRequest $request)
   {
-
     // retrieve page
-    if( $stream = $this->streamRepository->getArrayWhere( ['stream' => $stream] ) )
+    if( $stream = $this->streamRepository->limit($request->input('limit'))->getArrayWhere( ['stream' => $stream] ) )
     {
       return $this->respond->ok($this->pageTransformer->transformArray($stream), 'pages#get');
     }

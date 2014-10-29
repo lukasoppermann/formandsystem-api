@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 class EloquentStreamRepository extends EloquentAbstractRepository implements StreamRepositoryInterface
 {
   protected $model;
+  protected $limit;
   /**
   * Constructor
   */
@@ -43,7 +44,14 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
    */
   public function getArrayWhere($whereArray = [])
   {
-    $streams = $this->queryWhere($whereArray, false)->orderBy('position')->with('content')->get()->toArray();
+    $streams = $this->queryWhere($whereArray, false)->orderBy('position');
+
+    if( isset($this->limit) )
+    {
+        $streams->take($this->limit);
+    }
+
+    $streams = $streams->with('content')->get()->toArray();
 
     foreach($streams as $key => $value)
     {
