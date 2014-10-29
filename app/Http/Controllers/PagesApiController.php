@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Http\FormRequest;
 use Formandsystemapi\Repositories\Content\ContentRepositoryInterface as ContentRepository;
 use Formandsystemapi\Repositories\Stream\StreamRepositoryInterface as StreamRepository;
-use Formandsystemapi\Http\Requests\pages as Request;
+use Formandsystemapi\Http\Requests\Pages as Request;
 use Formandsystemapi\Transformers\PageTransformer;
 use Formandsystemapi\Http\respond;
 

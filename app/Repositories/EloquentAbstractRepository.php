@@ -24,7 +24,7 @@ abstract class EloquentAbstractRepository implements AbstractRepositoryInterface
     return $this->model;
   }
 
-
+  
   public function limit($limit)
   {
     if( isset($limit) && is_int((int) $limit) && (int) $limit > 0 )

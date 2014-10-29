@@ -1,7 +1,7 @@
 <?php namespace Formandsystemapi\Http\Controllers;
 
 use Formandsystemapi\Http\respond;
-use Formandsystemapi\Http\Requests\streams as Request;
+use Formandsystemapi\Http\Requests\Streams as Request;
 use Formandsystemapi\Repositories\Content\ContentRepositoryInterface as ContentRepository;
 use Formandsystemapi\Repositories\Stream\StreamRepositoryInterface as StreamRepository;
 use Formandsystemapi\Transformers\StreamTransformer;

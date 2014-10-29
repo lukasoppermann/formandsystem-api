@@ -75,7 +75,7 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
   {
     $pages = $this->queryWhere($whereArray, $withTrashed)->with('stream')->get()->toArray();
 
-    if( is_null($pages) )
+    if( !is_array($pages) OR count($pages) == 0 )
     {
       return false;
     }
