@@ -8,6 +8,8 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
 {
 
   protected $model;
+  protected $limit;
+  protected $offset;
 
   /**
   * Constructor
@@ -30,19 +32,6 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
     }
 
     return $this->getArrayWhere(['id' => $link], $withTrashed);
-    // if( !is_numeric($link) )
-    // {
-    //   $link = $this->model->whereRaw('link = ? and language = ?', array($link, $language) )->first();
-    //
-    //   if( is_null($link) )
-    //   {
-    //     return false;
-    //   }
-    //
-    //   $link = $link->article_id;
-    // }
-    //
-    // return $this->getArrayById($link, $withTrashed);
   }
 
   /**
@@ -105,7 +94,11 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
   public function storeModel($input)
   {
      // insert with next article id
-     return $this->model->create( array_merge($input, ['created_at' => Carbon::now()]) );
+     return $this->model->create(
+        array_merge(
+          $input,
+          ['created_at' => Carbon::now()])
+      );
   }
 
   /**
@@ -129,22 +122,4 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
 
       return false;
    }
-
-  /**
-   * delete the specified page
-   *
-   * @param  int  $id
-   * @return bool
-   */
-  public function deleteModel($id)
-  {
-    if( $page = $this->getById($id) )
-    {
-      $page->delete();
-
-      return true;
-    }
-
-    return false;
-  }
 }

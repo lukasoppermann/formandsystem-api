@@ -144,9 +144,12 @@ curl -i -H "Accept: application/json" -X POST -d "stream=news" http://api.forman
 
 curl -i -H "Accept: application/json" -X PUT -d "status=4&access_token=yj2goW4knZrkwuWd9YS9PW6jl9HCeOxCWy6YhbtZ" http://newapi.formandsystem.local/v1/pages/1
 
-curl -i -H "Accept: application/json" -X DELETE -d "access_token=pH52c48RBzbwnn1OwPkJ1iensOcXZQ2NWKTnnst4" http://newapi.formandsystem.local/v1/streams/56
 
+Delete steam:
+curl -i -H "Accept: application/json" -X DELETE -d "access_token=G3rxWk5rt7LSkXkRBRTZMc8MLDx5VLCK9R3C05z6" http://newapi.formandsystem.local/v1/streams/50
 
+Delete page:
+curl -i -H "Accept: application/json" -X DELETE -d "access_token=G3rxWk5rt7LSkXkRBRTZMc8MLDx5VLCK9R3C05z6" http://newapi.formandsystem.local/v1/pages/56
 
 
 Add Page:

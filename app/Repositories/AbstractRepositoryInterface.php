@@ -2,6 +2,10 @@
 
 interface AbstractRepositoryInterface
 {
+  public function limit($limit);
+
+  public function offset($offset);
+
   public function getById($id, $withTrashed);
 
   public function delete($id);

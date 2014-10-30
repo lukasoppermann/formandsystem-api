@@ -6,25 +6,17 @@ use Illuminate\Support\Collection;
 
 class EloquentStreamRepository extends EloquentAbstractRepository implements StreamRepositoryInterface
 {
+
   protected $model;
   protected $limit;
+  protected $offset;
+
   /**
   * Constructor
   */
   public function __construct(Stream $model)
   {
     $this->model = $model;
-  }
-
-  /**
-  * get the specified resource in storage.
-  *
-  * @param  int  $article_id
-  * @return Response
-  */
-  public function getByArticleId($article_id)
-  {
-    return $this->model->where('article_id', $article_id);
   }
 
   /**
@@ -77,7 +69,12 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
   public function storeModel($input)
   {
     // insert with next article id
-    return $this->model->create( array_merge($input, ['article_id' => $this->model->orderBy('article_id','desc')->first()->article_id+1]) );
+    return $this->model->create(
+        array_merge(
+          $input,
+          ['article_id' => $this->model->orderBy('article_id','desc')->first()->article_id+1]
+        )
+    );
   }
 
   /**
@@ -86,10 +83,13 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
   * @param  int  $article_id
   * @return record | bool
   */
-  public function updateModel($article_id, $input = [])
+  public function updateModel($stream_record_id, $input = [])
   {
-    if( $record = $this->getByArticleId($article_id, true) )
+    if( $record = $this->getById($stream_record_id, true) )
     {
+      // restore if deleted
+      $record->restore();
+
       // update all changed values
       $record->update($input);
 
@@ -97,18 +97,6 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
     }
 
     return false;
-  }
-
-
-  /**
-  * delete the specified resource in storage
-  *
-  * @param  int  $article_id
-  * @return bool
-  */
-  public function deleteModel($article_id)
-  {
-    return $this->getByArticleId($article_id)->delete();
   }
 
 }

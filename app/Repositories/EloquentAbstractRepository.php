@@ -8,6 +8,42 @@ abstract class EloquentAbstractRepository implements AbstractRepositoryInterface
   */
   protected $model;
   protected $limit;
+  protected $offset;
+
+  /**
+   * set limit to a certain amount
+   *
+   * @param integer $limit
+   *
+   * @return class instance $this
+   */
+  public function limit($limit = 20)
+  {
+    if( is_int((int) $limit) && (int) $limit > 0 )
+    {
+      $this->limit = $limit;
+    }
+
+    return $this;
+  }
+
+  /**
+   * set offset value
+   *
+   * @param integer $offset
+   *
+   * @return class instance $this
+   */
+  public function offset($offset = 0)
+  {
+    if( is_int((int) $offset))
+    {
+      $this->offset = $offset;
+    }
+
+    return $this;
+  }
+
 
   /**
    * Include trashed records in query
@@ -22,27 +58,6 @@ abstract class EloquentAbstractRepository implements AbstractRepositoryInterface
       return $this->model->withTrashed();
     }
     return $this->model;
-  }
-
-  
-  public function limit($limit)
-  {
-    if( isset($limit) && is_int((int) $limit) && (int) $limit > 0 )
-    {
-      $this->limit = $limit;
-    }
-
-    return $this;
-  }
-
-  /**
-   * Return entry by id optionally with additional data
-   *
-   * @return Illuminate\Database\Eloquent\Collection
-   */
-  public function getById($id, $withTrashed = false)
-  {
-    return $this->withTrashed($withTrashed)->find($id);
   }
 
   /**
@@ -67,6 +82,16 @@ abstract class EloquentAbstractRepository implements AbstractRepositoryInterface
       $query = $query->where($key, $operator, $value);
     }
     return $query;
+  }
+
+  /**
+   * Return entry by id optionally with additional data
+   *
+   * @return Illuminate\Database\Eloquent\Collection
+   */
+  public function getById($id, $withTrashed = false)
+  {
+    return $this->withTrashed($withTrashed)->find($id);
   }
 
   /**

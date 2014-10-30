@@ -129,7 +129,7 @@ class PagesApiController extends BaseApiController {
 	 */
 	public function destroy($id, Request\deletePageRequest $request)
 	{
-		if( $this->contentRepository->deleteModel($id) )
+		if( $this->contentRepository->delete($id) )
 		{
 			return $this->respond->noContent();
 		}

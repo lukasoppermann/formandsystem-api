@@ -12,5 +12,5 @@ interface ContentRepositoryInterface
 
   public function updateModel($id, $input);
 
-  public function deleteModel($id);
+
 }

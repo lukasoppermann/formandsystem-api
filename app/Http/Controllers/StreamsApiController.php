@@ -25,7 +25,6 @@ class StreamsApiController extends BaseApiController {
     parent::__construct();
 
     // Repositories
-    // $this->contentRepository = $contentRepository;
     $this->streamRepository = $streamRepository;
 
     // Transformer
@@ -86,7 +85,9 @@ class StreamsApiController extends BaseApiController {
     // retrieve page
     if( $stream = $this->streamRepository->limit($request->input('limit'))->getArrayWhere( ['stream' => $stream] ) )
     {
-      return $this->respond->ok($nestArrayService->nest($this->pageTransformer->transformArray($stream)), 'pages#get');
+      return $this->respond->ok(
+                $nestArrayService->nest( $this->pageTransformer->transformArray($stream) )
+            ,'pages#get');
     }
 
     // return 404 if no page exists
@@ -124,9 +125,9 @@ class StreamsApiController extends BaseApiController {
    * @param  int  $id
    * @return Response
    */
-  public function destroy($article_id, Request\deleteStreamRequest $request)
+  public function destroy($stream_record_id, Request\deleteStreamRequest $request)
   {
-    if( $this->streamRepository->deleteModel($article_id) )
+    if( $this->streamRepository->delete($stream_record_id) )
     {
       return $this->respond->noContent();
     }
