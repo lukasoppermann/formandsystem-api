@@ -16,6 +16,15 @@ class StreamTransformer extends Transformer{
     return array_keys($item);
   }
 
+  /**
+   * transform Post data
+   *
+   * @method transformPostData
+   *
+   * @param  array $data
+   *
+   * @return array
+   */
   public function transformPostData($data)
   {
 
@@ -26,6 +35,5 @@ class StreamTransformer extends Transformer{
     ];
 
   }
-
 
 }

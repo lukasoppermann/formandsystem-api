@@ -31,6 +31,13 @@ class PageTransformer extends Transformer{
     ];
   }
 
+  /**
+   * transform Post data
+   *
+   * @method transformPostData
+   *
+   * @param  array $data
+   */
   public function transformPostData($data)
   {
     // assign names

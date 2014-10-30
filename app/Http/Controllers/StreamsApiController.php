@@ -2,14 +2,13 @@
 
 use Formandsystemapi\Http\respond;
 use Formandsystemapi\Http\Requests\Streams as Request;
-use Formandsystemapi\Repositories\Content\ContentRepositoryInterface as ContentRepository;
 use Formandsystemapi\Repositories\Stream\StreamRepositoryInterface as StreamRepository;
 use Formandsystemapi\Transformers\StreamTransformer;
 use Formandsystemapi\Transformers\PageTransformer;
+use Formandsystemapi\Services\NestArrayService;
 
 class StreamsApiController extends BaseApiController {
 
-  // protected $contentRepository;
   protected $streamRepository;
   protected $respond;
   protected $streamTransformer;
@@ -20,7 +19,7 @@ class StreamsApiController extends BaseApiController {
   *
   * @return void
   */
-  function __construct(ContentRepository $contentRepository, StreamRepository $streamRepository, StreamTransformer $streamTransformer, PageTransformer $pageTransformer, respond $respond)
+  function __construct(StreamRepository $streamRepository, StreamTransformer $streamTransformer, PageTransformer $pageTransformer, respond $respond)
   {
     // call parent constrcutor
     parent::__construct();
@@ -82,12 +81,12 @@ class StreamsApiController extends BaseApiController {
    * @param  int  $id
    * @return Response
    */
-  public function show($stream, Request\showStreamRequest $request)
+  public function show($stream, Request\showStreamRequest $request, NestArrayService $nestArrayService)
   {
     // retrieve page
     if( $stream = $this->streamRepository->limit($request->input('limit'))->getArrayWhere( ['stream' => $stream] ) )
     {
-      return $this->respond->ok($this->pageTransformer->transformArray($stream), 'pages#get');
+      return $this->respond->ok($nestArrayService->nest($this->pageTransformer->transformArray($stream)), 'pages#get');
     }
 
     // return 404 if no page exists
@@ -134,5 +133,6 @@ class StreamsApiController extends BaseApiController {
 
     return $this->respond->notFound();
   }
+
 
 }
