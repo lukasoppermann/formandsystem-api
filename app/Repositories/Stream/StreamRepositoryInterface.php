@@ -3,6 +3,4 @@
 interface StreamRepositoryInterface
 {
   public function storeModel($input);
-
-  public function updateModel($id, $input);
 }

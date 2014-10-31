@@ -92,7 +92,17 @@ class PagesApiController extends BaseApiController {
 		);
 
 		// retrieve page
-		if( $page = $this->contentRepository->getArrayByLinkOrId( str_replace($parameters['pathSeparator'],'/',$id), $parameters['language'] ) )
+		if( !is_numeric($id) )
+		{
+			$page = $this->contentRepository->getArrayWhere(['link' => str_replace($parameters['pathSeparator'],'/',$id), 'language' => $parameters['language']]);
+		}
+		else
+		{
+			$page = $this->contentRepository->getArrayWhere(['id' => $id]);
+		}
+
+		// return page in 200 response
+		if( $page )
 		{
 			return $this->respond->ok($this->pageTransformer->transform($page[0]), 'pages#get');
 		}
@@ -113,7 +123,7 @@ class PagesApiController extends BaseApiController {
 		$input = $this->pageTransformer->transformPostData( $request->only('status','language','article_id','data','tags','menu_label','link') );
 
 		// update model with input & restore if deleted
-		if( $this->contentRepository->updateModel($id, $input) )
+		if( $this->contentRepository->update($id, $input) )
 		{
 			return $this->respond->noContent();
 		}

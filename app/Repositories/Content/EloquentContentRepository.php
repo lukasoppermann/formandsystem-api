@@ -20,21 +20,6 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
   }
 
   /**
-   * get a page id by link & language
-   *
-   * @return array
-   */
-  public function getArrayByLinkOrId($link, $language, $withTrashed = false)
-  {
-    if( !is_numeric($link) )
-    {
-      return $this->getArrayWhere(['link' => $link, 'language' => $language ], $withTrashed);
-    }
-
-    return $this->getArrayWhere(['id' => $link], $withTrashed);
-  }
-
-  /**
    * get a page by id and include stream info
    *
    * @return array
@@ -100,26 +85,4 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
           ['created_at' => Carbon::now()])
       );
   }
-
-  /**
-   * Update the specified page
-   *
-   * @param  int  $id
-   * @return array | bool
-   */
-   public function updateModel($id, $input = [])
-   {
-      if( $page = $this->getById($id, true) )
-      {
-        // restore if deleted
-        $page->restore();
-
-        // update all changed values
-        $page->update($input);
-
-        return true;
-      }
-
-      return false;
-   }
 }

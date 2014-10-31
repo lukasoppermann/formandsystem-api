@@ -1,4 +1,4 @@
-<?php namespace Formandsystemapi\Http\Requests\Pages;;
+<?php namespace Formandsystemapi\Http\Requests\Pages;
 
 class deletePageRequest extends basicPageRequest {
 

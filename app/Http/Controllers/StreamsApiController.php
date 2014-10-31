@@ -111,7 +111,7 @@ class StreamsApiController extends BaseApiController {
     }
 
     // update model with input & restore if deleted
-    if( $this->streamRepository->updateModel($article_id, $input) )
+    if( $this->streamRepository->update($article_id, $input) )
     {
       return $this->respond->noContent();
     }

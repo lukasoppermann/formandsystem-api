@@ -45,7 +45,7 @@ abstract class EloquentAbstractRepository implements AbstractRepositoryInterface
   }
 
 
-  /**
+/**
    * Include trashed records in query
    *
    * @param array $with
@@ -99,14 +99,41 @@ abstract class EloquentAbstractRepository implements AbstractRepositoryInterface
   *
   * @return boolean
   */
-  public function delete($id)
+  public function delete($id, $force = false)
   {
     if( $record = $this->model->find($id) )
     {
+      if($force === true)
+      {
+        return $record->forceDelete();
+      }
+
       return $record->delete();
     }
 
     return false;
   }
+
+  /**
+   * Update the specified record
+   *
+   * @param  int  $id
+   * @return array | bool
+   */
+   public function update($id, $input = [])
+   {
+      if( $record = $this->getById($id, true) )
+      {
+        // restore if deleted
+        $record->restore();
+
+        // update all changed values
+        $record->update($input);
+
+        return true;
+      }
+
+      return false;
+   }
 
 }

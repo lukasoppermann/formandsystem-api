@@ -77,26 +77,4 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
     );
   }
 
-  /**
-  * update the specified resource in storage
-  *
-  * @param  int  $article_id
-  * @return record | bool
-  */
-  public function updateModel($stream_record_id, $input = [])
-  {
-    if( $record = $this->getById($stream_record_id, true) )
-    {
-      // restore if deleted
-      $record->restore();
-
-      // update all changed values
-      $record->update($input);
-
-      return true;
-    }
-
-    return false;
-  }
-
 }
