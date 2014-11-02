@@ -1,5 +1,7 @@
 <?php
 
+use Formandsystemapi\Models\Content;
+
 class PagesTest extends ApiTester {
 
 	/** @test */

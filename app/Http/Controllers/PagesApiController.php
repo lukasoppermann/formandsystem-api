@@ -94,7 +94,9 @@ class PagesApiController extends BaseApiController {
 		// retrieve page
 		if( !is_numeric($id) )
 		{
-			$page = $this->contentRepository->getArrayWhere(['link' => str_replace($parameters['pathSeparator'],'/',$id), 'language' => $parameters['language']]);
+			$page = $this->contentRepository->getArrayWhere(
+				['link' => str_replace($parameters['pathSeparator'],'/',$id), 'language' => $parameters['language']]
+			);
 		}
 		else
 		{
