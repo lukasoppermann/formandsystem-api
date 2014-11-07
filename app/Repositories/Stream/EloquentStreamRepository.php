@@ -8,8 +8,6 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
 {
 
   protected $model;
-  protected $limit;
-  protected $offset;
 
   /**
   * Constructor
@@ -34,30 +32,99 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
    *
    * @return array
    */
-  public function getArrayWhere($whereArray = [])
+  public function getWhere($whereArray = [], $parameters = [])
   {
-    $streams = $this->queryWhere($whereArray, false)->orderBy('position');
+    // merge parameters
+    $parameters = array_merge([
+      'offset' => 0,
+      'limit' => 20,
+      'from' => null,
+      'until' => null,
+      'withtrashed' => 'false',
+      'language' => 'en'
+    ], $parameters);
 
-    if( isset($this->limit) )
+    // get model
+    $records = $this->modelWithTrashed($parameters['withtrashed'])->orderBy('position');
+
+    // parse where conditions
+    $records->where($whereArray);
+
+    // add content, get and turn into array
+    $records->with(['content' => function($query) use ($parameters)
     {
-        $streams->take($this->limit);
-    }
-
-    $streams = $streams->with('content')->get()->toArray();
-
-    foreach($streams as $key => $value)
-    {
-      if( isset($value['content']) )
+      // include trashed if wanted
+      if( $parameters['withtrashed'] === 'true' )
       {
-        unset($streams[$key]['content']);
-        foreach($value['content'] as $cont)
-        {
-          $streams[$key]['content'][$cont['language']] = $cont;
-        }
+        $query->withTrashed();
+      }
+
+      // apply from
+      if( $parameters['from'] != null )
+      {
+        $where[]  = 'created_at > ? and ';
+        $values[] = $parameters['from'].' 00:00:01';
+      }
+
+      // apply until
+      if( $parameters['until'] != null )
+      {
+        $where[]  = 'created_at < ? and ';
+        $values[] = $parameters['until'].' 23:59:59';
+      }
+
+      // add language for 3rd and 4th parameter
+      $values[] = $parameters['language'];
+      $values[] = $parameters['language'];
+
+      // needed here in case from & until are both NOT defined so implode has something to work with
+      $where[] = 'language = ?';
+
+      $query->whereRaw('('.implode('',$where).') OR language != ?', $values );
+
+    }]);
+
+    // return and apply limit & offset
+    return array_slice(
+      $this->sortByLanguage( $records->get()->toArray(), $parameters['language'] ),
+      $parameters['offset'], $parameters['limit']
+    );
+  }
+
+  /**
+   * sort the content array by language
+   *
+   * @method sortByLanguage
+   *
+   * @param  array $records
+   *
+   * @return array
+   */
+  private function sortByLanguage($records, $lang)
+  {
+    // sort content by language
+    foreach($records as $key => $value)
+    {
+
+      unset($records[$key]['content']);
+
+      // sort by language
+      foreach($value['content'] as $cont)
+      {
+        $records[$key]['content'][$cont['language']] = $cont;
+      }
+
+      // remove entries without any content
+      if( !isset($records[$key]['content'])
+          || count($records[$key]['content']) < 1
+          || ( $lang != null && !isset($records[$key]['content'][$lang]) )
+      )
+      {
+        unset($records[$key]);
       }
     }
 
-    return $streams;
+    return $records;
   }
 
   /**

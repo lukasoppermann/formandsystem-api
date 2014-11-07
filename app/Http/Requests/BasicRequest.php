@@ -69,10 +69,10 @@ class BasicRequest extends FormRequest{
 	{
 		foreach($errors as $key => $err)
 		{
-			$errs[] = implode($err);
+			$errs[] = implode(' ',$err);
 		}
 
-		return $this->respond->unprocessableContent( implode($errs) );
+		return $this->respond->unprocessableContent( implode(' ',$errs) );
 	}
 
 

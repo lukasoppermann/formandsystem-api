@@ -2,9 +2,8 @@
 
 interface ContentRepositoryInterface
 {
-  public function getArrayById($id, $withTrashed);
 
-  public function getArrayWhere($whereArray, $withTrashed);
+  public function getArticleId($idOrLink, $language);
 
   public function storeModel($input);
 

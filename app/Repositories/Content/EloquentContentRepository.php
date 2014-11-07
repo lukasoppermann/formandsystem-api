@@ -8,8 +8,6 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
 {
 
   protected $model;
-  protected $limit;
-  protected $offset;
 
   /**
   * Constructor
@@ -19,58 +17,16 @@ class EloquentContentRepository extends EloquentAbstractRepository implements Co
     $this->model = $model;
   }
 
-  /**
-   * get a page by id and include stream info
-   *
-   * @return array
-   */
-  public function getArrayById($id, $withTrashed = false)
+  public function getArticleId($idOrLink, $language = 'en')
   {
-    if( $page = $this->getById($id, $withTrashed) )
+    if( is_numeric($idOrLink) && $record = $this->model->find($idOrLink) )
     {
-      if( $stream = $page->stream()->withTrashed()->first() )
-      {
-        $stream = $page->stream()->withTrashed()->first();
-        $stream['stream_record_id'] = $stream->id;
-
-        return array_merge($stream->toArray(), $page->toArray());
-      }
+      return $record->article_id;
     }
-
-    return false;
-  }
-
-  /**
-   * get a pages and include stream info
-   *
-   * @return array
-   */
-  public function getArrayWhere($whereArray = [], $withTrashed = false)
-  {
-    $pages = $this->queryWhere($whereArray, $withTrashed)->with('stream')->get()->toArray();
-
-    if( !is_array($pages) OR count($pages) == 0 )
+    elseif( $record = $this->model->where(['link' => $idOrLink, 'language' => $language])->first() )
     {
-      return false;
+      return $record->article_id;
     }
-
-    foreach( $pages as $page )
-    {
-      $content = null;
-      foreach($this->queryWhere(['article_id' => $page['article_id']], $withTrashed)->get()->toArray() as $cont)
-      {
-        $content[$cont['language']] = $cont;
-      }
-
-      $result[] = array_merge(array_merge([
-        'article_id' => $page['article_id'],
-        'id' => null,
-        'stream' => null,
-        'position' => null,
-      ], (array) $page['stream']), ['content' => $content]);
-    }
-
-    return $result;
   }
 
   /**

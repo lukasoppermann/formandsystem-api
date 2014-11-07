@@ -13,7 +13,6 @@ class Stream extends Model{
 	protected $connection = 'user';
 	protected $table = 'fs_stream';
 	protected $fillable = array('parent_id','article_id','stream','position');
-	protected $primaryKey = 'id';
 	public $timestamps = false;
 
 	/**

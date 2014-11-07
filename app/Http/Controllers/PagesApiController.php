@@ -43,11 +43,15 @@ class PagesApiController extends BaseApiController {
 	 */
 	public function index(Request\getPagesRequest $request)
 	{
-		// get accepted fields
-		$input = $request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags');
+		// get accepted fields, filter everything but 0
+		$input = array_filter($request->only('parent_id'), function($var){
+			return ($var !== NULL && $var !== FALSE && $var !== '');
+		});
+
+		$parameters = $request->only('language', 'limit', 'offset');
 
 		// retrieve page
-		if( $pages = $this->contentRepository->getArrayWhere( array_filter($input) ) )
+		if( $pages = $this->streamRepository->getWhere( $input, array_filter($parameters) ) )
 		{
 			return $this->respond->ok( $this->pageTransformer->transformArray($pages) );
 		}
@@ -83,26 +87,20 @@ class PagesApiController extends BaseApiController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id, Request\showPageRequest $request)
+	public function show($idOrLink, Request\showPageRequest $request)
 	{
 		// merge parameters with defaults
 		$parameters = array_merge(
-										array('status' => 1,'language' => 'en', 'pathSeparator' => '.'),
+										array('status' => 1, 'pathSeparator' => '.'),
 										array_filter($request->only('status','language','pathSeparator'))
 		);
 
-		// retrieve page
-		if( !is_numeric($id) )
-		{
-			$page = $this->contentRepository->getArrayWhere(
-				['link' => str_replace($parameters['pathSeparator'],'/',$id), 'language' => $parameters['language']]
-			);
-		}
-		else
-		{
-			$page = $this->contentRepository->getArrayWhere(['id' => $id]);
-		}
+		$article_id = $this->contentRepository->getArticleId( str_replace($parameters['pathSeparator'],'/',$idOrLink), $parameters['language'] );
 
+		$page = $this->streamRepository->getWhere(
+			['article_id' => $article_id],
+			$parameters
+		);
 		// return page in 200 response
 		if( $page )
 		{

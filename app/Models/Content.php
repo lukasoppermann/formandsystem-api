@@ -28,7 +28,7 @@ class Content extends Model{
 	 */
 	function stream()
 	{
-		return $this->belongsTo('Formandsystemapi\Models\Stream', 'article_id', 'article_id')->withTrashed();
+		return $this->belongsTo('Formandsystemapi\Models\Stream', 'article_id', 'article_id');
 	}
 
 }

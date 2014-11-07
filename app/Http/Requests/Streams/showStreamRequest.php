@@ -13,7 +13,12 @@ class showStreamRequest extends basicStreamRequest {
 	{
 		return [
 			'limit' 			=> 'integer',
+			'offset' 			=> 'integer',
+			'withTrashed'	=> 'alpha',
+			'from'				=> 'date_format:Y-m-d',
+			'until'				=> 'date_format:Y-m-d',
+			'language'		=> 'alpha|required|size:2'
 		];
 	}
-	
+
 }

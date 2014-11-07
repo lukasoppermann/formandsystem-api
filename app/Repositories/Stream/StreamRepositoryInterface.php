@@ -2,5 +2,7 @@
 
 interface StreamRepositoryInterface
 {
+  public function getWhere($whereArray);
+
   public function storeModel($input);
 }
