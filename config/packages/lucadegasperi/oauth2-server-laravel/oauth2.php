@@ -165,7 +165,7 @@ return [
     | This is useful to only allow specific clients to use some scopes
     |
     */
-    'limit_clients_to_scopes' => false,
+    'limit_clients_to_scopes' => true,
 
     /*
     |--------------------------------------------------------------------------
