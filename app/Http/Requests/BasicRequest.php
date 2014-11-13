@@ -26,7 +26,7 @@ class BasicRequest extends FormRequest{
 	{
 
 		// varify correct scopes
-		if ( !is_object($authorizer) OR (!empty($this->scopes) and !$authorizer->hasScope($this->scopes)) )
+		if ( !is_object($authorizer) OR ( !empty($this->scopes) and !$this->checkScopes($authorizer, $this->scopes) ) )
 		{
 			return false;
 		}
@@ -73,6 +73,19 @@ class BasicRequest extends FormRequest{
 		}
 
 		return $this->respond->unprocessableContent( implode(' ',$errs) );
+	}
+
+	private function checkScopes(Authorizer $authorizer, $scopes)
+	{
+		foreach($scopes as $scope)
+		{
+			if( !$authorizer->hasScope($scope) )
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 
