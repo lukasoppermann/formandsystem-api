@@ -17,9 +17,9 @@
 /*
  * access_token
  */
-$router->post('oauth/access_token', function()
+$router->post('v1/oauth/access_token', function()
 {
-  return Authorizer::issueAccessToken();
+  return Response::json(Authorizer::issueAccessToken());
 });
 
 /*
