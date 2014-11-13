@@ -12,6 +12,11 @@ class ApiTester extends TestCase {
     $this->fake = Faker::create();
   }
 
+  public function tearDown()
+  {
+    Mockery::close();
+  }
+
   /**
    * set times variable
    *
@@ -24,6 +29,11 @@ class ApiTester extends TestCase {
   protected function times($count)
   {
     $this->times = $count;
+  }
+
+  protected function getJson($uri, $parameters = [])
+  {
+    return json_encode($this->call('GET', $uri, $parameters)->getContent());
   }
 
   /**

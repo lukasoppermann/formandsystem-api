@@ -4,12 +4,40 @@ use Formandsystemapi\Models\Content;
 
 class PagesTest extends ApiTester {
 
+	public function setUp()
+	{
+    parent::setUp();
+
+    Session::start();
+
+		$db = array(
+			'driver'    => 'sqlite',
+			'database' => storage_path().'/testing-database.sqlite',
+			'prefix'    => '',
+		);
+
+		Config::set("database.connections.user", $db);
+
+    $path = Config::get('database.connections.user.database');
+
+    if (!file_exists($path) && is_dir(dirname($path))) {
+        touch($path);
+    }
+
+		Artisan::call('migrate', ['--path' => 'database/testing/migrations', '--database' => 'user' ]);
+		Artisan::call('db:seed', ['--class' => 'TestDatabaseSeeder', '--database' => 'user' ]);
+
+    // Enable filters
+    // Route::enableFilters();
+	}
+
 	/** @test */
 	public function it_fetches_pages()
 	{
-		$this->make('Content');
 
-		$this->requestJson('v1/pages');
+		$req = Mockery::mock('Formandsystemapi\Http\Requests\Pages\getPagesRequest');
+
+		$this->action('GET', 'PagesApiController@index', [$req]);
 
 		$this->assertResponseOK();
 	}
