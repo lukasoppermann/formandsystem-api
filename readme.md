@@ -162,7 +162,7 @@ Update Stream:
 curl -i -H "Accept: application/json" -X PUT -d "access_token=pFgsLyW7VFoacu4Fe9bsWaUYBuyNyd4KMimABaPJ&position=99" http://newapi.formandsystem.local/v1/stream/54
 
 GET Token:
-curl -i -X POST -d "grant_type=client_credentials&client_id=uraXRboY9ijqHWjO&client_secret=hGD49fqKswpQbPpIFrUrEXsONlp06cdv&scope=content.read,content.write,content.delete" http://newapi.formandsystem.local/oauth/access_token
+curl -i -X POST -d "grant_type=client_credentials&client_id=uraXRboY9ijqHWjO&client_secret=hGD49fqKswpQbPpIFrUrEXsONlp06cdv&scope=content.read" http://newapi.formandsystem.local/v1/oauth/access_token
 
 curl -i -H "Accept: application/json" GET -d "access_token=hJIwPhKSH4Ko0NkwqnkHVazs5X2bN0xKN7UgQ8c5&language=de" http://newapi.formandsystem.local/v1/pages
 

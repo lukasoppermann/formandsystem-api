@@ -31,4 +31,9 @@ class Content extends Model{
 		return $this->belongsTo('Formandsystemapi\Models\Stream', 'article_id', 'article_id');
 	}
 
+	function tags()
+	{
+		return $this->belongsToMany('Formandsystemapi\Models\Tags', 'fs_content_tags', 'content_id', 'tag_id');
+	}
+
 }

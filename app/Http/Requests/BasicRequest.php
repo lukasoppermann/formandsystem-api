@@ -51,6 +51,9 @@ class BasicRequest extends FormRequest{
 
 		Config::set("database.connections.user", $db);
 
+		// save owner data for Accept cross origin url header
+		Config::set("owner", $owner);
+
 		// return true to make authorize pass
 		return true;
 	}
@@ -65,6 +68,15 @@ class BasicRequest extends FormRequest{
 		return $this->respond->Unauthorized();
 	}
 
+	/**
+	 * respond with validation error
+	 *
+	 * @method response
+	 *
+	 * @param  array    $errors
+	 *
+	 * @return Response::Json
+	 */
 	public function response(array $errors)
 	{
 		foreach($errors as $key => $err)
@@ -75,6 +87,16 @@ class BasicRequest extends FormRequest{
 		return $this->respond->unprocessableContent( implode(' ',$errs) );
 	}
 
+	/**
+	 * Check array of scopes
+	 *
+	 * @method checkScopes
+	 *
+	 * @param  Authorizer  $authorizer
+	 * @param  array       $scopes
+	 *
+	 * @return boolean
+	 */
 	private function checkScopes(Authorizer $authorizer, $scopes)
 	{
 		foreach($scopes as $scope)

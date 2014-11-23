@@ -48,7 +48,7 @@ class PagesApiController extends BaseApiController {
 			return ($var !== NULL && $var !== FALSE && $var !== '');
 		});
 
-		$parameters = $request->only('language', 'limit', 'offset');
+		$parameters = $request->only('language', 'limit', 'offset', 'withdrafts');
 
 		// retrieve page
 		if( $pages = $this->streamRepository->getWhere( $input, array_filter($parameters) ) )
@@ -69,7 +69,7 @@ class PagesApiController extends BaseApiController {
 	{
 		// get accepted fields
 		$input = $this->pageTransformer->transformPostData(
-				$request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'status', 'language', 'data', 'tags')
+				$request->only('parent_id', 'menu_label', 'position', 'article_id', 'link', 'withdrafts', 'language', 'data', 'tags')
 		);
 
 		// store page
@@ -91,8 +91,8 @@ class PagesApiController extends BaseApiController {
 	{
 		// merge parameters with defaults
 		$parameters = array_merge(
-										array('status' => 1, 'pathSeparator' => '.'),
-										array_filter($request->only('status','language','pathSeparator'))
+										array('pathSeparator' => '.'),
+										array_filter($request->only('withdrafts','language','pathSeparator'))
 		);
 
 		$article_id = $this->contentRepository->getArticleId( str_replace($parameters['pathSeparator'],'/',$idOrLink), $parameters['language'] );
@@ -120,7 +120,7 @@ class PagesApiController extends BaseApiController {
 	public function update($id, Request\updatePageRequest $request)
 	{
 		// get input
-		$input = $this->pageTransformer->transformPostData( $request->only('status','language','article_id','data','tags','menu_label','link') );
+		$input = $this->pageTransformer->transformPostData( $request->only('withdrafts','language','article_id','data','tags','menu_label','link') );
 
 		// update model with input & restore if deleted
 		if( $this->contentRepository->update($id, $input) )

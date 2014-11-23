@@ -83,7 +83,7 @@ class StreamsApiController extends BaseApiController {
   public function show($stream, Request\showStreamRequest $request, NestArrayService $nestArrayService)
   {
     // get input
-    $parameters = array_filter($request->only('limit','offset','from','until','withtrashed', 'language'));
+    $parameters = array_filter($request->only('limit','offset','from','until','withtrashed', 'language', 'withdrafts'));
 
     // retrieve page
     if( $stream = $this->streamRepository->getWhere( ['stream' => $stream], $parameters ) )

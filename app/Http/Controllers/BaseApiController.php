@@ -12,12 +12,8 @@ class BaseApiController extends Controller {
 	*/
 	function __construct()
 	{
-	  // Allow from any origin
-		header('content-type: application/json; charset=utf-8');
-		// header('Access-Control-Allow-Origin: http://cms.formandsystem.com');
-		// header('Access-Control-Allow-Credentials: true');
-		header('Access-Control-Max-Age: 86400');    // cache for 1 day
-		header("Access-Control-Allow-Methods: GET, POST, DELETE, PUT, OPTIONS");
+		// keep because child classes call parent::__con
+		// so if its need its easy to add
 	}
 
 

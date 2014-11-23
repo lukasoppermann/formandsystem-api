@@ -41,7 +41,8 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
       'from' => null,
       'until' => null,
       'withtrashed' => 'false',
-      'language' => 'en'
+      'language' => 'en',
+      'withdrafts' => 'false',
     ], $parameters);
 
     // get model
@@ -57,6 +58,13 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
       if( $parameters['withtrashed'] === 'true' )
       {
         $query->withTrashed();
+      }
+
+      // apply published
+      $drafts[] = '';
+      if( $parameters['withdrafts'] != 'true' )
+      {
+        $drafts[]  = 'published = 1 and ';
       }
 
       // apply from
@@ -80,7 +88,7 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
       // needed here in case from & until are both NOT defined so implode has something to work with
       $where[] = 'language = ?';
 
-      $query->whereRaw('('.implode('',$where).') OR language != ?', $values );
+      $query->whereRaw(implode('',$drafts).'( ('.implode('',$where).') OR language != ? )', $values )->with('tags');
 
     }]);
 

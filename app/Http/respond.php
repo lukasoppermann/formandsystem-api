@@ -1,6 +1,7 @@
 <?php namespace Formandsystemapi\Http;
 
 use Illuminate\Support\Facades\Response;
+use Config;
 
 class respond{
 
@@ -52,13 +53,29 @@ class respond{
    *
    * @param int $statusCode
    *
-   * return $this
+   * @return $this
    */
   public function setStatusCode( $statusCode )
   {
     $this->statusCode = $statusCode;
 
     return $this;
+  }
+
+  /**
+   * return headers for requests
+   *
+   * @method getHeaders
+   *
+   * @return array
+   */
+  public function getHeaders()
+  {
+    return [
+      'Access-Control-Max-Age'        => 86400,
+      'Access-Control-Allow-Methods'  => 'GET, POST, DELETE, PUT, OPTIONS',
+      'Access-Control-Allow-Origin'   => (substr(Config::get('owner.service_url'), 0, 4) != 'http' ?  'http://' : '').Config::get('owner.service_url')
+    ];
   }
 
   /**
@@ -92,7 +109,7 @@ class respond{
       'status_code' => $this->getStatusCode(),
       'more_info' => $this->errorUrl($this->getStatusCode()),
       'error_message' => $message
-    ]);
+    ], $this->getHeaders());
   }
 
   /**
@@ -109,7 +126,7 @@ class respond{
       'status_code' => $this->getStatusCode(),
       'more_info' => $this->infoUrl($handle),
       'data' => $data
-    ]);
+    ], $this->getHeaders());
   }
 
   /**

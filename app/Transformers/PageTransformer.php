@@ -16,9 +16,23 @@ class PageTransformer extends Transformer{
 
     if( isset($item['content']) )
     {
-      foreach($item['content'] as $key => $content){
+      foreach($item['content'] as $key => $content)
+      {
         $item['content'][$key]['data'] = json_decode($content['data'], true);
+
+
+        if( is_array($content['tags']) )
+        {
+          $t = [];
+          foreach($content['tags'] as $tag)
+          {
+            $t[] = $tag['name'];
+          }
+
+          $item['content'][$key]['tags'] = $t;
+        }
       }
+
     }
 
     return [
