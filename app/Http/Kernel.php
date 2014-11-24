@@ -1,4 +1,4 @@
-<?php namespace App\Http;
+<?php namespace Formandsystemapi\Http;
 
 use Exception;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -16,7 +16,7 @@ class Kernel extends HttpKernel {
 		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
 		'Illuminate\Session\Middleware\StartSession',
 		'Illuminate\View\Middleware\ShareErrorsFromSession',
-		'Illuminate\Foundation\Http\Middleware\VerifyCsrfToken',
+		// 'Illuminate\Foundation\Http\Middleware\VerifyCsrfToken',
 	];
 
 	/**
@@ -25,9 +25,9 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $routeMiddleware = [
-		'auth' => 'App\Http\Middleware\Authenticate',
+		'auth' => 'Formandsystemapi\Http\Middleware\Authenticate',
 		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
-		'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
+		'guest' => 'Formandsystemapi\Http\Middleware\RedirectIfAuthenticated',
 	];
 
 }

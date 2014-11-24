@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Formandsystemapi\Http\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;

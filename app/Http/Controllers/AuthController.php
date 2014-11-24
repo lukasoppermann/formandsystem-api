@@ -1,9 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Formandsystemapi\Http\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
+use Formandsystemapi\Http\Requests\LoginRequest;
+use Formandsystemapi\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller {
 

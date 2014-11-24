@@ -1,4 +1,4 @@
-<?php namespace App\Http\Requests;
+<?php namespace Formandsystemapi\Http\Requests;
 
 class LoginRequest extends Request {
 
