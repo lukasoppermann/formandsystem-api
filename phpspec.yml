@@ -1,0 +1,15 @@
+formatter.name: pretty
+
+suites:
+
+  formandsystem_suite:
+
+    namespace: Formandsystemapi
+
+    psr4_prefix: Formandsystemapi
+
+    src_path: app
+
+    spec_path: tests
+
+    spec_prefix: spec

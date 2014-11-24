@@ -27,7 +27,8 @@
 	"autoload": {
 		"classmap": [
 			"database",
-			"tests/TestCase.php"
+			"tests/TestCase.php",
+			"tests"
 		],
 		"psr-4": {
 			"Formandsystemapi\\": "app/"
