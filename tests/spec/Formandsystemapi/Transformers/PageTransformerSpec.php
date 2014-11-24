@@ -25,10 +25,27 @@ class PageTransformerSpec extends ObjectBehavior
           'article_id'  => "1",
           'menu_label'  => "label",
           'link'        => "page/test",
-          'status'      => "1",
+          'published'      => "1",
           'language'    => "de",
-          'data'        => '{"test":"test"}',
-          'tags'        => "test, test 2",
+          'data'        => '{"test" : "test"}',
+          'tags'        => [
+            "id" => 7,
+            "name" => "quasi",
+            "internal" => null,
+            "pivot" => [
+              "content_id" => 1,
+              "tag_id" => 7
+            ]
+          ],
+          [
+            "id" => 7,
+            "name" => "quasi",
+            "internal" => null,
+            "pivot" => [
+              "content_id" => 1,
+              "tag_id" => 7
+            ]
+          ],
           'created_at'  => "2014-09-30 02:15:35",
           'updated_at'  => "2014-09-30 02:15:35",
           'deleted_at'  => "NULL"
@@ -39,13 +56,13 @@ class PageTransformerSpec extends ObjectBehavior
           'article_id'  => 1,
           'menu_label'  => "label",
           'link'        => "page/test",
-          'status'      => 1,
+          'published'      => 1,
           'language'    => "de",
           'data'        => [ "test" => "test" ],
           'tags'        => ["test", "test 2" ],
-          'created_at'  => "2014-09-30 02:15:35",
-          'updated_at'  => "2014-09-30 02:15:35",
-          'deleted_at'  => "NULL"
+          // 'created_at'  => "2014-09-30 02:15:35",
+          // 'updated_at'  => "2014-09-30 02:15:35",
+          // 'deleted_at'  => "NULL"
         ]);
     }
 
