@@ -21,6 +21,16 @@ class Content extends Model{
 	protected $dates = ['deleted_at'];
 
 	/**
+	* Attribute getters
+	*
+	* @return void
+	*/
+	public function getDataAttribute($value)
+	{
+		return json_decode($value, true);
+	}
+
+	/**
 	 * Define relationships
 	 *
 	 * @return void
@@ -33,6 +43,11 @@ class Content extends Model{
 	function tags()
 	{
 		return $this->belongsToMany('Formandsystemapi\Models\Tags', 'fs_content_tags', 'content_id', 'tag_id');
+	}
+
+	function fragments()
+	{
+		return $this->belongsToMany('Formandsystemapi\Models\Fragments', 'fs_content_fragments', 'content_id', 'fragment_id');
 	}
 
 }
