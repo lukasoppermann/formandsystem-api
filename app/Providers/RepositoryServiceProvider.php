@@ -38,6 +38,12 @@ class RepositoryServiceProvider extends ServiceProvider {
       'Formandsystemapi\Repositories\User\UserRepositoryInterface',
       'Formandsystemapi\Repositories\User\EloquentUserRepository'
     );
+
+    // Settings Repository
+    $this->app->bind(
+    'Formandsystemapi\Repositories\Settings\SettingsRepositoryInterface',
+    'Formandsystemapi\Repositories\Settings\EloquentSettingsRepository'
+  );
   }
 
 }

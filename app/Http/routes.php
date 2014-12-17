@@ -40,6 +40,11 @@ $router->group(array('prefix' => 'v1', 'before' => ['oauth']), function($router)
   $router->resource('streams', 'StreamsApiController', array('except' => array('create', 'edit')));
 
   /*
+  * Settings resource
+  */
+  $router->resource('settings', 'SettingsApiController', array('except' => array('create', 'edit', 'destroy')));
+
+  /*
    * Wrong paths
    */
    $router->any('/', 'BaseApiController@invalidPath');
