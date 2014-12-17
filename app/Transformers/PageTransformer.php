@@ -26,36 +26,14 @@ class PageTransformer extends Transformer{
     {
       $content['tags'] = $this->inlineTags($content['tags']);
 
+      // inline Fragmenrs into sections
       $content['sections'] = $this->inlineFragments($content['data'], $this->fragmentTransformer->transformArray($content['fragments']) );
       unset($content['data'], $content['fragments']);
 
-      $item['content'][$key] = $content;
+      // unset itself because and use lang as key
+      unset($item['content'][$key]);
+      $item['content'][$content['language']] = $content;
     }
-
-    // if( isset($item['content']) )
-    // {
-    //   foreach($item['content'] as $lang => $content)
-    //   {
-    //     //TODO: clean up whole transformer class
-    //     // remove some data from array
-    //     unset($item['content'][$lang]['data'],
-    //     $item['content'][$lang]['article_id']);
-    //
-    //     $item['content'][$lang]['sections'] = $content['data'];
-    //
-    //     if( is_array($content['tags']) )
-    //     {
-    //       $t = [];
-    //       foreach($content['tags'] as $tag)
-    //       {
-    //         $t[] = $tag['name'];
-    //       }
-    //
-    //       $item['content'][$lang]['tags'] = $t;
-    //     }
-    //   }
-    //
-    // }
 
     return [
       'article_id'        => (int) $item['article_id'],
@@ -83,48 +61,43 @@ class PageTransformer extends Transformer{
     return $output;
   }
 
-    /**
-     * transform merged fragments & data into sections array
-     *
-     * @method inlineFragments
-     *
-     * @param  array $data
-     * @param  array $fragments
-     */
-    private function inlineFragments( $data, $fragmentArray )
+  /**
+   * transform merged fragments & data into sections array
+   *
+   * @method inlineFragments
+   *
+   * @param  array $data
+   * @param  array $fragments
+   */
+  private function inlineFragments( $data, $fragmentArray )
+  {
+    $fragments = $this->sortByFragmentId($fragmentArray);
+
+    foreach( $data as $key => $section)
     {
-      // \Log::warning($fragmentArray);
-
-      foreach( $fragmentArray as $fragment )
+      foreach( $section['columns'] as $k => $column )
       {
-        $fragments[$fragment['fragment_id']] = $fragment;
+        $data[$key]['columns'][$k]['fragment'] = $fragments[$column['fragment']];
       }
-
-      foreach( $data as $key => $section)
-      {
-        foreach( $section['columns'] as $k => $column )
-        {
-          $data[$key]['columns'][$k]['fragment'] = $fragments[$column['fragment']];
-        }
-      }
-      return $data;
     }
+    return $data;
+  }
 
-    /**
-     * sort fragments by their id
-     *
-     * @method sortByFragmentId
-     *
-     * @param  array    $fragments
-     */
-    private function sortByFragmentId( $array )
+  /**
+   * sort fragments by their id
+   *
+   * @method sortByFragmentId
+   *
+   * @param  array    $fragments
+   */
+  private function sortByFragmentId( $array )
+  {
+    foreach( $array as $fragment)
     {
-      foreach( $array as $fragment)
-      {
-        $fragments[$fragment['id']] = $fragment;
-      }
-      return $fragments;
+      $fragments[$fragment['fragment_id']] = $fragment;
     }
+    return $fragments;
+  }
 
 
   /**

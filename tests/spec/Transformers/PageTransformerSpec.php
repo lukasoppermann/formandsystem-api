@@ -146,7 +146,7 @@ class PageTransformerSpec extends ObjectBehavior
           'position' => 1,
           'parent_id' => 0,
           'content' => array (
-            0 => array (
+            'de' => array (
               'id' => 1,
               'article_id' => 1,
               'menu_label' => 'Home',

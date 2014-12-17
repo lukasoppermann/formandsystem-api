@@ -95,7 +95,6 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
     // $records = $this->sortByLanguage( $records->get()->toArray(), $parameters['language'] );
 
     // apply limit & offset
-    // $records = array_slice($records->get()->toArray() ,$parameters['offset'], $parameters['limit'] );
     return array_slice($records->get()->toArray() ,$parameters['offset'], $parameters['limit'] );
   }
 
@@ -142,36 +141,34 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
    *
    * @param  array          $records
    */
-  protected function inlineFragments( $records )
-  {
-    foreach($records['fragments'] as $fragment)
-    {
-      $fragments[$fragment['id']] = [
-        'key' => $fragment['key'],
-        'data' => $fragment['data']
-      ];
-    }
-
-    unset($records['fragments']);
-
-    $records['data'] = json_decode($records['data'], true);
-
-    foreach( $records['data'] as $key => $section )
-    {
-      foreach( $section['columns'] as $k => $column )
-      {
-        if( isset($column['fragment']) )
-        {
-          $records['data'][$key]['columns'][$k] = json_decode($fragments[$column['fragment']]['data'], true);
-          $records['data'][$key]['columns'][$k]['fragment_key'] = $fragments[$column['fragment']]['key'];
-
-          unset($records['data'][$key]['columns'][$k]['fragment']);
-        }
-      }
-    }
-
-    return $records;
-  }
+  // protected function inlineFragments( $records )
+  // {
+  //   foreach($records['fragments'] as $fragment)
+  //   {
+  //     $fragments[$fragment['id']] = [
+  //       'key' => $fragment['key'],
+  //       'data' => $fragment['data']
+  //     ];
+  //   }
+  //
+  //   unset($records['fragments']);
+  //
+  //   foreach( $records['data'] as $key => $section )
+  //   {
+  //     foreach( $section['columns'] as $k => $column )
+  //     {
+  //       if( isset($column['fragment']) )
+  //       {
+  //         $records['data'][$key]['columns'][$k] = json_decode($fragments[$column['fragment']]['data'], true);
+  //         $records['data'][$key]['columns'][$k]['fragment_key'] = $fragments[$column['fragment']]['key'];
+  //
+  //         unset($records['data'][$key]['columns'][$k]['fragment']);
+  //       }
+  //     }
+  //   }
+  //
+  //   return $records;
+  // }
 
   /**
    * Update the specified record
