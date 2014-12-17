@@ -12,14 +12,5 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    mix.sass('app.scss')
-       .phpUnit()
-       .publish(
-            'jquery/dist/jquery.min.js',
-            'public/js/vendor/jquery.js'
-        )
-       .publish(
-            'bootstrap-sass-official/assets/javascripts/bootstrap.js',
-            'public/js/vendor/bootstrap.js'
-        );
+    mix.phpSpec();
 });

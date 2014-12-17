@@ -1,6 +1,15 @@
 <?php namespace Formandsystemapi\Transformers;
 
+use Formandsystemapi\Transformers\FragmentTransformer as FragmentTransformer;
+
 class PageTransformer extends Transformer{
+
+  protected $fragmentTransformer;
+
+  function __construct(FragmentTransformer $fragmentTransformer)
+  {
+    $this->fragmentTransformer = $fragmentTransformer;
+  }
 
   /**
    * transform data
@@ -13,27 +22,40 @@ class PageTransformer extends Transformer{
    */
   public function transform($item)
   {
-
-    if( isset($item['content']) )
+    foreach($item['content'] as $key => $content)
     {
-      foreach($item['content'] as $key => $content)
-      {
-        $item['content'][$key]['data'] = json_decode($content['data'], true);
+      $content['tags'] = $this->inlineTags($content['tags']);
 
+      $content['sections'] = $this->inlineFragments($content['data'], $this->fragmentTransformer->transformArray($content['fragments']) );
+      unset($content['data'], $content['fragments']);
 
-        if( is_array($content['tags']) )
-        {
-          $t = [];
-          foreach($content['tags'] as $tag)
-          {
-            $t[] = $tag['name'];
-          }
-
-          $item['content'][$key]['tags'] = $t;
-        }
-      }
-
+      $item['content'][$key] = $content;
     }
+
+    // if( isset($item['content']) )
+    // {
+    //   foreach($item['content'] as $lang => $content)
+    //   {
+    //     //TODO: clean up whole transformer class
+    //     // remove some data from array
+    //     unset($item['content'][$lang]['data'],
+    //     $item['content'][$lang]['article_id']);
+    //
+    //     $item['content'][$lang]['sections'] = $content['data'];
+    //
+    //     if( is_array($content['tags']) )
+    //     {
+    //       $t = [];
+    //       foreach($content['tags'] as $tag)
+    //       {
+    //         $t[] = $tag['name'];
+    //       }
+    //
+    //       $item['content'][$lang]['tags'] = $t;
+    //     }
+    //   }
+    //
+    // }
 
     return [
       'article_id'        => (int) $item['article_id'],
@@ -44,6 +66,66 @@ class PageTransformer extends Transformer{
       'content'           => isset($item['content']) ? $item['content'] : [],
     ];
   }
+
+  /**
+   * transform merged tags into one name-only array
+   *
+   * @method inlineTags
+   *
+   * @param  array    $tags
+   */
+  private function inlineTags( $tags )
+  {
+    foreach( $tags as $tag)
+    {
+      $output[] = $tag['name'];
+    }
+    return $output;
+  }
+
+    /**
+     * transform merged fragments & data into sections array
+     *
+     * @method inlineFragments
+     *
+     * @param  array $data
+     * @param  array $fragments
+     */
+    private function inlineFragments( $data, $fragmentArray )
+    {
+      // \Log::warning($fragmentArray);
+
+      foreach( $fragmentArray as $fragment )
+      {
+        $fragments[$fragment['fragment_id']] = $fragment;
+      }
+
+      foreach( $data as $key => $section)
+      {
+        foreach( $section['columns'] as $k => $column )
+        {
+          $data[$key]['columns'][$k]['fragment'] = $fragments[$column['fragment']];
+        }
+      }
+      return $data;
+    }
+
+    /**
+     * sort fragments by their id
+     *
+     * @method sortByFragmentId
+     *
+     * @param  array    $fragments
+     */
+    private function sortByFragmentId( $array )
+    {
+      foreach( $array as $fragment)
+      {
+        $fragments[$fragment['id']] = $fragment;
+      }
+      return $fragments;
+    }
+
 
   /**
    * transform Post data

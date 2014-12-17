@@ -88,15 +88,15 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
       // needed here in case from & until are both NOT defined so implode has something to work with
       $where[] = 'language = ?';
 
-      $query->whereRaw(implode('',$drafts).'( ('.implode('',$where).') OR language != ? )', $values )->with('tags');
+      $query->whereRaw(implode('',$drafts).'( ('.implode('',$where).') OR language != ? )', $values )->with('tags','fragments');
 
     }]);
+    // sort by language
+    // $records = $this->sortByLanguage( $records->get()->toArray(), $parameters['language'] );
 
-    // return and apply limit & offset
-    return array_slice(
-      $this->sortByLanguage( $records->get()->toArray(), $parameters['language'] ),
-      $parameters['offset'], $parameters['limit']
-    );
+    // apply limit & offset
+    // $records = array_slice($records->get()->toArray() ,$parameters['offset'], $parameters['limit'] );
+    return array_slice($records->get()->toArray() ,$parameters['offset'], $parameters['limit'] );
   }
 
   /**
@@ -119,7 +119,7 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
       // sort by language
       foreach($value['content'] as $cont)
       {
-        $records[$key]['content'][$cont['language']] = $cont;
+        $records[$key]['content'][$cont['language']] = $this->inlineFragments($cont);
       }
 
       // remove entries without any content
@@ -129,6 +129,44 @@ class EloquentStreamRepository extends EloquentAbstractRepository implements Str
       )
       {
         unset($records[$key]);
+      }
+    }
+
+    return $records;
+  }
+
+  /**
+   * places fragments inside content structure
+   *
+   * @method inlineFragments
+   *
+   * @param  array          $records
+   */
+  protected function inlineFragments( $records )
+  {
+    foreach($records['fragments'] as $fragment)
+    {
+      $fragments[$fragment['id']] = [
+        'key' => $fragment['key'],
+        'data' => $fragment['data']
+      ];
+    }
+
+    unset($records['fragments']);
+
+    $records['data'] = json_decode($records['data'], true);
+
+    foreach( $records['data'] as $key => $section )
+    {
+      foreach( $section['columns'] as $k => $column )
+      {
+        if( isset($column['fragment']) )
+        {
+          $records['data'][$key]['columns'][$k] = json_decode($fragments[$column['fragment']]['data'], true);
+          $records['data'][$key]['columns'][$k]['fragment_key'] = $fragments[$column['fragment']]['key'];
+
+          unset($records['data'][$key]['columns'][$k]['fragment']);
+        }
       }
     }
 
