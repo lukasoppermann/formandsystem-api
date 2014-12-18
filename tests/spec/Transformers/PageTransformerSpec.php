@@ -60,12 +60,12 @@ class PageTransformerSpec extends ObjectBehavior
                   'columns' => array (
                     0 => array (
                       'fragment' => 1,
-                      'column' => 4,
+                      'columns' => 4,
                       'offset' => 0,
                     ),
                     1 => array (
                       'fragment' => 1,
-                      'column' => 6,
+                      'columns' => 6,
                       'offset' => 2,
                     )
                   )
@@ -76,7 +76,7 @@ class PageTransformerSpec extends ObjectBehavior
                   'columns' => array (
                     0 => array (
                       'fragment' => 1,
-                      'column' => 4,
+                      'columns' => 4,
                       'offset' => 2,
                     ),
                   )
@@ -163,12 +163,12 @@ class PageTransformerSpec extends ObjectBehavior
                   'columns' => array (
                     0 => array (
                       'fragment' => $fragment[0],
-                      'column' => 4,
+                      'columns' => 4,
                       'offset' => 0,
                     ),
                     1 => array (
                       'fragment' => $fragment[0],
-                      'column' => 6,
+                      'columns' => 6,
                       'offset' => 2,
                     )
                   )
@@ -179,7 +179,7 @@ class PageTransformerSpec extends ObjectBehavior
                   'columns' => array (
                     0 => array (
                       'fragment' => $fragment[0],
-                      'column' => 4,
+                      'columns' => 4,
                       'offset' => 2,
                     ),
                   )
