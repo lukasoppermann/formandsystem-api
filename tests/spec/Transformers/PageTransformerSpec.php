@@ -193,10 +193,6 @@ class PageTransformerSpec extends ObjectBehavior
     }
 
 
-
-
-
-
     function it_converts_post_data_correctly()
     {
       $this->transformPostData(
@@ -219,6 +215,145 @@ class PageTransformerSpec extends ObjectBehavior
           'data'        => '{"test":"test"}',
           'tags'        => "test, test 2",
         ]);
+    }
+
+    function it_converts_empty_fields_correctly( )
+    {
+      // no data
+      $this->transform(
+      // beginning of input
+        array (
+          'id' => 2,
+          'parent_id' => 0,
+          'article_id' => 1,
+          'stream' => 'navigation',
+          'position' => 1,
+          'deleted_at' => NULL,
+          'content' => array (
+            0 => array (
+              'id' => 1,
+              'article_id' => 1,
+              'menu_label' => 'Home',
+              'link' => 'home',
+              'published' => 1,
+              'language' => 'de',
+              'data' => [],
+              'created_at' => '2014-12-16 02:53:57',
+              'updated_at' => '2014-12-16 02:53:57',
+              'deleted_at' => NULL,
+              'tags' => [],
+              'fragments' => []
+            ),
+          ),
+        )
+      // end of input
+      )->shouldReturn(
+      // beginning of output
+        array (
+          'article_id' => 1,
+          'stream_record_id' => 2,
+          'stream' => 'navigation',
+          'position' => 1,
+          'parent_id' => 0,
+          'content' => array (
+            'de' => array (
+              'id' => 1,
+              'article_id' => 1,
+              'menu_label' => 'Home',
+              'link' => 'home',
+              'published' => 1,
+              'language' => 'de',
+              'created_at' => '2014-12-16 02:53:57',
+              'updated_at' => '2014-12-16 02:53:57',
+              'deleted_at' => NULL,
+              'tags' => [],
+              'sections' => [],
+              ),
+            ),
+        )
+      // end of output
+      );
+      // no fragments
+      $this->transform(
+      // beginning of input
+        array (
+          'id' => 2,
+          'parent_id' => 0,
+          'article_id' => 1,
+          'stream' => 'navigation',
+          'position' => 1,
+          'deleted_at' => NULL,
+          'content' => array (
+            0 => array (
+              'id' => 1,
+              'article_id' => 1,
+              'menu_label' => 'Home',
+              'link' => 'home',
+              'published' => 1,
+              'language' => 'de',
+              'data' => array (
+                0 => array (
+                  'class' => 'section-01',
+                  'columns' => array (
+                    0 => array (
+                      'fragment' => 1,
+                      'columns' => 4,
+                      'offset' => 0,
+                    ),
+                    1 => array (
+                      'fragment' => 1,
+                      'columns' => 6,
+                      'offset' => 2,
+                    )
+                  )
+                ),
+                1 => array (
+                  'class' => 'space-bottom-wide',
+                  'link' => 'Vision',
+                  'columns' => array (
+                    0 => array (
+                      'fragment' => 1,
+                      'columns' => 4,
+                      'offset' => 2,
+                    ),
+                  )
+                )
+              ),
+              'created_at' => '2014-12-16 02:53:57',
+              'updated_at' => '2014-12-16 02:53:57',
+              'deleted_at' => NULL,
+              'tags' => [],
+              'fragments' => []
+            ),
+          ),
+        )
+      // end of input
+      )->shouldReturn(
+      // beginning of output
+        array (
+          'article_id' => 1,
+          'stream_record_id' => 2,
+          'stream' => 'navigation',
+          'position' => 1,
+          'parent_id' => 0,
+          'content' => array (
+            'de' => array (
+              'id' => 1,
+              'article_id' => 1,
+              'menu_label' => 'Home',
+              'link' => 'home',
+              'published' => 1,
+              'language' => 'de',
+              'created_at' => '2014-12-16 02:53:57',
+              'updated_at' => '2014-12-16 02:53:57',
+              'deleted_at' => NULL,
+              'tags' => [],
+              'sections' => [],
+              ),
+            ),
+        )
+      // end of output
+      );
     }
 
 

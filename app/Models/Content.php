@@ -18,6 +18,7 @@ class Content extends Model{
 	 *
 	 * @var string
 	 */
+	use SoftDeletes;
 	protected $dates = ['deleted_at'];
 
 	/**

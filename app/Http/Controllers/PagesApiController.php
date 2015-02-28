@@ -120,11 +120,12 @@ class PagesApiController extends BaseApiController {
 	public function update($id, Request\updatePageRequest $request)
 	{
 		// get input
-		$input = $this->pageTransformer->transformPostData( $request->only('withdrafts','language','article_id','data','tags','menu_label','link') );
-
+		$input = $this->pageTransformer->transformPostData( $request->only('withdrafts','language','article_id','data','menu_label','link') );
 		// update model with input & restore if deleted
 		if( $this->contentRepository->update($id, $input) )
 		{
+			// TODO: save tags
+
 			return $this->respond->noContent();
 		}
 

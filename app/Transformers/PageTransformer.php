@@ -58,7 +58,7 @@ class PageTransformer extends Transformer{
     {
       $output[] = $tag['name'];
     }
-    return $output;
+    return isset($output) ? $output : [];
   }
 
   /**
@@ -75,9 +75,19 @@ class PageTransformer extends Transformer{
 
     foreach( $data as $key => $section)
     {
-      foreach( $section['columns'] as $k => $column )
+      if( isset($section['columns']) )
       {
-        $data[$key]['columns'][$k]['fragment'] = $fragments[$column['fragment']];
+        foreach( $section['columns'] as $k => $column )
+        {
+          if( isset($fragments[$column['fragment']]) )
+          {
+            $data[$key]['columns'][$k]['fragment'] = $fragments[$column['fragment']];
+          }
+          else
+          {
+            unset($data[$key]);
+          }
+        }
       }
     }
     return $data;
@@ -92,11 +102,16 @@ class PageTransformer extends Transformer{
    */
   private function sortByFragmentId( $array )
   {
+    if( !isset($array) || !is_array($array) )
+    {
+      return false;
+    }
+
     foreach( $array as $fragment)
     {
       $fragments[$fragment['fragment_id']] = $fragment;
     }
-    return $fragments;
+    return isset($fragments) ? $fragments : [];
   }
 
 
