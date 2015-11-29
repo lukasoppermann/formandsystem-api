@@ -14,9 +14,8 @@ class CreateCollectionTable extends Migration
     {
         Schema::create('collections', function (Blueprint $table) {
             $table->binary('id');
-            $table->string('type', 255);
-            $table->binary('page_id');
-            $table->integer('position');
+            $table->string('name', 255);
+            $table->binary('slug');
         });
     }
 
