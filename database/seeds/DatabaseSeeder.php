@@ -5,7 +5,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class DatabaseSeeder extends Seeder
 {
-    protected $truncate = ['streams'];
+    // tables below will be:
+    // 1. truncated / deleted
+    // 2. seeded
+    protected $tables = [
+        'collections'
+    ];
 
     /**
      * Run the database seeds.
@@ -16,11 +21,12 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        foreach($this->truncate as $table){
+        foreach ($this->tables as $table) {
+            // empty table
             DB::table($table)->truncate();
+            // seed table
+            $this->call(ucfirst($table).'TableSeeder');
         }
-
-        $this->call('StreamsTableSeeder');
 
         Model::reguard();
     }

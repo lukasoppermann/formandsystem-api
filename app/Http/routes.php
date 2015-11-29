@@ -11,5 +11,5 @@ $api->group([
     'namespace' => 'App\Api\V1\Controllers',
 ], function($api)
 {
-    $api->get('streams/{stream}', 'StreamsController@show');
+    $api->get('collection/{collection}', 'CollectionsController@show');
 });

@@ -10,7 +10,7 @@
 | database. Just tell the factory how a default model should look.
 |
 */
-$factory->define(App\Api\V1\Models\Streams::class, function ($faker) {
+$factory->define(App\Api\V1\Models\Collection::class, function ($faker) {
     $types = ['navigation', 'news'];
     return [
         'id' => $faker->uuid,

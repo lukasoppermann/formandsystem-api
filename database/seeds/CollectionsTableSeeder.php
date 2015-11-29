@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class StreamsTableSeeder extends Seeder {
+class CollectionsTableSeeder extends Seeder {
 
 	/**
 	 * Auto generated seed file
@@ -11,7 +11,7 @@ class StreamsTableSeeder extends Seeder {
 	 */
 	public function run()
 	{
-        factory('App\Api\V1\Models\Streams', 50)->create();
+        factory('App\Api\V1\Models\Collection', 50)->create();
 	}
 
 }

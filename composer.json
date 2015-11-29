@@ -7,7 +7,7 @@
         "laravel/lumen-framework": "5.1.*",
         "vlucas/phpdotenv": "~1.0",
         "dingo/api": "@dev",
-        "lukasoppermann/http-status": "^0.9.7",
+        "lukasoppermann/http-status": "~1.0",
         "guzzlehttp/guzzle": "~6.0"
     },
     "require-dev": {
