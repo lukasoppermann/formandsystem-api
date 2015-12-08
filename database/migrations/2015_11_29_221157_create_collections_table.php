@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCollectionTable extends Migration
+class CreateCollectionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateCollectionTable extends Migration
     public function up()
     {
         Schema::create('collections', function (Blueprint $table) {
-            $table->binary('id');
-            $table->string('name', 255);
-            $table->binary('slug');
+            $table->uuid('id');
+            $table->string('name', 100);
+            $table->string('slug', 100);
         });
     }
 
