@@ -1,18 +1,18 @@
 <?php
 
-class CollectionTest extends TestCase
+class PageTest extends TestCase
 {
     /**
      * @test
      */
-    public function get_a_collection_by_type()
+    public function get_a_page_by_id()
     {
-        $response = $this->client->get('/collections/navigation', [
+        $response = $this->client->get('/pages/1', [
             'headers' => [
                 'Accept' => 'application/json',
             ],
         ]);
-
+        print_r($this->getResponseArray($response));
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
 
         $expected = [

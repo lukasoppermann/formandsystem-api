@@ -11,5 +11,6 @@ $api->group([
     'namespace' => 'App\Api\V1\Controllers',
 ], function($api)
 {
-    $api->get('collection/{collection}', 'CollectionsController@show');
+    $api->get('collections/{collection}', 'CollectionsController@show');
+    $api->get('pages/{page}', 'PagesController@show');
 });

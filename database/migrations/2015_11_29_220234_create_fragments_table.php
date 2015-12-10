@@ -14,7 +14,7 @@ class CreateFragmentsTable extends Migration
     {
         Schema::create('fragments', function (Blueprint $table) {
             $table->uuid('id');
-            $table->string('name', 100);
+            $table->string('name', 100)->nullable();
             $table->string('type')->nullable();
             $table->json('data');
             $table->timestamps();

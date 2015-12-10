@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePagesFragmentsTable extends Migration
+class CreateFragmentPageTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreatePagesFragmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pages_fragments', function (Blueprint $table) {
+        Schema::create('fragment_page', function (Blueprint $table) {
             $table->increments('id');
 
             $table->uuid('page_id')->index();
@@ -30,6 +30,6 @@ class CreatePagesFragmentsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('pages_fragments');
+        Schema::drop('fragment_page');
     }
 }

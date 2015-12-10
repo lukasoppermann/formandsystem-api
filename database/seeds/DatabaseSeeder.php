@@ -9,7 +9,10 @@ class DatabaseSeeder extends Seeder
     // 1. truncated / deleted
     // 2. seeded
     protected $tables = [
-        'collections'
+        'collections',
+        'fragments',
+        'pages',
+        // 'page_fragment',
     ];
 
     /**

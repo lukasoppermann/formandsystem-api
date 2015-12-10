@@ -11,7 +11,7 @@ class CollectionsTableSeeder extends Seeder {
 	 */
 	public function run()
 	{
-        factory('App\Api\V1\Models\Collection', 50)->create();
+        factory('App\Api\V1\Models\Collection', 3)->create();
 	}
 
 }
