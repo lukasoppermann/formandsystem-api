@@ -31,6 +31,13 @@ class Page extends Model
      */
     public function fragments()
     {
-        return $this->belongsToMany('App\Api\V1\Models\Fragment');
+        return $this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable');
+    }
+    /**
+     * The collection that owns the page.
+     */
+    public function collections()
+    {
+        return $this->belongsToMany('App\Api\V1\Models\Collection');
     }
 }

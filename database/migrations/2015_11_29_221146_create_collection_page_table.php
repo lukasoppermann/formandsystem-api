@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCollectionsPagesTable extends Migration
+class CreateCollectionPageTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateCollectionsPagesTable extends Migration
      */
      public function up()
      {
-         Schema::create('collections_pages', function (Blueprint $table) {
+         Schema::create('collection_page', function (Blueprint $table) {
              $table->increments('id');
 
              $table->uuid('collection_id')->index();
@@ -29,6 +29,6 @@ class CreateCollectionsPagesTable extends Migration
       */
      public function down()
      {
-         Schema::drop('collections_pages');
+         Schema::drop('collection_page');
      }
 }

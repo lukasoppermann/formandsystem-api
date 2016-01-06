@@ -10,8 +10,8 @@ class DatabaseSeeder extends Seeder
     // 2. seeded
     protected $tables = [
         'collections',
-        'fragments',
         'pages',
+        'fragments',
         // 'page_fragment',
     ];
 

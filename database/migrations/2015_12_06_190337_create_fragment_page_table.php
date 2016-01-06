@@ -12,14 +12,16 @@ class CreateFragmentPageTable extends Migration
      */
     public function up()
     {
-        Schema::create('fragment_page', function (Blueprint $table) {
+        Schema::create('fragmentables', function (Blueprint $table) {
             $table->increments('id');
-
-            $table->uuid('page_id')->index();
-            $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
 
             $table->uuid('fragment_id')->index();
             $table->foreign('fragment_id')->references('id')->on('fragments')->onDelete('cascade');
+
+            $table->uuid('fragmentable_id')->index();
+            $table->string('fragmentable_type');
+
+
         });
     }
 
@@ -30,6 +32,6 @@ class CreateFragmentPageTable extends Migration
      */
     public function down()
     {
-        Schema::drop('fragment_page');
+        Schema::drop('fragmentables');
     }
 }

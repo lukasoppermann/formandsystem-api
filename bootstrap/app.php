@@ -80,7 +80,29 @@ $app->singleton(
 $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+/*
+|--------------------------------------------------------------------------
+| Dingo Configureation
+|--------------------------------------------------------------------------
+*/
+// set up default serializer
+$app['Dingo\Api\Transformer\Factory']->setAdapter(function ($app) {
+    $fractal = new League\Fractal\Manager;
+    $serializer = new \League\Fractal\Serializer\JsonApiSerializer($_ENV['API_DOMAIN']);
+    $fractal->setSerializer($serializer);
 
+    return new Dingo\Api\Transformer\Adapter\Fractal($fractal, 'include', ',', true);
+});
+// set up error format
+$app['Dingo\Api\Exception\Handler']->setErrorFormat([
+    'error' => [
+        'message' => ':message',
+        'errors' => ':errors',
+        'code' => ':code',
+        'status_code' => ':status_code',
+        'debug' => ':debug'
+    ]
+]);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

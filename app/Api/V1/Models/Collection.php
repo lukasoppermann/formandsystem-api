@@ -18,4 +18,11 @@ class Collection extends Model
      * @var bool
      */
     public $incrementing = false;
+    /**
+     * The pages that belong to the collection.
+     */
+    public function pages()
+    {
+        return $this->belongsToMany('App\Api\V1\Models\Page');
+    }
 }

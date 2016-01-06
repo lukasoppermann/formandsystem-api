@@ -31,6 +31,14 @@ class Fragment extends Model
      */
     public function pages()
     {
-        return $this->belongsToMany('App\Api\V1\Models\Page');
+        return $this->morphedByMany('App\Api\V1\Models\Page', 'fragmentable');
+    }
+    /**
+     * The fragments that belong to the fragment.
+     */
+    public function fragments()
+    {
+        // return $this->belongsToMany('App\Api\V1\Models\Fragment');
+        return $this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable');
     }
 }

@@ -16,7 +16,7 @@ class CreateFragmentsTable extends Migration
             $table->uuid('id');
             $table->string('name', 100)->nullable();
             $table->string('type')->nullable();
-            $table->json('data');
+            $table->json('data')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

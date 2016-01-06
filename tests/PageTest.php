@@ -12,7 +12,7 @@ class PageTest extends TestCase
                 'Accept' => 'application/json',
             ],
         ]);
-        print_r($this->getResponseArray($response));
+        print_r($this->getResponseArray($response)['data'][0]);
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
 
         $expected = [

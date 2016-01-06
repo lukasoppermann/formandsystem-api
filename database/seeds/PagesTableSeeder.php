@@ -11,6 +11,17 @@ class PagesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory('App\Api\V1\Models\Page', 50)->create();
+        factory('App\Api\V1\Models\Page', 20)->create();
+
+        App\Api\V1\Models\Page::all()->each(function($page){
+            if( rand(0,2) === 2 ){
+                App\Api\V1\Models\Collection::all()->random(2)->each(function($collection) use ($page){
+                    $collection->pages()->save($page);
+                });
+            }
+            else {
+                App\Api\V1\Models\Collection::all()->random()->pages()->save($page);
+            }
+        });
     }
 }

@@ -15,10 +15,11 @@ class CreatePagesTable extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->uuid('id');
             $table->string('menu_label')->nullable();
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
             $table->string('slug')->index()->nullable();
             $table->boolean('published');
             $table->string('language', 2)->nullable();
-            $table->json('data')->nullable();
             $table->timestamps();
 			$table->softDeletes();
         });
