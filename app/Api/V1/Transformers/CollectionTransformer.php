@@ -8,17 +8,6 @@ use App\Api\V1\Models\Collection;
 
 class CollectionTransformer extends TransformerAbstract
 {
-    protected $defaultIncludes = [
-        'pages'
-    ];
-    /**
-      * List of resources possible to include
-      *
-      * @var array
-      */
-    protected $availableIncludes = [
-      'pages'
-    ];
 
     public function transform(Collection $collection)
     {
@@ -26,10 +15,10 @@ class CollectionTransformer extends TransformerAbstract
             'id'    => $collection->id,
             'name' => $collection->name,
             'slug' => $collection->slug,
+            'links' => [[
+                'rel' => 'pages',
+                'uri' => $_ENV['API_DOMAIN'].'/collections/'.$collection->id.'/pages',
+            ]]
         ];
-    }
-
-    public function includePages(Collection $collection){
-        return $this->collection($collection->pages, new PageTransformer, 'pages' );
     }
 }
