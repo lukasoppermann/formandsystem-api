@@ -18,7 +18,8 @@ class PageTransformer extends TransformerAbstract
       * @var array
       */
     protected $availableIncludes = [
-      'fragments'
+      'fragments',
+      'collections'
     ];
 
     public function transform(Page $page)
@@ -39,5 +40,10 @@ class PageTransformer extends TransformerAbstract
     public function includeFragments( Page $page )
     {
         return $this->collection( $page->fragments, new FragmentTransformer, 'fragments' );
+    }
+
+    public function includeCollections( Page $page )
+    {
+        return $this->collection( $page->collections, new CollectionTransformer, 'collections' );
     }
 }

@@ -11,13 +11,23 @@ class ApiController extends BaseController
 
     protected $availableFilters = [];
 
-    public function getFilteredResult($model, $filters){
+    protected $perPage = 20;
 
-        foreach((array) $filters as $key => $value){
+    /**
+     * return filtered result
+     * @usage: url.com/resource?filter
+     */
 
-            if(in_array($key, $this->availableFilters)){
-                $model = $model->where($key, $value);
+    public function getFilteredResult($model, $filterList){
+
+        $filters = $this->prepFilters($filterList);
+
+        foreach($filters as $key => $value){
+
+            if(!in_array($key, $this->availableFilters)){
+                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Filter "'.$key.'" is not available for for this resource.');
             }
+            $model = $model->where($key, $value);
 
         }
 
@@ -26,6 +36,30 @@ class ApiController extends BaseController
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
         }
 
-        return $model->get();
+        return $model->paginate($this->perPage);
+    }
+
+    /**
+     * prepare filter items
+     */
+    public function prepFilters($filterList){
+        if( trim($filterList) === "")
+        {
+            return [];
+        }
+
+        // check for correct format
+        if( substr($filterList,0,1) !== "[" || substr($filterList,-1) !== "]" ){
+            throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Malformed filter syntax.');
+        }
+
+        // buld filter array
+        $filterList = explode(',',substr($filterList,1,-1));
+        foreach($filterList as $filter){
+            $filter = explode('=',$filter);
+            $filters[$filter[0]] = $filter[1];
+        }
+
+        return $filters;
     }
 }
