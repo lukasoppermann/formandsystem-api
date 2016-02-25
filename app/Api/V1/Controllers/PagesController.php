@@ -5,6 +5,7 @@ namespace App\Api\V1\Controllers;
 use App\Api\V1\Models\Page;
 use App\Api\V1\Transformers\PageTransformer;
 use App\Api\V1\Transformers\CollectionTransformer;
+use App\Api\V1\Transformers\FragmentTransformer;
 use League\Fractal\Serializer\DataArraySerializer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
@@ -35,31 +36,43 @@ class PagesController extends ApiController
     }
 
     public function getCollections(Request $request, $page_id){
-        // get the pages for the specific collection
-        $thisPage = Page::find($page_id)->collections;
-        //
-        $page = $request->input('page', 1); // Get the current page or default to 1
-        $offset = ($page * $this->perPage) - $this->perPage;
+        
+        // no entry exists, throw exception, will be converted to jsonapi response
+        if (Page::find($page_id) === null) {
+            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+        }
 
-        return $this->response->paginator(new LengthAwarePaginator($thisPage->slice($offset, $this->perPage), $thisPage->count(), $this->perPage, $page, ['path' => $request->url(), 'query' => $request->query()]), new CollectionTransformer, ['key' => 'collections']);
+        return $this->getRelated(
+            $request,
+            Page::find($page_id)->collections,
+            'collections'
+        );
+
     }
 
     public function getRelationshipsCollections(Request $request, $page_id){
-        // no fractal implementation yet
-        foreach(Page::find($page_id)->collections->lists('id') as $id){
-            $collections[] = [
-                'id' => $id,
-                'type' => 'collections'
-            ];
-        }
 
-        return $this->response->array([
-            'links' => [
-                'self' => $_ENV['API_DOMAIN'].'/pages/'.$page_id.'/relationships/collections',
-                'related' => $_ENV['API_DOMAIN'].'/pages/'.$page_id.'/collections'
-            ],
-            'data' => $collections
-        ]);
+        $model = Page::find($page_id);
+
+        return $this->getRelationship($page_id, 'pages', 'collections', $model);
+
+    }
+
+
+    public function getFragments(Request $request, $page_id){
+
+        return $this->getRelated($request,
+            Page::find($page_id)->fragments,
+            'fragments'
+        );
+
+    }
+
+    public function getRelationshipsFragments(Request $request, $page_id){
+
+        $model = Page::find($page_id);
+
+        return $this->getRelationship($page_id, 'pages', 'fragments', $model);
 
     }
 }

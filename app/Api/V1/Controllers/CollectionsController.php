@@ -10,6 +10,10 @@ use Illuminate\Http\Request;
 
 class CollectionsController extends ApiController
 {
+    protected $availableFilters = [
+        'slug'
+    ];
+
     public function index(Request $request)
     {
         $collection = $this->getFilteredResult(new Collection, $request->input('filter'));
@@ -37,7 +41,28 @@ class CollectionsController extends ApiController
         $page = $request->input('page', 1); // Get the current page or default to 1
         $offset = ($page * $this->perPage) - $this->perPage;
 
-        return $this->response->paginator(new LengthAwarePaginator($collection->slice($offset, $this->perPage), $collection->count(), $this->perPage, $page, ['path' => $request->url(), 'query' => $request->query()]), new PageTransformer, ['key' => 'pages']);
+        $paginator = new LengthAwarePaginator($collection->slice($offset, $this->perPage), $collection->count(), $this->perPage, $page, ['path' => $request->url(), 'query' => $request->query()]);
+
+        return $this->response->paginator($paginator, new PageTransformer, ['key' => 'pages']);
+    }
+
+    public function getRelationshipsPages(Request $request, $collection_id){
+        // no fractal implementation yet
+        foreach(Collection::find($collection_id)->pages->lists('id') as $id){
+            $pages[] = [
+                'id' => $id,
+                'type' => 'pages'
+            ];
+        }
+
+        return $this->response->array([
+            'links' => [
+                'self' => $_ENV['API_DOMAIN'].'/collections/'.$collection_id.'/relationships/pages',
+                'related' => $_ENV['API_DOMAIN'].'/collections/'.$collection_id.'/pages'
+            ],
+            'data' => $pages
+        ]);
+
     }
 
 }
