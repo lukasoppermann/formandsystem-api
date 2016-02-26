@@ -27,12 +27,20 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
     {
         return require __DIR__.'/../bootstrap/app.php';
     }
-
+    /**
+     * Decode json response to array
+     *
+     * @return array
+     */
     public function getResponseArray($response)
     {
         return json_decode($response->getBody()->getContents(), true);
     }
-
+    /**
+     * Decode json response to array
+     *
+     * @return array
+     */
     public function assertArray($expected, $actual)
     {
         $specialValues = ['is_int', 'is_string'];
@@ -53,5 +61,33 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
         }
 
         $this->assertTrue($passes);
+    }
+    /**
+     * get the response from server
+     */
+    public function getClientResponse($url, $headers = [])
+    {
+        return $this->client->get($url, [
+            'headers' => array_merge([
+                'Accept' => 'application/json',
+            ], $headers),
+        ]);
+    }
+    /**
+     * test error response
+     */
+    public function checkErrorResponse($response, $errorType){
+        $received = $this->getResponseArray($response);
+        // check status
+        $this->assertEquals(constant("self::$errorType"), $response->getStatusCode());
+
+        $expected = [
+            'error' => [
+                'message' => 'string',
+                'status_code' => 'integer|in:'.constant("self::$errorType")
+            ]
+        ];
+
+        $this->assertValidArray($expected, $received);
     }
 }

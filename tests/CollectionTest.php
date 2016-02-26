@@ -7,11 +7,7 @@ class CollectionTest extends TestCase
      */
     public function get_collections()
     {
-        $response = $this->client->get('/collections', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
+        $response = $this->getClientResponse('/collections');
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
 
         $received = $this->getResponseArray($response)['data'][0];
@@ -32,12 +28,7 @@ class CollectionTest extends TestCase
     public function get_a_collection_by_id()
     {
         $id = App\Api\V1\Models\Collection::first()->id;
-
-        $response = $this->client->get('/collections/'.$id, [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
+        $response = $this->getClientResponse('/collections/'.$id);
 
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
 
@@ -60,12 +51,7 @@ class CollectionTest extends TestCase
     public function get_a_collection_by_type()
     {
         $slug = App\Api\V1\Models\Collection::first()->slug;
-
-        $response = $this->client->get('/collections?filter=[slug='.$slug.']', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
+        $response = $this->getClientResponse('/collections?filter=[slug='.$slug.']');
 
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
 
@@ -80,18 +66,22 @@ class CollectionTest extends TestCase
         ];
 
         $this->assertValidArray($expected, $received);
-
+    }
+    /**
+     * @test
+     */
+    public function get_collection_by_wrong_id()
+    {
+        $response = $this->getClientResponse('collections/1');
+        // check status code & response body
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
     }
     /**
      * @test
      */
     public function get_collections_is_paginated()
     {
-        $response = $this->client->get('/collections', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
+        $response = $this->getClientResponse('/collections');
 
         $received = $this->getResponseArray($response)['meta'];
         $expected = [
@@ -112,12 +102,8 @@ class CollectionTest extends TestCase
     public function get_collections_pages()
     {
         $id = App\Api\V1\Models\Collection::first()->id;
+        $response = $this->getClientResponse('/collections/'.$id.'/pages');
 
-        $response = $this->client->get('/collections/'.$id.'/pages', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
 
         $received = $this->getResponseArray($response);
@@ -145,15 +131,11 @@ class CollectionTest extends TestCase
     /**
      * @test
      */
-    public function get_collections_realtionship_pages()
+    public function get_collections_relationship_pages()
     {
         $id = App\Api\V1\Models\Collection::first()->id;
+        $response = $this->getClientResponse('/collections/'.$id.'/relationships/pages');
 
-        $response = $this->client->get('/collections/'.$id.'/relationships/pages', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
 
         $received = $this->getResponseArray($response);
@@ -168,4 +150,5 @@ class CollectionTest extends TestCase
 
         $this->assertValidArray($expected, $received);
     }
+
 }

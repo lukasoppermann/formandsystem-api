@@ -7,11 +7,7 @@ class PageTest extends TestCase
      */
     public function get_pages()
     {
-        $response = $this->client->get('/pages/', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
+        $response = $this->getClientResponse('pages');
         // check for HTTP_OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
 
@@ -40,13 +36,9 @@ class PageTest extends TestCase
      */
     public function get_pages_with_pagination_page_one()
     {
+        $response = $this->getClientResponse('pages');
         // check for default count
         $defaultCount = 20;
-        $response = $this->client->get('/pages/', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
         $received = $this->getResponseArray($response)['data'];
 
         $this->assertEquals($defaultCount, count($received), $defaultCount.' results should be returned.');
@@ -56,13 +48,8 @@ class PageTest extends TestCase
      */
     public function get_a_page_by_id()
     {
-        $pageId = (new App\Api\V1\Models\Page)->first()->id;
-
-        $response = $this->client->get('/pages/'.$pageId, [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
+        $id = (new App\Api\V1\Models\Page)->first()->id;
+        $response = $this->getClientResponse('pages/'.$id);
         // check for HTTP_OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
 
@@ -91,23 +78,9 @@ class PageTest extends TestCase
      */
     public function get_a_page_by_wrong_id()
     {
-
-        $response = $this->client->get('/pages/1', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
-        // check for HTTP_NOT_FOUND
-        $this->assertEquals(self::HTTP_NOT_FOUND, $response->getStatusCode());
-        // Check if error is correctly formatted & everything is returned
-        $received = $this->getResponseArray($response);
-        $expected = [
-            'error' => [
-                'message' => 'string',
-                'status_code' => 'integer|in:'.self::HTTP_NOT_FOUND,
-            ]
-        ];
-        $this->assertValidArray($expected, $received);
+        $response = $this->getClientResponse('pages/1');
+        // check status code & response body
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
     }
 
     /**
@@ -116,12 +89,8 @@ class PageTest extends TestCase
     public function get_pages_collections()
     {
         $id = App\Api\V1\Models\Page::first()->id;
+        $response = $this->getClientResponse('/pages/'.$id.'/collections');
 
-        $response = $this->client->get('/pages/'.$id.'/collections', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
 
         $received = $this->getResponseArray($response);
@@ -152,23 +121,9 @@ class PageTest extends TestCase
      */
     public function get_collection_from_page_wrong_id()
     {
-        $response = $this->client->get('/pages/1/collections', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
-
-        $this->assertEquals(self::HTTP_NOT_FOUND, $response->getStatusCode());
-
-        // Check if error is correctly formatted & everything is returned
-        $received = $this->getResponseArray($response);
-        $expected = [
-            'error' => [
-                'message' => 'string',
-                'status_code' => 'integer|in:'.self::HTTP_NOT_FOUND,
-            ]
-        ];
-        $this->assertValidArray($expected, $received);
+        $response = $this->getClientResponse('/pages/1/collections');
+        // check status code & response body
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
     }
 
 }
