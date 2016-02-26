@@ -10,7 +10,8 @@ class PageTest extends TestCase
         $response = $this->getClientResponse('pages');
         // check for HTTP_OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-
+        // check pagination
+        $this->isPaginated($response);
         // Check if data is correctly formatted & everything is returned
         $received = $this->getResponseArray($response)['data'][0];
         $expected = [
@@ -30,19 +31,6 @@ class PageTest extends TestCase
         ];
         $this->assertValidArray($expected, $received);
     }
-
-    /**
-     * @test
-     */
-    public function get_pages_with_pagination_page_one()
-    {
-        $response = $this->getClientResponse('pages');
-        // check for default count
-        $defaultCount = 20;
-        $received = $this->getResponseArray($response)['data'];
-
-        $this->assertEquals($defaultCount, count($received), $defaultCount.' results should be returned.');
-    }
     /**
      * @test
      */
@@ -52,7 +40,6 @@ class PageTest extends TestCase
         $response = $this->getClientResponse('pages/'.$id);
         // check for HTTP_OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-
         // Check if data is correctly formatted & everything is returned
         $received = $this->getResponseArray($response)['data'];
         $expected = [
@@ -90,27 +77,16 @@ class PageTest extends TestCase
     {
         $id = App\Api\V1\Models\Page::first()->id;
         $response = $this->getClientResponse('/pages/'.$id.'/collections');
-
+        // check for HTTP_OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-
-        $received = $this->getResponseArray($response);
+        // check pagination
+        $this->isPaginated($response);
+        // check specific structure & data
+        $received = $this->getResponseArray($response)['data'][0];
         $expected = [
-            'data' => [
-                0 => [
-                    'type' => 'in:collections',
-                    'id' => 'string',
-                    'attributes' => 'required'
-                ]
-            ],
-            'meta'  => [
-                'pagination' => [
-                    'total' => 'int',
-                    'count' => 'int',
-                    "per_page" => 'int',
-                    "current_page" => 'in:1',
-                    "total_pages" => 'int',
-                ]
-            ]
+            'type' => 'in:collections',
+            'id' => 'string',
+            'attributes' => 'required'
         ];
 
         $this->assertValidArray($expected, $received);

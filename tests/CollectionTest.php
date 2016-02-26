@@ -8,8 +8,9 @@ class CollectionTest extends TestCase
     public function get_collections()
     {
         $response = $this->getClientResponse('/collections');
+        // check for HTTP OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-
+        // check specific structure & data
         $received = $this->getResponseArray($response)['data'][0];
         $expected = [
             'id' => 'string',
@@ -29,9 +30,9 @@ class CollectionTest extends TestCase
     {
         $id = App\Api\V1\Models\Collection::first()->id;
         $response = $this->getClientResponse('/collections/'.$id);
-
+        // check for HTTP OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-
+        // check specific structure & data
         $received = $this->getResponseArray($response)['data'];
         $expected = [
             'id' => 'in:'.$id,
@@ -52,9 +53,11 @@ class CollectionTest extends TestCase
     {
         $slug = App\Api\V1\Models\Collection::first()->slug;
         $response = $this->getClientResponse('/collections?filter=[slug='.$slug.']');
-
+        // check for HTTP OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-
+        // check pagination
+        $this->isPaginated($response);
+        // check specific structure & data
         $received = $this->getResponseArray($response)['data'][0];
         $expected = [
             'id' => 'string',
@@ -79,33 +82,15 @@ class CollectionTest extends TestCase
     /**
      * @test
      */
-    public function get_collections_is_paginated()
-    {
-        $response = $this->getClientResponse('/collections');
-
-        $received = $this->getResponseArray($response)['meta'];
-        $expected = [
-            'pagination' => [
-                'total' => 'int',
-                'count' => 'int',
-                "per_page" => 'int',
-                "current_page" => 'in:1',
-                "total_pages" => 'int',
-            ]
-        ];
-
-        $this->assertValidArray($expected, $received);
-    }
-    /**
-     * @test
-     */
     public function get_collections_pages()
     {
         $id = App\Api\V1\Models\Collection::first()->id;
         $response = $this->getClientResponse('/collections/'.$id.'/pages');
-
+        // check for HTTP OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-
+        // check pagination
+        $this->isPaginated($response);
+        // check specific structure & data
         $received = $this->getResponseArray($response);
         $expected = [
             'data' => [
@@ -113,15 +98,6 @@ class CollectionTest extends TestCase
                     'type' => 'in:pages',
                     'id' => 'string',
                     'attributes' => 'required'
-                ]
-            ],
-            'meta'  => [
-                'pagination' => [
-                    'total' => 'int',
-                    'count' => 'int',
-                    "per_page" => 'int',
-                    "current_page" => 'in:1',
-                    "total_pages" => 'int',
                 ]
             ]
         ];
@@ -135,17 +111,13 @@ class CollectionTest extends TestCase
     {
         $id = App\Api\V1\Models\Collection::first()->id;
         $response = $this->getClientResponse('/collections/'.$id.'/relationships/pages');
-
+        // check for HTTP OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-
-        $received = $this->getResponseArray($response);
+        // check specific structure & data
+        $received = $this->getResponseArray($response)['data'][0];
         $expected = [
-            'data' => [
-                0 => [
-                    'type' => 'in:pages',
-                    'id' => 'string'
-                ]
-            ]
+            'type' => 'in:pages',
+            'id' => 'string'
         ];
 
         $this->assertValidArray($expected, $received);

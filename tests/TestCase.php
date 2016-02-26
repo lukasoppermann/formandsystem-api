@@ -34,7 +34,7 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
      */
     public function getResponseArray($response)
     {
-        return json_decode($response->getBody()->getContents(), true);
+        return json_decode((string) $response->getBody(), true);
     }
     /**
      * Decode json response to array
@@ -78,13 +78,30 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
      */
     public function checkErrorResponse($response, $errorType){
         $received = $this->getResponseArray($response);
-        // check status
+        // check status code
         $this->assertEquals(constant("self::$errorType"), $response->getStatusCode());
-
+        // check for correct structure
         $expected = [
             'error' => [
                 'message' => 'string',
                 'status_code' => 'integer|in:'.constant("self::$errorType")
+            ]
+        ];
+
+        $this->assertValidArray($expected, $received);
+    }
+    /**
+     * test for pagination
+     */
+    public function isPaginated($response){
+        $received = $this->getResponseArray($response)['meta'];
+        $expected = [
+            'pagination' => [
+                'total' => 'int',
+                'count' => 'int',
+                "per_page" => 'int',
+                "current_page" => 'in:1',
+                "total_pages" => 'int',
             ]
         ];
 
