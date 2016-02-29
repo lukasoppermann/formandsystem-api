@@ -59,7 +59,6 @@ class PageTest extends TestCase
         ];
         $this->assertValidArray($expected, $received);
     }
-
     /**
      * @test
      */
@@ -69,7 +68,6 @@ class PageTest extends TestCase
         // check status code & response body
         $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
     }
-
     /**
      * @test
      */
@@ -91,7 +89,6 @@ class PageTest extends TestCase
 
         $this->assertValidArray($expected, $received);
     }
-
     /**
      * @test
      */
@@ -101,5 +98,21 @@ class PageTest extends TestCase
         // check status code & response body
         $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
     }
+    /**
+     * @test
+     */
+    public function get_relationship_for_page_related_collections(){
+        $id = App\Api\V1\Models\Page::first()->id;
+        $response = $this->getClientResponse('/pages/'.$id.'/relationships/collections');
+        // check for HTTP OK
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // check specific structure & data
+        $received = $this->getResponseArray($response)['data'][0];
+        $expected = [
+            'type' => 'in:collections',
+            'id' => 'string'
+        ];
 
+        $this->assertValidArray($expected, $received);
+    }
 }

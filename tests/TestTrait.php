@@ -32,7 +32,11 @@ trait TestTrait
         foreach ($rules as $key => $rule) {
             // if the attribute has no children, validate it
             if (!is_array($rule)) {
-                $rules[$key] = $rule.'|required';
+                $rules[$key] = $rule;
+                // add required if not explicitly set to not required
+                if(!strpos($rule,'not_required')){
+                    $rules[$key] = $rules[$key].'|required';
+                }
             // if the attribute has children, do a sub-loop
             } else {
                 $rules[$key] = 'required';

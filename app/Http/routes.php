@@ -28,4 +28,8 @@ $api->group([
     // pages/fragments
     $api->get('pages/{page}/fragments', 'PagesController@getFragments');
     $api->get('pages/{page}/relationships/fragments', 'PagesController@getRelationshipsFragments');
+    // ---------------------------
+    // fragments
+    $api->get('fragments', 'FragmentsController@index');
+    $api->get('fragments/{fragment}', 'FragmentsController@show');
 });

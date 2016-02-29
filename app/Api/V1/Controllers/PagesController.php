@@ -36,7 +36,7 @@ class PagesController extends ApiController
     }
 
     public function getCollections(Request $request, $page_id){
-        
+
         // no entry exists, throw exception, will be converted to jsonapi response
         if (Page::find($page_id) === null) {
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -51,13 +51,17 @@ class PagesController extends ApiController
     }
 
     public function getRelationshipsCollections(Request $request, $page_id){
+        // retrieve related ids
+        $ids = Page::find($page_id)->collections->lists('id');
 
-        $model = Page::find($page_id);
-
-        return $this->getRelationship($page_id, 'pages', 'collections', $model);
+        return $this->getRelationship([
+            'ids' => $ids,
+            'type' => 'collections',
+            'parent_id' => $page_id,
+            'parent_type' => 'pages'
+        ]);
 
     }
-
 
     public function getFragments(Request $request, $page_id){
 

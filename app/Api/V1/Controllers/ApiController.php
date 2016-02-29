@@ -91,8 +91,24 @@ class ApiController extends BaseController
     }
 
     /**
-     * get paginated relationship data
+     * get relationship data
      */
+     public function getRelationship($data){
+         // build relationship array
+         foreach($data['ids'] as $id){
+             $relationships[] = [
+                 'id' => $id,
+                 'type' => $data['type']
+             ];
+         }
 
+         return $this->response->array([
+             'data' => $relationships,
+             'links' => [
+                 'self' => $_ENV['API_DOMAIN'].'/'.$data['parent_type'].'/'.$data['parent_id'].'/relationships/'.$data['type'],
+                 'related' => $_ENV['API_DOMAIN'].'/'.$data['parent_type'].'/'.$data['parent_id'].'/'.$data['type']
+             ],
+         ]);
+     }
 
 }

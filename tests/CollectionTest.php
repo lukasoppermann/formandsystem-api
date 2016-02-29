@@ -107,7 +107,7 @@ class CollectionTest extends TestCase
     /**
      * @test
      */
-    public function get_collections_relationship_pages()
+    public function get_relationship_for_collection_related_pages()
     {
         $id = App\Api\V1\Models\Collection::first()->id;
         $response = $this->getClientResponse('/collections/'.$id.'/relationships/pages');

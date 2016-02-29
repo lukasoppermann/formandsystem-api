@@ -47,20 +47,14 @@ class CollectionsController extends ApiController
     }
 
     public function getRelationshipsPages(Request $request, $collection_id){
-        // no fractal implementation yet
-        foreach(Collection::find($collection_id)->pages->lists('id') as $id){
-            $pages[] = [
-                'id' => $id,
-                'type' => 'pages'
-            ];
-        }
 
-        return $this->response->array([
-            'links' => [
-                'self' => $_ENV['API_DOMAIN'].'/collections/'.$collection_id.'/relationships/pages',
-                'related' => $_ENV['API_DOMAIN'].'/collections/'.$collection_id.'/pages'
-            ],
-            'data' => $pages
+        $ids = Collection::find($collection_id)->pages->lists('id');
+
+        return $this->getRelationship([
+            'ids' => $ids,
+            'type' => 'pages',
+            'parent_id' => $collection_id,
+            'parent_type' => 'collections'
         ]);
 
     }
