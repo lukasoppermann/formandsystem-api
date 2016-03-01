@@ -26,7 +26,7 @@ class CollectionTest extends TestCase
     /**
      * @test
      */
-    public function get_a_collection_by_id()
+    public function get_collection_by_id()
     {
         $id = App\Api\V1\Models\Collection::first()->id;
         $response = $this->getClientResponse('/collections/'.$id);
@@ -49,7 +49,16 @@ class CollectionTest extends TestCase
     /**
      * @test
      */
-    public function get_a_collection_by_type()
+    public function get_collection_by_wrong_id()
+    {
+        $response = $this->getClientResponse('collections/1');
+        // check status code & response body
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
+    }
+    /**
+     * @test
+     */
+    public function get_collection_by_type()
     {
         $slug = App\Api\V1\Models\Collection::first()->slug;
         $response = $this->getClientResponse('/collections?filter=[slug='.$slug.']');
@@ -73,16 +82,16 @@ class CollectionTest extends TestCase
     /**
      * @test
      */
-    public function get_collection_by_wrong_id()
+    public function get_collection_by_wrong_type()
     {
-        $response = $this->getClientResponse('collections/1');
+        $response = $this->getClientResponse('/collections?filter=[slug=doesnt_exist]');
         // check status code & response body
         $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
     }
     /**
      * @test
      */
-    public function get_collections_pages()
+    public function get_related_pages()
     {
         $id = App\Api\V1\Models\Collection::first()->id;
         $response = $this->getClientResponse('/collections/'.$id.'/pages');
@@ -107,7 +116,16 @@ class CollectionTest extends TestCase
     /**
      * @test
      */
-    public function get_relationship_for_collection_related_pages()
+    public function get_related_pages_wrong_id()
+    {
+        $response = $this->getClientResponse('collections/1/pages');
+        // check status code & response body
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
+    }
+    /**
+     * @test
+     */
+    public function get_relationships_to_pages()
     {
         $id = App\Api\V1\Models\Collection::first()->id;
         $response = $this->getClientResponse('/collections/'.$id.'/relationships/pages');
@@ -122,5 +140,13 @@ class CollectionTest extends TestCase
 
         $this->assertValidArray($expected, $received);
     }
-
+    /**
+     * @test
+     */
+    public function get_relationships_to_pages_wrong_id()
+    {
+        $response = $this->getClientResponse('collections/1/relationships/pages');
+        // check status code & response body
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
+    }
 }

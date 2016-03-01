@@ -32,7 +32,7 @@ class FragmentTest extends TestCase
     /**
      * @test
      */
-    public function get_a_fragment_by_id()
+    public function get_fragment_by_id()
     {
         $id = (new App\Api\V1\Models\Fragment)->first()->id;
         $response = $this->getClientResponse('fragments/'.$id);
@@ -57,7 +57,7 @@ class FragmentTest extends TestCase
     /**
      * @test
      */
-    public function get_a_fragment_by_wrong_id()
+    public function get_fragment_by_wrong_id()
     {
         $response = $this->getClientResponse('fragments/1');
         // check status code & response body
@@ -66,14 +66,32 @@ class FragmentTest extends TestCase
     /**
      * @test
      */
-    public function get_fragments_fragments()
+    public function get_related_fragments()
     {
-        $this->fail('Test missing!');
+        $id = App\Api\V1\Models\Fragment::first()->id;
+        $response = $this->getClientResponse('/fragment/'.$id.'/fragments');
+        // check for HTTP OK
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // check pagination
+        $this->isPaginated($response);
+        // check specific structure & data
+        $received = $this->getResponseArray($response);
+        $expected = [
+            'data' => [
+                0 => [
+                    'type' => 'in:pages',
+                    'id' => 'string',
+                    'attributes' => 'required'
+                ]
+            ]
+        ];
+
+        $this->assertValidArray($expected, $received);
     }
     /**
      * @test
      */
-    public function get_fragments_from_fragment_wrong_id()
+    public function get_related_fragments_wrong_id()
     {
         $response = $this->getClientResponse('fragments/1/fragments');
         // check status code & response body
@@ -82,14 +100,14 @@ class FragmentTest extends TestCase
     /**
      * @test
      */
-    public function get_fragments_relationship_fragments()
+    public function get_relationships_to_fragments()
     {
         $this->fail('Test missing!');
     }
     /**
      * @test
      */
-    public function get_fragments_relationship_from_fragment_wrong_id()
+    public function get_relationships_to_fragments_wrong_id()
     {
         $response = $this->getClientResponse('/fragments/1/relationships/fragments');
         // check status code & response body

@@ -34,7 +34,7 @@ class PageTest extends TestCase
     /**
      * @test
      */
-    public function get_a_page_by_id()
+    public function get_page_by_id()
     {
         $id = (new App\Api\V1\Models\Page)->first()->id;
         $response = $this->getClientResponse('pages/'.$id);
@@ -62,7 +62,7 @@ class PageTest extends TestCase
     /**
      * @test
      */
-    public function get_a_page_by_wrong_id()
+    public function get_page_by_wrong_id()
     {
         $response = $this->getClientResponse('pages/1');
         // check status code & response body
@@ -71,7 +71,7 @@ class PageTest extends TestCase
     /**
      * @test
      */
-    public function get_pages_collections()
+    public function get_related_collections()
     {
         $id = App\Api\V1\Models\Page::first()->id;
         $response = $this->getClientResponse('/pages/'.$id.'/collections');
@@ -92,7 +92,7 @@ class PageTest extends TestCase
     /**
      * @test
      */
-    public function get_collection_from_page_wrong_id()
+    public function get_related_collections_wrong_id()
     {
         $response = $this->getClientResponse('/pages/1/collections');
         // check status code & response body
@@ -101,7 +101,7 @@ class PageTest extends TestCase
     /**
      * @test
      */
-    public function get_relationship_for_page_related_collections(){
+    public function get_relationships_to_collections(){
         $id = App\Api\V1\Models\Page::first()->id;
         $response = $this->getClientResponse('/pages/'.$id.'/relationships/collections');
         // check for HTTP OK
@@ -114,5 +114,71 @@ class PageTest extends TestCase
         ];
 
         $this->assertValidArray($expected, $received);
+    }
+    /**
+     * @test
+     */
+    public function get_relationships_to_collections_wrong_id()
+    {
+        $response = $this->getClientResponse('/pages/1/relationships/collections');
+        // check status code & response body
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
+    }
+    /**
+     * @test
+     */
+    public function get_related_fragments()
+    {
+        $id = App\Api\V1\Models\Page::first()->id;
+        $response = $this->getClientResponse('/pages/'.$id.'/fragments');
+        // check for HTTP_OK
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // check pagination
+        $this->isPaginated($response);
+        // check specific structure & data
+        $received = $this->getResponseArray($response)['data'][0];
+        $expected = [
+            'type' => 'in:fragments',
+            'id' => 'string',
+            'attributes' => 'required'
+        ];
+
+        $this->assertValidArray($expected, $received);
+    }
+    /**
+     * @test
+     */
+    public function get_related_fragments_wrong_id()
+    {
+        $response = $this->getClientResponse('/pages/1/fragments');
+        // check status code & response body
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
+    }
+    /**
+     * @test
+     */
+    public function get_relationships_to_fragments()
+    {
+        $id = App\Api\V1\Models\Page::first()->id;
+        $response = $this->getClientResponse('/pages/'.$id.'/relationships/fragments');
+        // check for HTTP OK
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // check specific structure & data
+        $received = $this->getResponseArray($response)['data'][0];
+        $expected = [
+            'type' => 'in:fragments',
+            'id' => 'string'
+        ];
+
+        $this->assertValidArray($expected, $received);
+    }
+    /**
+     * @test
+     */
+    public function get_relationships_to_fragments_wrong_id()
+    {
+        $response = $this->getClientResponse('/pages/1/relationships/fragments');
+        // check status code & response body
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
     }
 }

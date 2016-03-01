@@ -22,14 +22,26 @@ class FragmentsController extends ApiController
 
     public function show($fragment_id)
     {
-            $fragment = Fragment::find($fragment_id);
-
-            // no entry exists, throw exception, will be converted to jsonapi response
-            if ($fragment === null) {
-                throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-            }
+            $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
 
             return $this->response->item($fragment, new FragmentTransformer, ['key' => 'fragments']);
+    }
+
+    public function getFragments(Request $request, $fragment_id)
+    {
+
+    }
+
+    public function getFragmentsRelationships(Request $request, $fragment_id)
+    {
+        $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
+        // return relationship
+        return $this->getRelationship([
+            'ids' => $fragment->fragment->lists('id'),
+            'type' => 'fragments',
+            'parent_id' => $fragment_id,
+            'parent_type' => 'fragments'
+        ]);
     }
 
 }

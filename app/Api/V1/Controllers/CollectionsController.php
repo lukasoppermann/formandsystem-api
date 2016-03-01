@@ -23,35 +23,27 @@ class CollectionsController extends ApiController
 
     public function show($collection_id)
     {
-        $collection = Collection::find($collection_id);
-
-        // no entry exists, throw exception, will be converted to jsonapi response
-        if ($collection === null) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-        }
+        $collection = $this->validateResourceExists(Collection::find($collection_id));
 
         return $this->response->item($collection, new CollectionTransformer, ['key' => 'collections']);
     }
 
     public function getPages(Request $request, $collection_id)
     {
-        // get the pages for the specific collection
-        $collection = Collection::find($collection_id)->pages;
-        //
-        $page = $request->input('page', 1); // Get the current page or default to 1
-        $offset = ($page * $this->perPage) - $this->perPage;
+        $collection = $this->validateResourceExists(Collection::find($collection_id));
 
-        $paginator = new LengthAwarePaginator($collection->slice($offset, $this->perPage), $collection->count(), $this->perPage, $page, ['path' => $request->url(), 'query' => $request->query()]);
-
-        return $this->response->paginator($paginator, new PageTransformer, ['key' => 'pages']);
+        return $this->getRelated(
+            $request,
+            $collection->pages,
+            'pages'
+        );
     }
 
-    public function getRelationshipsPages(Request $request, $collection_id){
-
-        $ids = Collection::find($collection_id)->pages->lists('id');
-
+    public function getPagesRelationships(Request $request, $collection_id){
+        $collection = $this->validateResourceExists(Collection::find($collection_id));
+        // return relationship
         return $this->getRelationship([
-            'ids' => $ids,
+            'ids' => $collection->pages->lists('id'),
             'type' => 'pages',
             'parent_id' => $collection_id,
             'parent_type' => 'collections'

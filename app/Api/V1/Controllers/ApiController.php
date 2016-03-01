@@ -37,7 +37,7 @@ class ApiController extends BaseController
         if ($model->count() === 0) {
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
         }
-
+        
         return $model->paginate($this->perPage);
     }
 
@@ -110,5 +110,21 @@ class ApiController extends BaseController
              ],
          ]);
      }
-
+    /**
+     * validate if the resource exists, if not, throws 404
+     *
+     * @method validateResourceExists
+     *
+     * @param  resource object $resource
+     *
+     * @return resource object $resource
+     */
+    public function validateResourceExists($resource){
+        // throw 404 exception if resource does not exists
+        if ($resource === null) {
+            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+        }
+        // return resource if it does exist
+        return $resource;
+    }
 }

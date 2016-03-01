@@ -25,37 +25,27 @@ class PagesController extends ApiController
 
     public function show($page_id)
     {
-            $page = Page::find($page_id);
+        $page = $this->validateResourceExists(Page::find($page_id));
 
-            // no entry exists, throw exception, will be converted to jsonapi response
-            if ($page === null) {
-                throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-            }
-
-            return $this->response->item($page, new PageTransformer, ['key' => 'pages']);
+        return $this->response->item($page, new PageTransformer, ['key' => 'pages']);
     }
 
     public function getCollections(Request $request, $page_id){
-
-        // no entry exists, throw exception, will be converted to jsonapi response
-        if (Page::find($page_id) === null) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-        }
+        $page = $this->validateResourceExists(Page::find($page_id));
 
         return $this->getRelated(
             $request,
-            Page::find($page_id)->collections,
+            $page->collections,
             'collections'
         );
 
     }
 
-    public function getRelationshipsCollections(Request $request, $page_id){
-        // retrieve related ids
-        $ids = Page::find($page_id)->collections->lists('id');
-
+    public function getCollectionsRelationships(Request $request, $page_id){
+        $page = $this->validateResourceExists(Page::find($page_id));
+        // return relationship
         return $this->getRelationship([
-            'ids' => $ids,
+            'ids' => $page->collections->lists('id'),
             'type' => 'collections',
             'parent_id' => $page_id,
             'parent_type' => 'pages'
@@ -64,19 +54,24 @@ class PagesController extends ApiController
     }
 
     public function getFragments(Request $request, $page_id){
-
+        $page = $this->validateResourceExists(Page::find($page_id));
+        // return related objects
         return $this->getRelated($request,
-            Page::find($page_id)->fragments,
+            $page->fragments,
             'fragments'
         );
 
     }
 
-    public function getRelationshipsFragments(Request $request, $page_id){
-
-        $model = Page::find($page_id);
-
-        return $this->getRelationship($page_id, 'pages', 'fragments', $model);
+    public function getFragmentsRelationships(Request $request, $page_id){
+        $page = $this->validateResourceExists(Page::find($page_id));
+        // return relationship
+        return $this->getRelationship([
+            'ids' => $page->fragments->lists('id'),
+            'type' => 'fragments',
+            'parent_id' => $page_id,
+            'parent_type' => 'pages'
+        ]);
 
     }
 }
