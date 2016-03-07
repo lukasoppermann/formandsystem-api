@@ -2,10 +2,11 @@
 
 namespace App\Api\V1\Transformers;
 
+use App\Api\V1\Transformers\ApiTransformer;
 use League\Fractal\TransformerAbstract;
 use App\Api\V1\Models\Fragment;
 
-class FragmentTransformer extends TransformerAbstract
+class FragmentTransformer extends ApiTransformer
 {
 
     protected $defaultIncludes = [
@@ -22,6 +23,7 @@ class FragmentTransformer extends TransformerAbstract
             'fragments' => $this->collection( $fragment->fragments, new FragmentTransformer ),
             'created_at' => (string)$fragment->created_at,
             'updated_at' => (string)$fragment->updated_at,
+            'relationships' => $this->relationshipsLinks('fragments/'.$fragment->id),
         ];
     }
 

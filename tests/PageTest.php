@@ -20,7 +20,7 @@ class PageTest extends TestCase
             'attributes' => [
                 'menu_label' => 'string',
                 'slug' => 'string',
-                'published' => 'integer|in:0,1',
+                'published' => 'bool',
                 'language' => 'in:de,en',
                 'title' => 'string',
                 'description' => 'string'
@@ -48,7 +48,7 @@ class PageTest extends TestCase
             'attributes' => [
                 'menu_label' => 'string',
                 'slug' => 'string',
-                'published' => 'integer|in:0,1',
+                'published' => 'bool',
                 'language' => 'in:de,en',
                 'title' => 'string',
                 'description' => 'string'
@@ -73,7 +73,10 @@ class PageTest extends TestCase
      */
     public function get_related_collections()
     {
-        $id = App\Api\V1\Models\Page::first()->id;
+        $id = App\Api\V1\Models\Page::all()->first(function($key, $item){
+            return count($item->collections) > 0;
+        })->id;
+
         $response = $this->getClientResponse('/pages/'.$id.'/collections');
         // check for HTTP_OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
@@ -92,6 +95,27 @@ class PageTest extends TestCase
     /**
      * @test
      */
+    public function get_related_collections_no_relationships()
+    {
+        $id = App\Api\V1\Models\Page::all()->first(function($key, $item){
+            return count($item->collections) === 0;
+        })->id;
+
+        $response = $this->getClientResponse('/pages/'.$id.'/collections');
+
+        // check for HTTP_OK
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // check pagination
+        $this->isPaginated($response);
+        // check specific structure & data
+        $received = $this->getResponseArray($response)['data'];
+        $expected = [];
+
+        $this->assertValidArray($expected, $received);
+    }
+    /**
+     * @test
+     */
     public function get_related_collections_wrong_id()
     {
         $response = $this->getClientResponse('/pages/1/collections');
@@ -101,8 +125,12 @@ class PageTest extends TestCase
     /**
      * @test
      */
-    public function get_relationships_to_collections(){
-        $id = App\Api\V1\Models\Page::first()->id;
+    public function get_relationships_to_collections()
+    {
+        $id = App\Api\V1\Models\Page::all()->first(function($key, $item){
+            return count($item->collections) > 0;
+        })->id;
+
         $response = $this->getClientResponse('/pages/'.$id.'/relationships/collections');
         // check for HTTP OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
@@ -112,6 +140,22 @@ class PageTest extends TestCase
             'type' => 'in:collections',
             'id' => 'string'
         ];
+
+        $this->assertValidArray($expected, $received);
+    }
+    /**
+     * @test
+     */
+    public function get_relationships_to_collections_no_relationships(){
+        $id = App\Api\V1\Models\Page::all()->first(function($key, $item){
+            return count($item->collections) === 0;
+        })->id;
+        $response = $this->getClientResponse('/pages/'.$id.'/relationships/collections');
+        // check for HTTP OK
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // check specific structure & data
+        $received = $this->getResponseArray($response)['data'];
+        $expected = [];
 
         $this->assertValidArray($expected, $received);
     }

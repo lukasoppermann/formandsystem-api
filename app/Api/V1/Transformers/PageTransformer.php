@@ -6,11 +6,12 @@ use League\Fractal\TransformerAbstract;
 use App\Api\V1\Models\Page;
 
 
-class PageTransformer extends TransformerAbstract
+class PageTransformer extends ApiTransformer
 {
 
     protected $defaultIncludes = [
         // 'fragments'
+        // 'collections'
     ];
     /**
       * List of resources possible to include
@@ -34,6 +35,7 @@ class PageTransformer extends TransformerAbstract
             'description'   => $page->description,
             'created_at'    => (string)$page->created_at,
             'updated_at'    => (string)$page->updated_at,
+            'relationships' => $this->relationshipsLinks('pages/'.$page->id),
         ];
     }
 
@@ -46,4 +48,5 @@ class PageTransformer extends TransformerAbstract
     {
         return $this->collection( $page->collections, new CollectionTransformer, 'collections' );
     }
+
 }

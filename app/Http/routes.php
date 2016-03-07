@@ -18,6 +18,7 @@ $api->group([
     // collections/pages
     $api->get('collections/{collection}/pages', 'CollectionsController@getPages');
     $api->get('collections/{collection}/relationships/pages', 'CollectionsController@getPagesRelationships');
+    $api->get('collections/{collection}/test', 'CollectionsController@test');
     // ---------------------------
     // pages
     $api->get('pages', 'PagesController@index');

@@ -20,16 +20,22 @@ class FragmentsController extends ApiController
         return $this->response->paginator($fragments, new FragmentTransformer, ['key' => 'fragments']);
     }
 
-    public function show($fragment_id)
+    public function show(Request $request, $fragment_id)
     {
-            $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
+        $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
 
-            return $this->response->item($fragment, new FragmentTransformer, ['key' => 'fragments']);
+        return $this->response->item($fragment, new FragmentTransformer, ['key' => 'fragments']);
     }
 
     public function getFragments(Request $request, $fragment_id)
     {
+        $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
 
+        return $this->getRelated(
+            $request,
+            $fragment->fragments,
+            'fragments'
+        );
     }
 
     public function getFragmentsRelationships(Request $request, $fragment_id)
@@ -37,7 +43,7 @@ class FragmentsController extends ApiController
         $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
         // return relationship
         return $this->getRelationship([
-            'ids' => $fragment->fragment->lists('id'),
+            'ids' => $fragment->fragments->lists('id'),
             'type' => 'fragments',
             'parent_id' => $fragment_id,
             'parent_type' => 'fragments'

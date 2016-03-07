@@ -84,13 +84,13 @@ $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
 |--------------------------------------------------------------------------
 | Dingo Configureation
 |--------------------------------------------------------------------------
+| set up default serializer
 */
-// set up default serializer
 $app['Dingo\Api\Transformer\Factory']->setAdapter(function ($app) {
     $fractal = new League\Fractal\Manager;
     $serializer = new \App\Api\V1\Serializer\JsonApiExtendedSerializer($_ENV['API_DOMAIN']);
     $fractal->setSerializer($serializer);
-
+    // return a new Fractal instance
     return new Dingo\Api\Transformer\Adapter\Fractal($fractal, 'include', ',', true);
 });
 // set up error format

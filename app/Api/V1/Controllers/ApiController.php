@@ -37,7 +37,7 @@ class ApiController extends BaseController
         if ($model->count() === 0) {
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
         }
-        
+
         return $model->paginate($this->perPage);
     }
 
@@ -94,6 +94,7 @@ class ApiController extends BaseController
      * get relationship data
      */
      public function getRelationship($data){
+         $relationships = [];
          // build relationship array
          foreach($data['ids'] as $id){
              $relationships[] = [

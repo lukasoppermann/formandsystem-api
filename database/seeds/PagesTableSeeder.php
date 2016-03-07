@@ -14,12 +14,13 @@ class PagesTableSeeder extends Seeder
         factory('App\Api\V1\Models\Page', 20)->create();
 
         App\Api\V1\Models\Page::all()->each(function($page){
-            if( rand(0,2) === 2 ){
+            $i = rand(0,2);
+            if( $i === 2 ){
                 App\Api\V1\Models\Collection::all()->random(2)->each(function($collection) use ($page){
                     $collection->pages()->save($page);
                 });
             }
-            else {
+            if( $i === 1 ){
                 App\Api\V1\Models\Collection::all()->random()->pages()->save($page);
             }
         });

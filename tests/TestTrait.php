@@ -37,6 +37,7 @@ trait TestTrait
                 if(!strpos($rule,'not_required')){
                     $rules[$key] = $rules[$key].'|required';
                 }
+                $rules[$key] = str_replace('|not_required','',$rules[$key]);
             // if the attribute has children, do a sub-loop
             } else {
                 $rules[$key] = 'required';

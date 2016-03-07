@@ -68,8 +68,10 @@ class FragmentTest extends TestCase
      */
     public function get_related_fragments()
     {
-        $id = App\Api\V1\Models\Fragment::first()->id;
-        $response = $this->getClientResponse('/fragment/'.$id.'/fragments');
+        $id = App\Api\V1\Models\Fragment::all()->first(function($key, $item){
+            return count($item->fragments) > 0;
+        })->id;
+        $response = $this->getClientResponse('/fragments/'.$id.'/fragments');
         // check for HTTP OK
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
         // check pagination
@@ -79,7 +81,7 @@ class FragmentTest extends TestCase
         $expected = [
             'data' => [
                 0 => [
-                    'type' => 'in:pages',
+                    'type' => 'in:fragments',
                     'id' => 'string',
                     'attributes' => 'required'
                 ]
@@ -102,7 +104,21 @@ class FragmentTest extends TestCase
      */
     public function get_relationships_to_fragments()
     {
-        $this->fail('Test missing!');
+        $id = App\Api\V1\Models\Fragment::all()->first(function($key, $item){
+            return count($item->fragments) > 0;
+        })->id;
+
+        $response = $this->getClientResponse('/fragments/'.$id.'/relationships/fragments');
+        // check for HTTP OK
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // check specific structure & data
+        $received = $this->getResponseArray($response)['data'][0];
+        $expected = [
+            'type' => 'in:fragments',
+            'id' => 'string'
+        ];
+
+        $this->assertValidArray($expected, $received);
     }
     /**
      * @test
