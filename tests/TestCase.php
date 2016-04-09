@@ -73,6 +73,7 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
             ], $headers),
         ]);
     }
+
     /**
      * test error response
      */
@@ -106,5 +107,19 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
         ];
 
         $this->assertValidArray($expected, $received);
+    }
+    /*
+     * prepare data as headers & body for request
+     */
+    protected function prepData($data = []){
+        $output['headers'] = $data;
+        $output['body'] = null;
+        if(isset($data['headers']) || !isset($data['body']))
+        {
+            $output['headers'] = isset($data['headers']) ? $data['headers'] : [];
+            $output['body'] = isset($data['body']) ? $data['body'] : null;
+        }
+
+        return $output;
     }
 }

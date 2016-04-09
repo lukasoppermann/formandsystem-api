@@ -32,11 +32,15 @@ class CollectionsController extends ApiController
     {
         $collection = $this->validateResourceExists(Collection::find($collection_id));
 
-        return $this->getRelated(
-            $request,
-            $collection->pages,
-            'pages'
+        return $this->response->paginator(
+            $collection->pages()->paginate($this->perPage),
+            new PageTransformer ,
+            ['key' => 'pages']
         );
+        // return $this->getRelated(
+        //     $collection->pages(),
+        //     'pages'
+        // );
     }
 
     public function getPagesRelationships(Request $request, $collection_id){

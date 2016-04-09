@@ -26,18 +26,22 @@ class FragmentsController extends ApiController
 
         return $this->response->item($fragment, new FragmentTransformer, ['key' => 'fragments']);
     }
-
+    /*
+     * get related
+     */
     public function getFragments(Request $request, $fragment_id)
     {
         $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
 
         return $this->getRelated(
             $request,
-            $fragment->fragments,
+            $fragment->fragments(),
             'fragments'
         );
     }
-
+    /*
+     * get relationships
+     */
     public function getFragmentsRelationships(Request $request, $fragment_id)
     {
         $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
@@ -45,6 +49,33 @@ class FragmentsController extends ApiController
         return $this->getRelationship([
             'ids' => $fragment->fragments->lists('id'),
             'type' => 'fragments',
+            'parent_id' => $fragment_id,
+            'parent_type' => 'fragments'
+        ]);
+    }
+    /*
+     * get related
+     */
+    public function getImages(Request $request, $fragment_id)
+    {
+        $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
+
+        return $this->getRelated(
+            $request,
+            $fragment->images(),
+            'images'
+        );
+    }
+    /*
+     * get relationships
+     */
+    public function getImagesRelationships(Request $request, $fragment_id)
+    {
+        $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
+        // return relationship
+        return $this->getRelationship([
+            'ids' => $fragment->images->lists('id'),
+            'type' => 'images',
             'parent_id' => $fragment_id,
             'parent_type' => 'fragments'
         ]);

@@ -40,4 +40,11 @@ class Page extends Model
     {
         return $this->belongsToMany('App\Api\V1\Models\Collection');
     }
+    /**
+     * The metadetails that belongs to the page.
+     */
+    public function metadetails()
+    {
+        return $this->morphToMany('App\Api\V1\Models\Metadetail', 'metadetailable');
+    }
 }

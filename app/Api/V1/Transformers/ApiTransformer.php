@@ -5,8 +5,8 @@ namespace App\Api\V1\Transformers;
 use League\Fractal\TransformerAbstract;
 
 class ApiTransformer extends TransformerAbstract{
-    
-    public function relationshipsLinks($resource = null)
+
+    protected function relationshipsLinks($resource = null)
     {
         if( $resource !== null && isset($this->availableIncludes) && count($this->availableIncludes) > 0 ){
             foreach ($this->availableIncludes as $include) {
@@ -22,6 +22,20 @@ class ApiTransformer extends TransformerAbstract{
         // retur empty array if no available includes exist
         return [];
 
+    }
+
+    protected function decode($value){
+        if(is_string($value) && json_decode($value) !== null){
+            return json_decode($value);
+        }
+        return $value;
+    }
+
+    protected function encode($value){
+        if(is_array($value) || is_object($value)){
+            return json_encode($value);
+        }
+        return $value;
     }
 
 }

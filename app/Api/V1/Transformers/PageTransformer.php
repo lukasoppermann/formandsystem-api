@@ -20,7 +20,8 @@ class PageTransformer extends ApiTransformer
       */
     protected $availableIncludes = [
       'fragments',
-      'collections'
+      'collections',
+      'metadetails'
     ];
 
     public function transform(Page $page)
@@ -47,6 +48,11 @@ class PageTransformer extends ApiTransformer
     public function includeCollections( Page $page )
     {
         return $this->collection( $page->collections, new CollectionTransformer, 'collections' );
+    }
+
+    public function includeMetadetails( Page $page )
+    {
+        return $this->collection( $page->metadetails, new MetadetailTransformer, 'metadetails' );
     }
 
 }

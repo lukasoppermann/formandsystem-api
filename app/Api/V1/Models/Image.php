@@ -5,7 +5,7 @@ namespace App\Api\V1\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Fragment extends Model
+class Image extends Model
 {
     use SoftDeletes;
     /**
@@ -14,7 +14,6 @@ class Fragment extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
-
     /**
      * Indicates if the model should be timestamped.
      *
@@ -28,24 +27,10 @@ class Fragment extends Model
      */
     public $incrementing = false;
     /**
-     * The pages that belong to the fragment.
-     */
-    public function pages()
-    {
-        return $this->morphedByMany('App\Api\V1\Models\Page', 'fragmentable');
-    }
-    /**
-     * The fragments that belong to the fragment.
+     * The fragments that belong to the file.
      */
     public function fragments()
     {
-        return $this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable');
-    }
-    /**
-     * The images that belong to the fragment.
-     */
-    public function images()
-    {
-        return $this->morphToMany('App\Api\V1\Models\Image', 'imageable');
+        return $this->morphedByMany('App\Api\V1\Models\Fragment', 'imageable');
     }
 }

@@ -225,4 +225,103 @@ class PageTest extends TestCase
         // check status code & response body
         $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
     }
+    /**
+     * @test
+     */
+    public function get_related_metadetails()
+    {
+        $id = App\Api\V1\Models\Page::all()->first(function($key, $item){
+            return count($item->metadetails) > 0;
+        })->id;
+
+        $response = $this->getClientResponse('/pages/'.$id.'/metadetails');
+        // check for HTTP_OK
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // check pagination
+        $this->isPaginated($response);
+        // check specific structure & data
+        $received = $this->getResponseArray($response)['data'][0];
+        $expected = [
+            'type' => 'in:metadetails',
+            'id' => 'string',
+            'attributes' => 'required'
+        ];
+
+        $this->assertValidArray($expected, $received);
+    }
+    /**
+     * @test
+     */
+    public function get_related_metadetails_no_relationships()
+    {
+        $id = App\Api\V1\Models\Page::all()->first(function($key, $item){
+            return count($item->metadetails) === 0;
+        })->id;
+
+        $response = $this->getClientResponse('/pages/'.$id.'/metadetails');
+        // check for HTTP_OK
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // check pagination
+        $this->isPaginated($response);
+        // check specific structure & data
+        $received = $this->getResponseArray($response)['data'];
+        $expected = [];
+
+        $this->assertValidArray($expected, $received);
+    }
+    /**
+     * @test
+     */
+    public function get_related_metadetails_wrong_id()
+    {
+        $response = $this->getClientResponse('/pages/1/metadetails');
+        // check status code & response body
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
+    }
+    /**
+     * @test
+     */
+    public function get_relationships_to_metadetails()
+    {
+        $id = App\Api\V1\Models\Page::all()->first(function($key, $item){
+            return count($item->metadetails) > 0;
+        })->id;
+
+        $response = $this->getClientResponse('/pages/'.$id.'/relationships/metadetails');
+        // check for HTTP OK
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // check specific structure & data
+        $received = $this->getResponseArray($response)['data'][0];
+        $expected = [
+            'type' => 'in:metadetails',
+            'id' => 'string'
+        ];
+
+        $this->assertValidArray($expected, $received);
+    }
+    /**
+     * @test
+     */
+    public function get_relationships_to_metadetails_no_relationships(){
+        $id = App\Api\V1\Models\Page::all()->first(function($key, $item){
+            return count($item->metadetails) === 0;
+        })->id;
+        $response = $this->getClientResponse('/pages/'.$id.'/relationships/metadetails');
+        // check for HTTP OK
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // check specific structure & data
+        $received = $this->getResponseArray($response)['data'];
+        $expected = [];
+
+        $this->assertValidArray($expected, $received);
+    }
+    /**
+     * @test
+     */
+    public function get_relationships_to_metadetails_wrong_id()
+    {
+        $response = $this->getClientResponse('/pages/1/relationships/metadetails');
+        // check status code & response body
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
+    }
 }

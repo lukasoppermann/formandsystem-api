@@ -42,7 +42,7 @@ $factory->define(App\Api\V1\Models\Page::class, function ($faker) {
 $factory->define(App\Api\V1\Models\Fragment::class, function ($faker) {
     return [
         'id' => $uuid = $faker->uuid,
-        'type' => $faker->randomElement(['text', 'quote']),
+        'type' => $faker->randomElement(['text', 'quote', 'image', 'video']),
         'name' => (rand(0,1) === 1 ? $faker->word : null),
         'data' => $faker->paragraph(4),
     ];
@@ -57,27 +57,39 @@ $factory->defineAs(App\Api\V1\Models\Fragment::class, 'section', function ($fake
     ];
 });
 
-// for($i=rand(1,5); $i > 0; $i--){
-//     for($a=rand(1,2); $a > 0; $a--){
-//         $section = new App\Api\V1\Models\Fragment;
-//         $section->id = $faker->uuid;
-//         $section->type = "section";
-//         $section->save();
-//
-//         $fragments[] = App\Api\V1\Models\Fragment::where('type','section')->get();
-//         DB::table('fragmentables')->insert([
-//             'fragment_id' => $section->id,
-//             'fragmentable_id' => $pageUuid,
-//             'fragmentable_type' => 'App\Api\V1\Models\Page',
-//         ]);
-//         for($a=rand(1,5); $a > 0; $a--){
-//             $innerfragments = App\Api\V1\Models\Fragment::where('type', '!=','section')->get();
-//             $fragment = $innerfragments[rand(0,count($innerfragments)-1)];
-//             DB::table('fragmentables')->insert([
-//                 'fragment_id' => $fragment->id,
-//                 'fragmentable_id' => $section->id,
-//                 'fragmentable_type' => 'App\Api\V1\Models\Fragment',
-//             ]);
-//         }
-//     }
-// }
+/*
+| Image
+*/
+$factory->define(App\Api\V1\Models\Image::class, function ($faker) {
+    $width = rand(200,2000);
+    $height = rand(200,2000);
+    return [
+        'id'                => $faker->uuid,
+        'link'              => $faker->imageUrl($width, $height, 'cats'),
+        'slug'              => $faker->slug(),
+        'bytesize'          => rand(2000,60000),
+        'width'             => $width,
+        'height'            => $height,
+    ];
+});
+
+/*
+| Meta
+*/
+$factory->define(App\Api\V1\Models\Metadetail::class, function ($faker) {
+    $types = $faker->words(5);
+    $value = $faker->sentence(4);
+    if(rand(1,3) === 1 ){
+        $value = [];
+        for($i = rand(1,5); $i > 0; $i-- ){
+            $value[$faker->word()] = $faker->word();
+        }
+         $value = json_encode($value);
+    }
+
+    return [
+        'id'                => $faker->uuid,
+        'type'              => $faker->randomElement($types),
+        'value'             => $value,
+    ];
+});

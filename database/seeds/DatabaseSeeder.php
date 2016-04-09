@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
         'collections',
         'pages',
         'fragments',
+        'images',
+        'metadetails'
         // 'page_fragment',
     ];
 

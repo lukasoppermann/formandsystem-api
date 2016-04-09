@@ -129,4 +129,40 @@ class FragmentTest extends TestCase
         // check status code & response body
         $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
     }
+    /**
+     * @test
+     */
+    public function get_related_images()
+    {
+        $id = App\Api\V1\Models\Fragment::all()->first(function($key, $item){
+            return count($item->images) > 0;
+        })->id;
+        $response = $this->getClientResponse('/fragments/'.$id.'/images');
+        // check for HTTP OK
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // check pagination
+        $this->isPaginated($response);
+        // check specific structure & data
+        $received = $this->getResponseArray($response);
+        $expected = [
+            'data' => [
+                0 => [
+                    'type' => 'in:images',
+                    'id' => 'string',
+                    'attributes' => 'required'
+                ]
+            ]
+        ];
+
+        $this->assertValidArray($expected, $received);
+    }
+    /**
+     * @test
+     */
+    public function get_related_images_wrong_id()
+    {
+        $response = $this->getClientResponse('/fragments/1/images');
+        // check status code & response body
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
+    }
 }

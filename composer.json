@@ -8,9 +8,10 @@
         "vlucas/phpdotenv": "~1.0",
         "dingo/api": "@dev",
         "lukasoppermann/http-status": "~1.0",
-        "guzzlehttp/guzzle": "~6.0"
+        "ramsey/uuid": "^3.3"
     },
     "require-dev": {
+        "guzzlehttp/guzzle": "~6.0",
         "phpunit/phpunit": "~4.0",
         "phpspec/phpspec": "~2.0",
         "fzaninotto/faker": "~1.0"

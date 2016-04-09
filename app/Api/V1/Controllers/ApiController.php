@@ -71,23 +71,13 @@ class ApiController extends BaseController
     public function getRelated(Request $request, $relatedModel, $type){
         //
         $transformer = "App\Api\V1\Transformers\\".ucfirst(substr($type,0,-1))."Transformer";
-        $page = $request->input('page', 1); // Get the current page or default to 1
-        $offset = ($page * $this->perPage) - $this->perPage;
 
         return $this->response->paginator(
-            new LengthAwarePaginator(
-                $relatedModel->slice($offset, $this->perPage),
-                $relatedModel->count(),
-                $this->perPage,
-                $page,
-                [
-                    'path' => $request->url(),
-                    'query' => $request->query()
-                ]
-            ),
+            $relatedModel->paginate($this->perPage),
             new $transformer,
             ['key' => $type]
         );
+
     }
 
     /**
