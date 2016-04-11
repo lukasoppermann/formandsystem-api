@@ -10,22 +10,13 @@ use Illuminate\Http\Request;
 
 class FragmentsController extends ApiController
 {
-    protected $availableFilters = [
-    ];
+    /**
+     * The filters that are allowed in requests
+     *
+     * @var array
+     */
+    protected $resource = 'fragments';
 
-    public function index(Request $request)
-    {
-        $fragments = $this->getFilteredResult(new Fragment, $request->input('filter'));
-
-        return $this->response->paginator($fragments, new FragmentTransformer, ['key' => 'fragments']);
-    }
-
-    public function show(Request $request, $fragment_id)
-    {
-        $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
-
-        return $this->response->item($fragment, new FragmentTransformer, ['key' => 'fragments']);
-    }
     /*
      * get related
      */

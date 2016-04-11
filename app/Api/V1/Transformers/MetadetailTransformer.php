@@ -20,8 +20,7 @@ class MetadetailTransformer extends ApiTransformer
       * @var array
       */
     protected $availableIncludes = [
-    //   'fragments',
-    //   'collections'
+      'pages'
     ];
 
     public function transform(Metadetail $metadetails)
@@ -32,17 +31,29 @@ class MetadetailTransformer extends ApiTransformer
             'value'          => $this->decode($metadetails->value),
             'created_at'    => (string)$metadetails->created_at,
             'updated_at'    => (string)$metadetails->updated_at,
+            'relationships' => $this->relationshipsLinks('metadetails/'.$metadetails->id),
         ];
     }
-
-    public function receivedDataJson($data){
+    /*
+     * transform data received via post
+     */
+    public function transformPostData($data){
         if( count($data) > 0){
             return [
-                'type'          => $data['type'],
+                'type'          => (string) $data['type'],
                 'value'         => $this->encode($data['value']),
             ];
+            isset($data['name']) ? $output['name'] = (string) $data['name'] : '';
+            isset($data['slug']) ? $output['slug'] = (string) $data['slug'] : '';
         }
-        return false;
+        return [];
+    }
+    /*
+     * include Pages
+     */
+    public function includePages( Metadetail $metadetail )
+    {
+        return $this->collection( $metadetail->pages, new PageTransformer, 'pages' );
     }
 
 }

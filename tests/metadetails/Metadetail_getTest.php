@@ -1,6 +1,6 @@
 <?php
 
-class MetadetailTest extends TestCase
+class Metadetail_getTest extends TestCase
 {
     /**
      * single item
@@ -144,103 +144,5 @@ class MetadetailTest extends TestCase
         $response = $this->getClientResponse('metadetails/1/relationships/pages');
         // check status code & response body
         $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
-    }
-    /**
-     * @test
-     */
-    public function post_metadetail()
-    {
-        // $response = $this->client->request('POST', '/metadetails', ['body' => 'test']);
-
-    }
-    /**
-     * @test
-     */
-    public function post_metadetail_missing_data()
-    {
-        $this->fail('Test missing!');
-    }
-    /**
-     * @test
-     */
-    public function put_metadetail()
-    {
-        $this->fail('Test missing!');
-    }
-    /**
-     * @test
-     */
-    public function put_metadetail_missing_data()
-    {
-        $this->fail('Test missing!');
-    }
-    /**
-     * @test
-     */
-    public function put_metadetail_wrong_id()
-    {
-        $this->fail('Test missing!');
-    }
-    /**
-     * @test
-     */
-    public function delete_metadetail()
-    {
-        $this->fail('Test missing!');
-    }
-    /**
-     * @test
-     */
-    public function delete_metadetail_wrong_id()
-    {
-
-        // check status code & response body
-        $this->assertEquals(self::HTTP_NO_CONTENT, $response->getStatusCode());
-    }
-    /**
-     * @test
-     */
-    public function delete_metadetail_relationship()
-    {
-        $id = App\Api\V1\Models\Metadetail::all()->first(function($key, $item){
-            return count($item->pages) > 0;
-        })->id;
-        $model = App\Api\V1\Models\Metadetail::find($id);
-        $relationshipId = $model->pages()->first()->id;
-        $response = $this->client->request('DELETE', '/metadetails/'.$id.'/relationships/pages', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-            'body' => json_encode(["data" => [[
-                "type" => "pages",
-                "id" => $relationshipId
-            ]]])
-        ]);
-
-        // check status code & response body
-        $this->assertEquals(self::HTTP_NO_CONTENT, $response->getStatusCode());
-        $this->assertEquals(count($model->pages()->find($relationshipId)),0);
-    }
-    /**
-     * @test
-     */
-    public function delete_metadetail_relationship_wrong_id()
-    {
-        $id = App\Api\V1\Models\Metadetail::all()->first(function($key, $item){
-            return count($item->pages) > 0;
-        })->id;
-        
-        $response = $this->client->request('DELETE', '/metadetails/'.$id.'/relationships/pages', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-            'body' => json_encode(["data" => [[
-                "type" => "pages",
-                "id" => '1234'
-            ]]])
-        ]);
-
-        // check status code & response body
-        $this->assertEquals(self::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 }

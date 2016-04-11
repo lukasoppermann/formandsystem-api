@@ -12,23 +12,21 @@ use Illuminate\Http\Request;
 
 class PagesController extends ApiController
 {
+    /**
+     * The filters that are allowed in requests
+     *
+     * @var array
+     */
     protected $availableFilters = [
         'slug'
     ];
+    /**
+     * The filters that are allowed in requests
+     *
+     * @var array
+     */
+    protected $resource = 'pages';
 
-    public function index(Request $request)
-    {
-        $pages = $this->getFilteredResult(new Page, $request->input('filter'));
-
-        return $this->response->paginator($pages, new PageTransformer, ['key' => 'pages']);
-    }
-
-    public function show($page_id)
-    {
-        $page = $this->validateResourceExists(Page::find($page_id));
-
-        return $this->response->item($page, new PageTransformer, ['key' => 'pages']);
-    }
 
     public function getCollections(Request $request, $page_id){
         $page = $this->validateResourceExists(Page::find($page_id));

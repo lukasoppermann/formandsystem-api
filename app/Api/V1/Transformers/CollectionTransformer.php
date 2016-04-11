@@ -31,7 +31,9 @@ class CollectionTransformer extends ApiTransformer
             'relationships' => $this->relationshipsLinks('collections/'.$collection->id),
         ];
     }
-
+    /*
+     * include Pages
+     */
     public function includePages( Collection $collection )
     {
         return $this->collection( $collection->pages, new PageTransformer, 'pages' );

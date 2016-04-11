@@ -35,6 +35,7 @@ class ImageTransformer extends ApiTransformer
             'height'        => (int)$image->height,
             'created_at'    => (string)$image->created_at,
             'updated_at'    => (string)$image->updated_at,
+            'relationships' => $this->relationshipsLinks('images/'.$image->id),
         ];
     }
 

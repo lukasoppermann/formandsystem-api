@@ -4,8 +4,14 @@ namespace App\Api\V1\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Collection extends Model
+class Collection extends BaseModel
 {
+    /**
+     * If uuid is used instead of autoincementing id
+     *
+     * @var bool
+     */
+    protected $uuid = true;
     /**
      * Indicates if the model should be timestamped.
      *
@@ -18,6 +24,12 @@ class Collection extends Model
      * @var bool
      */
     public $incrementing = false;
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['id','name','slug'];
     /**
      * The pages that belong to the collection.
      */

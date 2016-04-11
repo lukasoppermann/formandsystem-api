@@ -9,23 +9,12 @@ use Illuminate\Http\Request;
 
 class ImagesController extends ApiController
 {
-    protected $availableFilters = [
-    ];
-
-    public function index(Request $request)
-    {
-
-        $images = $this->getFilteredResult(new Image, $request->input('filter'));
-        //
-        return $this->response->paginator($images, new ImageTransformer, ['key' => 'images']);
-    }
-
-    public function show(Request $request, $image_id)
-    {
-        $image = $this->validateResourceExists(Image::find($image_id));
-
-        return $this->response->item($image, new ImageTransformer, ['key' => 'images']);
-    }
+    /**
+     * The filters that are allowed in requests
+     *
+     * @var array
+     */
+    protected $resource = 'images';
     /*
      * get related
      */

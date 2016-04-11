@@ -15,6 +15,9 @@ $api->group([
     // collections
     $api->get('collections', 'CollectionsController@index');
     $api->get('collections/{collection}', 'CollectionsController@show');
+    $api->post('collections', 'CollectionsController@store');
+    $api->patch('collections/{collection}', 'CollectionsController@update');
+    $api->delete('collections/{collection}', 'CollectionsController@delete');
     // collections/pages
     $api->get('collections/{collection}/pages', 'CollectionsController@getPages');
     $api->get('collections/{collection}/relationships/pages', 'CollectionsController@getPagesRelationships');
@@ -56,6 +59,7 @@ $api->group([
     // images
     $api->get('images', 'ImagesController@index');
     $api->get('images/{image}', 'ImagesController@show');
+    $api->delete('images/{images}', 'ImagesController@delete');
     // images/fragments
     $api->get('images/{image}/fragments', 'ImagesController@getFragments');
     $api->get('images/{image}/relationships/fragments', 'ImagesController@getFragmentsRelationships');

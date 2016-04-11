@@ -18,10 +18,10 @@ class BaseModel extends Model
         $model = new static($attributes);
         // add uuid
         if( $model->uuid === true ){
+
             $model->incrementing = false;
             $model->{$model->getKeyName()} = (string)Uuid::uuid4();
         }
-
         $model->save();
 
         return $model;
