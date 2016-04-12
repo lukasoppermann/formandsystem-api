@@ -20,6 +20,14 @@ class MetadetailsController extends ApiController
         'type'
     ];
     /**
+     * The relationships a resource can have
+     *
+     * @var array
+     */
+    protected $relationships = [
+        'pages'
+    ];
+    /**
      * The filters that are allowed in requests
      *
      * @var array
@@ -50,7 +58,22 @@ class MetadetailsController extends ApiController
         ]);
     }
     /*
-     * get relationship
+     * update relationships
+     */
+    public function updatePagesRelationships(Request $request, $metadetail_id){
+        $receivedRelationships = $this->getRecivedRelationships($request);
+        return $receivedRelationships;
+        // $data = json_decode($request->getContent(), true);
+        // $metadetail = $this->validateResourceExists(Metadetail::find($metadetail_id));
+        //
+        // foreach($data['data'] as $relationship){
+        //     $metadetail->pages()->detach($relationship['id']);
+        // }
+        //
+        // return $this->response->noContent();
+    }
+    /*
+     * delete relationship
      */
     public function deletePagesRelationships(Request $request, $metadetail_id){
         $data = json_decode($request->getContent(), true);

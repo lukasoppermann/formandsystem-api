@@ -50,10 +50,12 @@ $api->group([
     $api->get('metadetails', 'metadetailsController@index');
     $api->get('metadetails/{metadetails}', 'metadetailsController@show');
     $api->post('metadetails', 'metadetailsController@store');
+    $api->patch('metadetails/{metadetails}', 'metadetailsController@update');
     $api->delete('metadetails/{metadetails}', 'metadetailsController@delete');
     // metadetails/pages
     $api->get('metadetails/{metadetails}/pages', 'metadetailsController@getPages');
     $api->get('metadetails/{metadetails}/relationships/pages', 'metadetailsController@getPagesRelationships');
+    $api->patch('metadetails/{metadetails}/relationships/pages', 'metadetailsController@updatePagesRelationships');
     $api->delete('metadetails/{metadetails}/relationships/pages', 'metadetailsController@deletePagesRelationships');
     // ---------------------------
     // images

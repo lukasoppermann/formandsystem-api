@@ -82,6 +82,7 @@ class ApiController extends BaseController
     {
         // get data from request
         $receivedData = $this->getRecivedData($request);
+        $receivedRelationships = $this->getRecivedRelationships($request);
         // validate data
         $errors = (new $this->validator)->validatePost(array_merge(
             $receivedData,
@@ -93,6 +94,15 @@ class ApiController extends BaseController
         }
         // create item
         $model = $this->model->create($receivedData);
+        // add relationships
+        foreach($receivedRelationships as $key => $relationships){
+            $relatedModel = "App\Api\V1\Models\\".substr(ucfirst($key),0,-1);
+            foreach($relationships['data'] as $relationship){
+                if($related = (new $relatedModel)->find($relationship['id'])){
+                    $model->{$key}()->save($related);
+                }
+            }
+        }
         // return result
         return $this->response->item($model, new $this->transformer, ['key' => $this->resource])->setStatusCode(201)->withHeader('Location', $_ENV['API_DOMAIN'].'/'.$this->resource.'/'.$model->id);
     }
@@ -101,18 +111,42 @@ class ApiController extends BaseController
     */
     public function update(Request $request, $id)
     {
-        // init transformer
-        $transformer = new $this->transformer;
         // get data from request
-        $data = json_decode($request->getContent(), true)['data']['attributes'];
-        // transform data
-        $input = $transformer->transformPostData($data);
+        $receivedData = $this->getRecivedData($request);
+        $receivedRelationships = $this->getRecivedRelationships($request);
+        // validate data
+        $errors = (new $this->validator)->validatePatch(array_merge(
+            $receivedData,
+            [
+                'resourceType' => $request->json('data.type'),
+                'resourceId' => $request->json('data.id'),
+            ]
+        ));
+        // return errors if vaildation fails
+        if( $errors ){
+            return $this->response->error($errors, 403);
+        }
         // update item
         $model = $this->model->find($id);
-        $model->fill($input);
+        if($model === null){
+            return $this->response->errorNotFound();
+        }
+
+        $model->fill($receivedData);
         $model->save();
+
+        // add relationships
+        foreach($receivedRelationships as $key => $relationships){
+            $relatedModel = "App\Api\V1\Models\\".substr(ucfirst($key),0,-1);
+            $model->{$key}()->detach();
+            foreach($relationships['data'] as $relationship){
+                if($related = (new $relatedModel)->find($relationship['id'])){
+                    $model->{$key}()->save($related);
+                }
+            }
+        }
         // return result
-        return $this->response->item($this->model->find($id), $transformer, ['key' => $this->resource])->setStatusCode(200);
+        return $this->response->item($this->model->find($id), new $this->transformer, ['key' => $this->resource])->setStatusCode(200);
     }
     /*
      * delete
@@ -226,7 +260,7 @@ class ApiController extends BaseController
         return $resource;
     }
     /**
-     * validate if the resource exists, if not, throws 404
+     * gets attributes from received data for fillable fields
      *
      * @method getRecivedData
      *
@@ -235,17 +269,54 @@ class ApiController extends BaseController
      * @return array
      */
     protected function getRecivedData(Request $request){
+        $attributes = $request->json('data.attributes');
+        if(!is_array($attributes)){
+            $attributes = [];
+        }
         // get fiels from model
         $fields = $this->model->getFillable();
         // remove id
         array_splice($fields, array_search('id', $fields ), 1);
         // grab data for accepted fields
-        foreach($request->json('data.attributes') as $key => $value){
+        $output = [];
+        foreach($attributes as $key => $value){
             if( in_array($key,$fields) ){
                 if(is_array($value)){
                     $value = json_encode($value);
                 }
                 $output[$key] = $value;
+            }
+        }
+        // return data
+        return $output;
+    }
+    /**
+     * gets relationships from received data, for
+     *
+     * @method getRecivedRelationships
+     *
+     * @param  Request $request
+     *
+     * @return array
+     */
+    protected function getRecivedRelationships(Request $request){
+        $relationships = $request->json('data.relationships');
+        // check for existance
+        if(!is_array($relationships)){
+            $relationships = [];
+        }
+        // grab data for accepted fields
+        $output = [];
+        foreach($relationships as $key => $value){
+            if( in_array($key,$this->relationships) ){
+                // check if single resource & make sure to turn into array
+                if(isset($value['data']['id'])){
+                    $value['data'] = [$value['data']];
+                }
+                // return relations
+                foreach($value as $v){
+                    $output[$key] = $value;
+                }
             }
         }
         // return data

@@ -7,7 +7,14 @@ class Metadetail_deleteTest extends TestCase
      */
     public function delete_metadetail()
     {
+        // PREPARE
         $id = App\Api\V1\Models\Metadetail::first()->id;
+        // CHECK BEFORE
+        $response = $this->client->request('GET', '/metadetails/'.$id, [
+            'headers' => ['Accept' => 'application/json']
+        ]);
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        // DELETE
         $response = $this->client->request('DELETE', '/metadetails/'.$id, [
             'headers' => [
                 'Accept' => 'application/json',
@@ -22,6 +29,12 @@ class Metadetail_deleteTest extends TestCase
      */
     public function delete_metadetail_wrong_id()
     {
+        // CHECK BEFORE DELETE
+        $response = $this->client->request('GET', '/metadetails/1', [
+            'headers' => ['Accept' => 'application/json']
+        ]);
+        $this->assertEquals(self::HTTP_NOT_FOUND, $response->getStatusCode());
+        // DELETE
         $response = $this->client->request('DELETE', '/metadetails/1', [
             'headers' => [
                 'Accept' => 'application/json',
@@ -35,11 +48,20 @@ class Metadetail_deleteTest extends TestCase
      */
     public function delete_metadetail_relationship()
     {
+        // PREPARE
         $id = App\Api\V1\Models\Metadetail::all()->first(function($key, $item){
             return count($item->pages) > 0;
         })->id;
         $model = App\Api\V1\Models\Metadetail::find($id);
         $relationshipId = $model->pages()->first()->id;
+
+        // CHECK BEFORE DELETE
+        $response = $this->client->request('GET', '/metadetails/'.$id.'/relationships/pages', [
+            'headers' => ['Accept' => 'application/json']
+        ]);
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+
+
         $response = $this->client->request('DELETE', '/metadetails/'.$id.'/relationships/pages', [
             'headers' => [
                 'Accept' => 'application/json',
@@ -69,7 +91,7 @@ class Metadetail_deleteTest extends TestCase
             ],
             'body' => json_encode(["data" => [[
                 "type" => "pages",
-                "id" => '1234'
+                "id" => '1'
             ]]])
         ]);
 

@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Validators;
 
-class MetadetailValidator extends ApiValidator{
+class CollectionValidator extends ApiValidator{
     /**
      * rules Post
      *
@@ -13,9 +13,9 @@ class MetadetailValidator extends ApiValidator{
     protected function rulesPost(){
 
         return [
-            'resourceType' => 'required|in:metadetails',
-            'type' => 'required|string',
-            'value' => 'required',
+            'resourceType' => 'required|in:collections',
+            'name' => 'required|string',
+            'slug' => 'required|string',
         ];
 
     }
@@ -29,10 +29,10 @@ class MetadetailValidator extends ApiValidator{
      protected function rulesPatch(){
 
          return [
-             'resourceType' => 'required|in:metadetails',
+             'resourceType' => 'required|in:collections',
              'resourceId' => 'required|string',
-             'type' => 'string',
-             'value' => '',
+             'name' => 'string',
+             'slug' => 'string',
          ];
 
      }
