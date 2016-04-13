@@ -8,6 +8,7 @@ use Lukasoppermann\Testing\BaseTests\PatchTest;
 use Lukasoppermann\Testing\BaseTests\DeleteTest;
 use Lukasoppermann\Testing\Resources\Collection;
 use Lukasoppermann\Testing\Resources\Page;
+use Lukasoppermann\Testing\Resources\Metadetail;
 use Illuminate\Support\Facades\Artisan as Artisan;
 
 class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
@@ -44,7 +45,10 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
             'collections' => (new Collection)->expected(),
             'collections_post' => (new Collection)->post(),
             'collections_post_incomplete' => (new Collection)->post_incomplete(),
-            'pages' => (new Page)->expected()
+            'pages' => (new Page)->expected(),
+            'metadetails' => (new Metadetail)->expected(),
+            'metadetails_post' => (new Metadetail)->post(),
+            'metadetails_post_incomplete' => (new Metadetail)->post_incomplete(),
         ];
         // init Model
         $model = "App\Api\V1\Models\\".ucfirst(substr($this->resource,0,-1));

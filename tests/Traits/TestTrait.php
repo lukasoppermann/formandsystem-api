@@ -48,6 +48,9 @@ trait TestTrait
 
         }
         // run validator
+        Validator::extend('stringOrArray', function($attribute, $value, $parameters, $validator) {
+            return (is_string($value) || is_array($value));
+        });
         $validator = Validator::make($resourceData, $rules);
         // store errors
         foreach ($validator->messages()->toArray() as $error) {
