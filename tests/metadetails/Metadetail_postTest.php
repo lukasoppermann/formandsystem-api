@@ -43,4 +43,38 @@ class Metadetail_postTest extends TestCase
         // check status code & response body
         $this->assertEquals(self::HTTP_FORBIDDEN, $response->getStatusCode());
     }
+    /**
+     * @test
+     */
+    public function post_metadetail_relationship_pages_missing_data()
+    {
+        $id = App\Api\V1\Models\Metadetail::first()->id;
+        $response = $this->client->request('POST', '/metadetails/'.$id.'/relationships/pages', [
+            'headers' => [
+                'Accept' => 'application/json',
+            ]
+        ]);
+        // check status code & response body
+        $this->assertEquals(self::HTTP_FORBIDDEN, $response->getStatusCode());
+    }
+    /**
+     * @test
+     */
+    public function post_metadetail_relationship_pages_wrong_data()
+    {
+        $id = App\Api\V1\Models\Metadetail::first()->id;
+        $response = $this->client->request('POST', '/metadetails/'.$id.'/relationships/pages', [
+            'headers' => [
+                'Accept' => 'application/json',
+            ],
+            'body' => json_encode(["data" => [
+                [
+                    "type" => "pages",
+                ],
+                    "id" => "1"
+                ]])
+        ]);
+        // check status code & response body
+        $this->assertEquals(self::HTTP_FORBIDDEN, $response->getStatusCode());
+    }
 }

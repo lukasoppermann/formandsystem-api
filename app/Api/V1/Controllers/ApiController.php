@@ -90,16 +90,25 @@ class ApiController extends BaseController
         ));
         // return errors if vaildation fails
         if( $errors ){
-            return $this->response->error($errors, 403);
+            return $this->response->error($errors, 400);
         }
         // create item
         $model = $this->model->create($receivedData);
         // add relationships
         foreach($receivedRelationships as $key => $relationships){
+            // check if relationship is valid
+            if(!in_array($key, $this->relationships)){
+                return $this->response()->errorBadRequest('Invalid relationship');
+            }
+            //
             $relatedModel = "App\Api\V1\Models\\".substr(ucfirst($key),0,-1);
             foreach($relationships['data'] as $relationship){
-                if($related = (new $relatedModel)->find($relationship['id'])){
+                $related = (new $relatedModel)->find($relationship['id']);
+                if( $related && in_array($relationship['type'], $this->relationships)){
                     $model->{$key}()->save($related);
+                }
+                else {
+                    return $this->response()->errorBadRequest('Invalid relationship');
                 }
             }
         }
@@ -124,7 +133,7 @@ class ApiController extends BaseController
         ));
         // return errors if vaildation fails
         if( $errors ){
-            return $this->response->error($errors, 403);
+            return $this->response->error($errors, 400);
         }
         // update item
         $model = $this->model->find($id);
@@ -140,7 +149,9 @@ class ApiController extends BaseController
             $relatedModel = "App\Api\V1\Models\\".substr(ucfirst($key),0,-1);
             $model->{$key}()->detach();
             foreach($relationships['data'] as $relationship){
-                if($related = (new $relatedModel)->find($relationship['id'])){
+                if(isset($relationship['id'])
+                    && $related = (new $relatedModel)->find($relationship['id'])
+                ){
                     $model->{$key}()->save($related);
                 }
             }
@@ -152,7 +163,35 @@ class ApiController extends BaseController
      * delete
      */
     public function delete($resource_id){
-        $this->model->destroy($resource_id);
+        // if resource doesn't exist
+        if($this->model->destroy($resource_id) === 0){
+            return $this->response->errorNotFound();
+        }
+
+        return $this->response->noContent();
+    }
+    /*
+     * delete
+     */
+    public function deleteRelationships(Request $request, $relationship, $id){
+        // Validate resource
+        $model = $this->validateResourceExists($this->model->find($id));
+        // validate relationship
+        if( !in_array($relationship, $this->relationships) ){
+            return $this->response->errorNotFound();
+        }
+        // delete individual relationships
+        $relationship_ids = [];
+        // get ids
+        foreach($request->json('data') as $relData){
+            // check for correct types
+            if($relationship !== $relData['type']){
+                return $this->response->errorBadRequest();
+            }
+            $ids[] = $relData['id'];
+        }
+        // delete relationships
+        $model->{$relationship}()->detach($ids);
 
         return $this->response->noContent();
     }
@@ -260,6 +299,62 @@ class ApiController extends BaseController
         return $resource;
     }
     /**
+     * update relationship
+     *
+     * @method updateRelationships
+     *
+     * @param  Request $request
+     * @param  Int $id
+     *
+     * @return array
+     */
+    public function updateRelationships(Request $request, $id){
+        // get type from url
+        $type = $request->segment(4);
+        // get ids
+        $relationshipIds = $this->getRelationshipsIds($request->json('data'), $type);
+        // get model
+        $model = $this->model->find($id);
+        // detach old relationships
+        $model->{$type}()->detach();
+        // attach new relationships
+        try{
+            $model->{$type}()->attach($relationshipIds);
+        }catch(\Exception $e){
+            return $this->response->error('', 403);
+        }
+        return $this->response->noContent();
+    }
+    /**
+     * add new relationships
+     *
+     * @method storeRelationships
+     *
+     * @param  Request $request
+     * @param  Int $id
+     *
+     * @return array
+     */
+    public function storeRelationships(Request $request, $id){
+        // get type from url
+        $type = $request->segment(4);
+        // check data
+        if(!$data = $request->json('data')){
+            return $this->response->error('Missing request body', 403);
+        }
+        // get ids
+        $relationshipIds = $this->getRelationshipsIds($data, $type);
+        // get model
+        $model = $this->model->find($id);
+        // attach new relationships
+        try{
+            $model->{$type}()->attach($relationshipIds);
+        }catch(\Exception $e){
+            return $this->response->error('', 403);
+        }
+        return $this->response->noContent();
+    }
+    /**
      * gets attributes from received data for fillable fields
      *
      * @method getRecivedData
@@ -321,5 +416,29 @@ class ApiController extends BaseController
         }
         // return data
         return $output;
+    }
+    /**
+     * turns relationship data into array
+     *
+     * @method prepareRelationshipsData
+     *
+     * @param  $data
+     *
+     * @return array
+     */
+    protected function getRelationshipsIds($relationships, $type){
+        // if single resource return id in array
+        if(isset($relationships['id']) && isset($relationships['type']) && $relationships['type'] === $type){
+            return [$relationships['id']];
+        }
+        // grab ids and return
+        $ids = [];
+        foreach($relationships as $rel){
+            if(isset($rel['type']) && $rel['type'] === $type && isset($rel['id'])){
+                $ids[] = $rel['id'];
+            }
+        }
+        // return
+        return $ids;
     }
 }

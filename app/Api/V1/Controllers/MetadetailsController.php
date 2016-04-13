@@ -36,11 +36,11 @@ class MetadetailsController extends ApiController
     /*
      * get related
      */
-    public function getPages(Request $request, $metadetail_id){
-        $metadetail = $this->validateResourceExists(Metadetail::find($metadetail_id));
+    public function getPages(Request $request, $id){
+        $model = $this->validateResourceExists($this->model->find($id));
         // return related objects
         return $this->getRelated($request,
-            $metadetail->pages(),
+            $model->pages(),
             'pages'
         );
     }
@@ -48,7 +48,7 @@ class MetadetailsController extends ApiController
      * get relationship
      */
     public function getPagesRelationships(Request $request, $metadetail_id){
-        $metadetail = $this->validateResourceExists(Metadetail::find($metadetail_id));
+        $metadetail = $this->validateResourceExists($this->model->find($metadetail_id));
         // return relationship
         return $this->getRelationship([
             'ids' => $metadetail->pages->lists('id'),
@@ -56,21 +56,6 @@ class MetadetailsController extends ApiController
             'parent_id' => $metadetail_id,
             'parent_type' => 'metadetails'
         ]);
-    }
-    /*
-     * update relationships
-     */
-    public function updatePagesRelationships(Request $request, $metadetail_id){
-        $receivedRelationships = $this->getRecivedRelationships($request);
-        return $receivedRelationships;
-        // $data = json_decode($request->getContent(), true);
-        // $metadetail = $this->validateResourceExists(Metadetail::find($metadetail_id));
-        //
-        // foreach($data['data'] as $relationship){
-        //     $metadetail->pages()->detach($relationship['id']);
-        // }
-        //
-        // return $this->response->noContent();
     }
     /*
      * delete relationship

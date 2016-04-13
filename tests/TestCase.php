@@ -1,22 +1,62 @@
 <?php
 
 use Lukasoppermann\Httpstatus\Httpstatuscodes;
-use Lukasoppermann\Testing\TestTrait;
+use Lukasoppermann\Testing\Traits\TestTrait;
+use Lukasoppermann\Testing\BaseTests\GetTest;
+use Lukasoppermann\Testing\BaseTests\PostTest;
+use Lukasoppermann\Testing\BaseTests\PatchTest;
+use Lukasoppermann\Testing\BaseTests\DeleteTest;
+use Lukasoppermann\Testing\Resources\Collection;
+use Lukasoppermann\Testing\Resources\Page;
+use Illuminate\Support\Facades\Artisan as Artisan;
 
 class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
 {
     use TestTrait;
-
+    use GetTest;
+    use PostTest;
+    use PatchTest;
+    use DeleteTest;
+    // guzzle client
     protected $client;
-
+    // the tests main model
+    protected $model;
+    // variable to ensure seeding only happens once
+    protected static $db_inited = false;
+    /*
+     * SETUP
+     */
     public function setUp()
     {
         parent::setUp();
-
+        // run migrations if they haven't been run yet
+        if (!static::$db_inited) {
+             static::$db_inited = true;
+             static::initDB();
+        }
+        // init guzzle
         $this->client = new GuzzleHttp\Client([
             'base_uri' => 'http://api.formandsystem.app',
             'exceptions' => false,
         ]);
+        // init resources
+        $this->resources = [
+            'collections' => (new Collection)->expected(),
+            'collections_post' => (new Collection)->post(),
+            'collections_post_incomplete' => (new Collection)->post_incomplete(),
+            'pages' => (new Page)->expected()
+        ];
+        // init Model
+        $model = "App\Api\V1\Models\\".ucfirst(substr($this->resource,0,-1));
+        $this->model = new $model;
+    }
+    /*
+     * run migration & seeding before tests
+     */
+    protected static function initDB()
+    {
+        Artisan::call('migrate:refresh');
+        Artisan::call('db:seed');
     }
     /**
      * Creates the application.
@@ -107,6 +147,14 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
         ];
 
         $this->assertValidArray($expected, $received);
+    }
+    /*
+     * @test
+     */
+    protected function getNotFound($url){
+        $response = $this->getClientResponse($url);
+        // ASSERTIONS
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
     }
     /*
      * prepare data as headers & body for request

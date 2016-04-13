@@ -14,14 +14,17 @@ $api->group([
     // ---------------------------
     // collections
     $api->get('collections', 'CollectionsController@index');
-    $api->get('collections/{collection}', 'CollectionsController@show');
+    $api->get('collections/{id}', 'CollectionsController@show');
     $api->post('collections', 'CollectionsController@store');
-    $api->patch('collections/{collection}', 'CollectionsController@update');
-    $api->delete('collections/{collection}', 'CollectionsController@delete');
+    $api->patch('collections/{id}', 'CollectionsController@update');
+    $api->delete('collections/{id}', 'CollectionsController@delete');
     // collections/pages
-    $api->get('collections/{collection}/pages', 'CollectionsController@getPages');
-    $api->get('collections/{collection}/relationships/pages', 'CollectionsController@getPagesRelationships');
-    $api->get('collections/{collection}/test', 'CollectionsController@test');
+    $api->get('collections/{id}/pages', 'CollectionsController@getPages');
+    $api->get('collections/{id}/relationships/pages', 'CollectionsController@getPagesRelationships');
+    // $api->post('collections', 'CollectionsController@store');
+    // $api->patch('collections/{collection}', 'CollectionsController@update');
+    $api->delete('collections/{id}/relationships/{relationship}', 'CollectionsController@deleteRelationships');
+
     // ---------------------------
     // pages
     $api->get('pages', 'PagesController@index');
@@ -48,21 +51,22 @@ $api->group([
     // ---------------------------
     // metadetails (like settings)
     $api->get('metadetails', 'metadetailsController@index');
-    $api->get('metadetails/{metadetails}', 'metadetailsController@show');
+    $api->get('metadetails/{id}', 'metadetailsController@show');
     $api->post('metadetails', 'metadetailsController@store');
-    $api->patch('metadetails/{metadetails}', 'metadetailsController@update');
-    $api->delete('metadetails/{metadetails}', 'metadetailsController@delete');
+    $api->patch('metadetails/{id}', 'metadetailsController@update');
+    $api->delete('metadetails/{id}', 'metadetailsController@delete');
     // metadetails/pages
-    $api->get('metadetails/{metadetails}/pages', 'metadetailsController@getPages');
-    $api->get('metadetails/{metadetails}/relationships/pages', 'metadetailsController@getPagesRelationships');
-    $api->patch('metadetails/{metadetails}/relationships/pages', 'metadetailsController@updatePagesRelationships');
-    $api->delete('metadetails/{metadetails}/relationships/pages', 'metadetailsController@deletePagesRelationships');
+    $api->get('metadetails/{id}/pages', 'metadetailsController@getPages');
+    $api->get('metadetails/{id}/relationships/pages', 'metadetailsController@getPagesRelationships');
+    $api->patch('metadetails/{id}/relationships/pages', 'metadetailsController@updateRelationships');
+    $api->post('metadetails/{id}/relationships/pages', 'metadetailsController@storeRelationships');
+    $api->delete('metadetails/{id}/relationships/pages', 'metadetailsController@deletePagesRelationships');
     // ---------------------------
     // images
     $api->get('images', 'ImagesController@index');
-    $api->get('images/{image}', 'ImagesController@show');
-    $api->delete('images/{images}', 'ImagesController@delete');
+    $api->get('images/{id}', 'ImagesController@show');
+    $api->delete('images/{id}', 'ImagesController@delete');
     // images/fragments
-    $api->get('images/{image}/fragments', 'ImagesController@getFragments');
-    $api->get('images/{image}/relationships/fragments', 'ImagesController@getFragmentsRelationships');
+    $api->get('images/{id}/fragments', 'ImagesController@getFragments');
+    $api->get('images/{id}/relationships/fragments', 'ImagesController@getFragmentsRelationships');
 });

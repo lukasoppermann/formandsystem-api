@@ -1,6 +1,6 @@
 <?php
 
-namespace Lukasoppermann\Testing;
+namespace Lukasoppermann\Testing\Traits;
 
 use PHPUnit_Framework_Assert as Assertion;
 use Illuminate\Support\Facades\Validator;

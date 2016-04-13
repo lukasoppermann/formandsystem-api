@@ -253,9 +253,14 @@ class Metadetail_patchTest extends TestCase
                     "id" => $id,
                     "relationships" => [
                         "pages" => [
-                            "data" => [
-                                'type' => 'pages',
-                                'id'   => "2"
+                            "data" => [[
+                                    'type' => 'pages',
+                                    'id'   => "2"
+                                ],[
+                                    'id'   => "2"
+                                ],[
+                                    'type' => 'pages',
+                                ]
                             ]
                         ],
                         "test" => [
@@ -279,11 +284,11 @@ class Metadetail_patchTest extends TestCase
     {
         // PREPARE
         $id = App\Api\V1\Models\Metadetail::first()->id;
-        // $model = App\Api\V1\Models\Metadetail::find($id);
-        // $model->pages()->detach();
-        // $model->pages()->save(App\Api\V1\Models\Page::all()->random(1));
-        // $model->pages()->save(App\Api\V1\Models\Page::all()->random(1));
-        // $this->assertEquals(2, $model->pages()->count());
+        $model = App\Api\V1\Models\Metadetail::find($id);
+        $model->pages()->detach();
+        $model->pages()->save(App\Api\V1\Models\Page::all()->random(1));
+        $model->pages()->save(App\Api\V1\Models\Page::all()->random(1));
+        $this->assertEquals(2, $model->pages()->count());
         // PATCH
         $response = $this->client->request('PATCH', '/metadetails/'.$id.'/relationships/pages', [
             'headers' => [
@@ -297,7 +302,7 @@ class Metadetail_patchTest extends TestCase
             ])
         ]);
         // check status code & response body
-        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals(self::HTTP_NO_CONTENT, $response->getStatusCode());
         $this->assertEquals(1, $model->pages()->count());
     }
 }
