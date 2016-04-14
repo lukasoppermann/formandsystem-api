@@ -21,6 +21,16 @@ class PagesController extends ApiController
         'slug'
     ];
     /**
+     * The relationships a resource can have
+     *
+     * @var array
+     */
+    protected $relationships = [
+        'metadetails',
+        'collections',
+        'fragments'
+    ];
+    /**
      * The filters that are allowed in requests
      *
      * @var array

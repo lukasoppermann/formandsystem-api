@@ -28,7 +28,12 @@ $api->group([
     // ---------------------------
     // pages
     $api->get('pages', 'PagesController@index');
-    $api->get('pages/{page}', 'PagesController@show');
+    $api->get('pages/{id}', 'PagesController@show');
+    $api->post('pages', 'PagesController@store');
+    $api->patch('pages/{id}', 'PagesController@update');
+    $api->delete('pages/{id}', 'PagesController@delete');
+    // pages/relationships
+    $api->delete('pages/{id}/relationships/{relationship}', 'PagesController@deleteRelationships');
     // pages/collections
     $api->get('pages/{page}/collections', 'PagesController@getCollections');
     $api->get('pages/{page}/relationships/collections', 'PagesController@getCollectionsRelationships');

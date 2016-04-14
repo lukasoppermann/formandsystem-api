@@ -2,29 +2,29 @@
 
 namespace Lukasoppermann\Testing\Resources;
 
-class CollectionResource{
+use Lukasoppermann\Testing\Resources\ApiResource;
+
+class CollectionResource extends ApiResource{
     /**
-     * available filtes
+     * returns available filters
      *
-     * @var [type]
+     * @method filter
+     *
+     * @return array
      */
-    protected $filter = [
-        'slug'
-    ];
-    // getter
-    public function __get($property){
-      if (property_exists($this, $property)) {
-        return $this->$property;
-      }
+    public function filter(){
+        return [
+            'slug'
+        ];
     }
     /**
      * returns expected blueprint
      *
-     * @method expected
+     * @method blueprint
      *
      * @return array
      */
-    public function expected(){
+    public function blueprint(){
         return [
             'id' => 'string',
             'type' => 'in:collections',
@@ -37,11 +37,11 @@ class CollectionResource{
     /**
      * returns dummy post data
      *
-     * @method post
+     * @method data
      *
      * @return array
      */
-    public function post(){
+    public function data(){
         return [
             "type" => "collections",
             "attributes" => [
@@ -51,13 +51,13 @@ class CollectionResource{
         ];
     }
     /**
-     * returns dummy post data
+     * returns incomplete dummy post data used for patch
      *
-     * @method post
+     * @method incomplete
      *
      * @return array
      */
-    public function post_incomplete(){
+    public function incomplete(){
         return [
             "type" => "collections",
             "attributes" => [

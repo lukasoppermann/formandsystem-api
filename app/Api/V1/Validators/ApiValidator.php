@@ -6,17 +6,17 @@ use Illuminate\Support\Facades\Validator;
 
 abstract class ApiValidator{
     /**
-     * Indicates if updates with only a part of the content are allowed
-     *
-     * @var bool
-     */
-    protected $partialUpdate = true;
-    /**
      * validate input
      *
      * @method validateInput
      */
     protected function validate($input, $rules){
+        if(!is_array($input)){
+            throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+        }
+        // prepare rules
+        $rules = $this->prepareRules($rules);
+        // run validation
         $validator = Validator::make($input, $rules);
         // return errors
         if( $validator->fails() ){
@@ -38,13 +38,33 @@ abstract class ApiValidator{
         return $this->validate($input, $rules);
     }
     /**
-     * validate Post
+     * validate Patch
      *
-     * @method validatePost
+     * @method validatePatch
      */
     public function validatePatch($input){
         $rules = $this->rulesPatch();
         return $this->validate($input, $rules);
+    }
+    /**
+     * prepare validation rules
+     *
+     * @method prepareRules
+     */
+    public function prepareRules($rules){
+        $output = [];
+        foreach($rules as $key => $rule){
+            if(!is_array($rule)){
+                $output[$key] = $rule;
+            }
+            if(is_array($rule)){
+                foreach($rule as $k => $r){
+                    $output[$key.'.'.$k] = $r;
+                }
+            }
+        }
+
+        return $output;
     }
     /**
      * rules Post

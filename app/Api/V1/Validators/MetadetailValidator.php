@@ -13,9 +13,11 @@ class MetadetailValidator extends ApiValidator{
     protected function rulesPost(){
 
         return [
-            'resourceType' => 'required|in:metadetails',
-            'type' => 'required|string',
-            'value' => 'required',
+            'type' => 'required|in:metadetails',
+            'attributes' => [
+                'type' => 'required|string|alpha_dash',
+                'value' => 'required',
+            ]
         ];
 
     }
@@ -29,10 +31,12 @@ class MetadetailValidator extends ApiValidator{
      protected function rulesPatch(){
 
          return [
-             'resourceType' => 'required|in:metadetails',
-             'resourceId' => 'required|string',
-             'type' => 'string',
-             'value' => '',
+             'type' => 'required|in:metadetails',
+             'id' => 'required|string',
+             'attributes' => [
+                 'type' => 'string|alpha_dash',
+                 'value' => '',
+             ]
          ];
 
      }

@@ -5,15 +5,35 @@ namespace App\Api\V1\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Page extends Model
+class Page extends BaseModel
 {
     use SoftDeletes;
+    /**
+     * If uuid is used instead of autoincementing id
+     *
+     * @var bool
+     */
+    protected $uuid = true;
     /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
     protected $dates = ['deleted_at'];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'id',
+        'menu_label',
+        'title',
+        'description',
+        'published',
+        'slug',
+        'language',
+    ];
     /**
      * Indicates if the model should be timestamped.
      *

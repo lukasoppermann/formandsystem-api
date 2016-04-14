@@ -13,9 +13,11 @@ class CollectionValidator extends ApiValidator{
     protected function rulesPost(){
 
         return [
-            'resourceType' => 'required|in:collections',
-            'name' => 'required|string',
-            'slug' => 'required|string',
+            'type' => 'required|in:collections',
+            'attributes' => [
+                'name' => 'required|string',
+                'slug' => 'required|string|alpha_dash',
+            ]
         ];
 
     }
@@ -29,10 +31,12 @@ class CollectionValidator extends ApiValidator{
      protected function rulesPatch(){
 
          return [
-             'resourceType' => 'required|in:collections',
-             'resourceId' => 'required|string',
-             'name' => 'string',
-             'slug' => 'string',
+             'id' => 'required|string',
+             'type' => 'required|in:collections',
+             'attributes' => [
+                 'name' => 'string',
+                 'slug' => 'string|alpha_dash',
+             ]
          ];
 
      }

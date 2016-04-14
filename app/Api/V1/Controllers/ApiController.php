@@ -84,10 +84,7 @@ class ApiController extends BaseController
         $receivedData = $this->getRecivedData($request);
         $receivedRelationships = $this->getRecivedRelationships($request);
         // validate data
-        $errors = (new $this->validator)->validatePost(array_merge(
-            $receivedData,
-            ['resourceType' => $request->json('data.type')]
-        ));
+        $errors = (new $this->validator)->validatePost($request->json('data'));
         // return errors if vaildation fails
         if( $errors ){
             return $this->response->error($errors, 400);
@@ -124,13 +121,7 @@ class ApiController extends BaseController
         $receivedData = $this->getRecivedData($request);
         $receivedRelationships = $this->getRecivedRelationships($request);
         // validate data
-        $errors = (new $this->validator)->validatePatch(array_merge(
-            $receivedData,
-            [
-                'resourceType' => $request->json('data.type'),
-                'resourceId' => $request->json('data.id'),
-            ]
-        ));
+        $errors = (new $this->validator)->validatePatch($request->json('data'));
         // return errors if vaildation fails
         if( $errors ){
             return $this->response->error($errors, 400);
