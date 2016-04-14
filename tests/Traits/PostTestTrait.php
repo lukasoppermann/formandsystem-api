@@ -13,7 +13,7 @@ trait PostTestTrait
         $response = $this->client->request('POST', '/'.$this->resource, [
             'headers' => ['Accept' => 'application/json'],
             'body' => json_encode([
-                "data" => $this->resources[$this->resource.'_post']
+                "data" => $this->resource()->data()
             ])
         ]);
         // GET DATA
@@ -21,7 +21,7 @@ trait PostTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
         $this->assertNotNull($this->model->find($data['id']));
-        $this->assertValidArray($this->resources[$this->resource], $data);
+        $this->assertValidArray($this->resource()->blueprint(), $data);
     }
     /**
      * post new resource with relationships
@@ -49,7 +49,7 @@ trait PostTestTrait
             'headers' => ['Accept' => 'application/json'],
             'body' => json_encode([
                 "data" => array_merge(
-                    $this->resources[$this->resource.'_post'],
+                    $this->resource()->data(),
                     ['relationships' => $relationshipData]
                 )
             ])
@@ -59,7 +59,7 @@ trait PostTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
         $this->assertNotNull($this->model->find($data['id']));
-        $this->assertValidArray($this->resources[$this->resource], $data);
+        $this->assertValidArray($this->resource()->blueprint(), $data);
         // ASSERT RELATIONSHIPS
         foreach($this->relationships as $relationship){
             $this->assertNotNull($this->model->find($data['id'])->{$relationship}->first());
@@ -85,7 +85,7 @@ trait PostTestTrait
             'headers' => ['Accept' => 'application/json'],
             'body' => json_encode([
                 "data" => array_merge(
-                    $this->resources[$this->resource.'_post'],
+                    $this->resource()->data(),
                     ['relationships' => $relationshipData]
                 )
             ])
@@ -95,7 +95,7 @@ trait PostTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
         $this->assertNotNull($this->model->find($data['id']));
-        $this->assertValidArray($this->resources[$this->resource], $data);
+        $this->assertValidArray($this->resource()->blueprint(), $data);
         // ASSERT RELATIONSHIPS
         foreach($this->relationships as $relationship){
             $this->assertNotNull($this->model->find($data['id'])->{$relationship}->first());
@@ -113,7 +113,7 @@ trait PostTestTrait
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
                     "data" => array_merge(
-                        $this->resources[$this->resource.'_post'],
+                        $this->resource()->data(),
                         ['relationships' =>
                             ['wrongRelationship' =>
                                 ['data' => [
@@ -144,7 +144,7 @@ trait PostTestTrait
             'headers' => ['Accept' => 'application/json'],
             'body' => json_encode([
                 "data" => array_merge(
-                    $this->resources[$this->resource.'_post'],
+                    $this->resource()->data(),
                     ['type' => 'wrongType']
                 )
             ])
@@ -152,7 +152,7 @@ trait PostTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_BAD_REQUEST, $response->getStatusCode());
         // POST with NO Type
-        $data = $this->resources[$this->resource.'_post'];
+        $data = $this->resource()->data();
         unset($data['type']);
         $response = $this->client->request('POST', '/'.$this->resource, [
             'headers' => ['Accept' => 'application/json'],
@@ -172,7 +172,7 @@ trait PostTestTrait
             'headers' => ['Accept' => 'application/json'],
             'body' => json_encode([
                 "data" => array_merge(
-                    $this->resources[$this->resource.'_post_incomplete']
+                    $this->resource()->incomplete()
                 )
             ])
         ]);
@@ -189,7 +189,7 @@ trait PostTestTrait
             'body' => json_encode([
                 "data" => array_merge(
                     array_merge(
-                        $this->resources[$this->resource.'_post'],
+                        $this->resource()->data(),
                         ['additonalData' => 'not supported']
                     )
                 )
@@ -200,7 +200,7 @@ trait PostTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
         $this->assertNotNull($this->model->find($data['id']));
-        $this->assertValidArray($this->resources[$this->resource], $data);
+        $this->assertValidArray($this->resource()->blueprint(), $data);
     }
     /**
      * post new resource with no body

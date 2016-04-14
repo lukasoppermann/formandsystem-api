@@ -15,7 +15,7 @@ trait GetTestTrait
         $received = $this->getResponseArray($response)['data'][0];
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-        $this->assertValidArray($this->resources[$this->resource], $received);
+        $this->assertValidArray($this->resource()->blueprint(), $received);
     }
     /*
      * test getting the main resource by id
@@ -28,7 +28,7 @@ trait GetTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
         $this->assertEquals($this->model->first()->id, $received['id']);
-        $this->assertValidArray($this->resources[$this->resource], $received);
+        $this->assertValidArray($this->resource()->blueprint(), $received);
     }
     /*
      * test getting the main resource by wrong id
@@ -41,8 +41,9 @@ trait GetTestTrait
     /**
      * test getting the main resource by filter
      */
-    public function getResourceByFilter($filter)
+    public function getResourceByFilter()
     {
+        $filter = $this->resource()->filter->first();
         // CALL
         $response = $this->getClientResponse('/'.$this->resource.'?filter=['.$filter.'='.$this->model->first()->{$filter}.']');
         // GET DATA
@@ -52,7 +53,7 @@ trait GetTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
         $this->assertEquals($this->model->first()->{$filter}, $received['attributes'][$filter]);
-        $this->assertValidArray($this->resources[$this->resource], $received);
+        $this->assertValidArray($this->resource()->blueprint(), $received);
     }
     /**
      * test getting the main resource by wrong filter
@@ -67,12 +68,14 @@ trait GetTestTrait
     /**
      * test getting the main resource by wrong filter
      */
-    public function getResourceByWrongFilterParameter($filter = false)
+    public function getResourceByWrongFilterParameter()
     {
+        // PREPARE
+        $filter = $this->resource()->filter->first();
         // CALL
         $response = $this->getClientResponse('/'.$this->resource.'?filter=['.$filter.'=wrongParameter]');
         // TEST PAGINATION
-        $this->checkErrorResponse($response, 'HTTP_BAD_REQUEST');
+        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
     }
 
     /**
@@ -90,7 +93,7 @@ trait GetTestTrait
             $received = $this->getResponseArray($response)['data'][0];
             // ASSERTIONS
             $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-            $this->assertValidArray($this->resources[$relationship], $received);
+            $this->assertValidArray($this->resources[$relationship]->blueprint(), $received);
         }
     }
     /**

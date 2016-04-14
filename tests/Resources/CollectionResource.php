@@ -2,8 +2,21 @@
 
 namespace Lukasoppermann\Testing\Resources;
 
-class Collection{
-
+class CollectionResource{
+    /**
+     * available filtes
+     *
+     * @var [type]
+     */
+    protected $filter = [
+        'slug'
+    ];
+    // getter
+    public function __get($property){
+      if (property_exists($this, $property)) {
+        return $this->$property;
+      }
+    }
     /**
      * returns expected blueprint
      *

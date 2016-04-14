@@ -19,7 +19,7 @@ trait GetTest
         // BY WRONG ID
         $this->getResourceByWrongId();
         // BY FILTER
-        $this->getResourceByFilter('slug');
+        $this->getResourceByFilter();
         // BY WRONG FILTER
         $this->getResourceByWrongFilter();
         // BY WRONG FILTER PARAMETER

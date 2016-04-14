@@ -16,14 +16,14 @@ trait PatchTestTrait
             'headers' => ['Accept' => 'application/json'],
             'body' => json_encode([
                 "data" => array_merge(
-                    $this->resources[$this->resource.'_post_incomplete'],
+                    $this->resource()->incomplete(),
                     ['id' => $model->id]
                 )
             ])
         ]);
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-        $this->assertValidArray($this->resources[$this->resource], json_decode($response->getBody(), true)['data']);
+        $this->assertValidArray($this->resource()->blueprint(), json_decode($response->getBody(), true)['data']);
     }
     /*
      * patch the main resource by wrong id
@@ -34,7 +34,7 @@ trait PatchTestTrait
             'headers' => ['Accept' => 'application/json'],
             'body' => json_encode([
                 "data" => array_merge(
-                    $this->resources[$this->resource.'_post_incomplete'],
+                    $this->resource()->incomplete(),
                     ['id' => $this->model->first()->id]
                 )
             ])
@@ -79,7 +79,7 @@ trait PatchTestTrait
             'headers' => ['Accept' => 'application/json'],
             'body' => json_encode([
                 "data" => array_merge(
-                    $this->resources[$this->resource.'_post_incomplete']
+                    $this->resource()->incomplete()
                 )
             ])
         ]);
@@ -87,7 +87,7 @@ trait PatchTestTrait
         $this->assertEquals(self::HTTP_BAD_REQUEST, $response->getStatusCode());
         // PREPARE FOR NO TYPE
         $data = array_merge(
-            $this->resources[$this->resource.'_post_incomplete'],
+            $this->resource()->incomplete(),
             ['id' => $this->model->first()->id]
         );
         unset($data['type']);

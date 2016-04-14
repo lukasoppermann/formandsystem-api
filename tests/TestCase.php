@@ -6,9 +6,6 @@ use Lukasoppermann\Testing\BaseTests\GetTest;
 use Lukasoppermann\Testing\BaseTests\PostTest;
 use Lukasoppermann\Testing\BaseTests\PatchTest;
 use Lukasoppermann\Testing\BaseTests\DeleteTest;
-use Lukasoppermann\Testing\Resources\Collection;
-use Lukasoppermann\Testing\Resources\Page;
-use Lukasoppermann\Testing\Resources\Metadetail;
 use Illuminate\Support\Facades\Artisan as Artisan;
 
 class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
@@ -18,6 +15,12 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
     use PostTest;
     use PatchTest;
     use DeleteTest;
+    // resource objects
+    protected $resourceObjects = [
+        'Metadetail',
+        'Page',
+        'Collection'
+    ];
     // guzzle client
     protected $client;
     // the tests main model
@@ -41,15 +44,10 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
             'exceptions' => false,
         ]);
         // init resources
-        $this->resources = [
-            'collections' => (new Collection)->expected(),
-            'collections_post' => (new Collection)->post(),
-            'collections_post_incomplete' => (new Collection)->post_incomplete(),
-            'pages' => (new Page)->expected(),
-            'metadetails' => (new Metadetail)->expected(),
-            'metadetails_post' => (new Metadetail)->post(),
-            'metadetails_post_incomplete' => (new Metadetail)->post_incomplete(),
-        ];
+        foreach($this->resourceObjects as $resource){
+            $Resourceclass = 'Lukasoppermann\Testing\Resources\\'.$resource.'Resource';
+            $this->resources[strtolower($resource).'s'] = new $Resourceclass;
+        }
         // init Model
         $model = "App\Api\V1\Models\\".ucfirst(substr($this->resource,0,-1));
         $this->model = new $model;
@@ -61,6 +59,16 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
     {
         Artisan::call('migrate:refresh');
         Artisan::call('db:seed');
+    }
+    /**
+     * return current resource
+     *
+     * @method resource
+     *
+     * @return resource object
+     */
+    public function resource(){
+        return $this->resources[$this->resource];
     }
     /**
      * Creates the application.

@@ -2,21 +2,34 @@
 
 namespace Lukasoppermann\Testing\Resources;
 
-class Metadetail{
+use Lukasoppermann\Testing\Resources\ApiResource;
 
+class MetadetailResource extends ApiResource{
     /**
-     * returns expected blueprint
+     * returns available filters
      *
-     * @method expected
+     * @method filter
      *
      * @return array
      */
-    public function expected(){
+    public function filter(){
+        return [
+            'type'
+        ];
+    }
+    /**
+     * returns expected blueprint
+     *
+     * @method blueprint
+     *
+     * @return array
+     */
+    public function blueprint(){
         return [
             'id' => 'string',
             'type' => 'in:metadetails',
             'attributes' => [
-                'key' => 'string',
+                'type' => 'string',
                 'value' => 'stringOrArray',
             ]
         ];
@@ -24,15 +37,15 @@ class Metadetail{
     /**
      * returns dummy post data
      *
-     * @method post
+     * @method data
      *
      * @return array
      */
-    public function post(){
+    public function data(){
         return [
             "type" => "metadetails",
             "attributes" => [
-                "key" => "language",
+                "type" => "language",
                 "value" => [
                     'lang' => 'de',
                     'name' => 'deutsch'
@@ -41,13 +54,13 @@ class Metadetail{
         ];
     }
     /**
-     * returns dummy post data
+     * returns incomplete dummy post data used for patch
      *
-     * @method post
+     * @method incomplete
      *
      * @return array
      */
-    public function post_incomplete(){
+    public function incomplete(){
         return [
             "type" => "metadetails",
             "attributes" => [

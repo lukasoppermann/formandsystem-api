@@ -50,17 +50,18 @@ $api->group([
     $api->get('fragments/{fragment}/relationships/images', 'FragmentsController@getImagesRelationships');
     // ---------------------------
     // metadetails (like settings)
-    $api->get('metadetails', 'metadetailsController@index');
-    $api->get('metadetails/{id}', 'metadetailsController@show');
-    $api->post('metadetails', 'metadetailsController@store');
-    $api->patch('metadetails/{id}', 'metadetailsController@update');
-    $api->delete('metadetails/{id}', 'metadetailsController@delete');
+    $api->get('metadetails', 'MetadetailsController@index');
+    $api->get('metadetails/{id}', 'MetadetailsController@show');
+    $api->post('metadetails', 'MetadetailsController@store');
+    $api->patch('metadetails/{id}', 'MetadetailsController@update');
+    $api->delete('metadetails/{id}', 'MetadetailsController@delete');
     // metadetails/pages
     $api->get('metadetails/{id}/pages', 'metadetailsController@getPages');
     $api->get('metadetails/{id}/relationships/pages', 'metadetailsController@getPagesRelationships');
     $api->patch('metadetails/{id}/relationships/pages', 'metadetailsController@updateRelationships');
     $api->post('metadetails/{id}/relationships/pages', 'metadetailsController@storeRelationships');
-    $api->delete('metadetails/{id}/relationships/pages', 'metadetailsController@deletePagesRelationships');
+    // $api->delete('metadetails/{id}/relationships/pages', 'metadetailsController@deletePagesRelationships');
+    $api->delete('metadetails/{id}/relationships/{relationship}', 'MetadetailsController@deleteRelationships');
     // ---------------------------
     // images
     $api->get('images', 'ImagesController@index');
