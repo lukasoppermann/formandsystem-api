@@ -23,7 +23,7 @@ trait PatchTestTrait
         ]);
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-        $this->assertValidArray($this->resource()->blueprint(), json_decode($response->getBody(), true)['data']);
+        $this->assertValid(json_decode($response->getBody(), true)['data'], $this->resource()->blueprint());
     }
     /*
      * patch the main resource by wrong id

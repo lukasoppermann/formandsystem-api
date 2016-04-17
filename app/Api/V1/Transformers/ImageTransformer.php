@@ -20,8 +20,8 @@ class ImageTransformer extends ApiTransformer
       * @var array
       */
     protected $availableIncludes = [
-    //   'fragments',
-    //   'collections'
+      'fragments',
+      'images'
     ];
 
     public function transform(Image $image)
@@ -37,6 +37,20 @@ class ImageTransformer extends ApiTransformer
             'updated_at'    => (string)$image->updated_at,
             'relationships' => $this->relationshipsLinks('images/'.$image->id),
         ];
+    }
+    /*
+     * include Fragmens
+     */
+    public function includeFragments( Image $image )
+    {
+        return $this->collection( $image->fragments, new FragmentTransformer, 'fragments' );
+    }
+    /*
+     * include images
+     */
+    public function includeImages( Image $image )
+    {
+        return $this->collection( $image->images, new ImageTransformer, 'images' );
     }
 
 }

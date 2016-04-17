@@ -11,65 +11,28 @@ use Illuminate\Http\Request;
 class FragmentsController extends ApiController
 {
     /**
+     * The relationships a resource can have
+     *
+     * @var array
+     */
+    protected $relationships = [
+        'pages',
+        'images',
+        'fragments',
+    ];
+    /**
      * The filters that are allowed in requests
      *
      * @var array
      */
+    protected $availableFilters = [
+        'type'
+    ];
+    /**
+     * The resources name
+     *
+     * @var array
+     */
     protected $resource = 'fragments';
-
-    /*
-     * get related
-     */
-    public function getFragments(Request $request, $fragment_id)
-    {
-        $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
-
-        return $this->getRelated(
-            $request,
-            $fragment->fragments(),
-            'fragments'
-        );
-    }
-    /*
-     * get relationships
-     */
-    public function getFragmentsRelationships(Request $request, $fragment_id)
-    {
-        $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
-        // return relationship
-        return $this->getRelationship([
-            'ids' => $fragment->fragments->lists('id'),
-            'type' => 'fragments',
-            'parent_id' => $fragment_id,
-            'parent_type' => 'fragments'
-        ]);
-    }
-    /*
-     * get related
-     */
-    public function getImages(Request $request, $fragment_id)
-    {
-        $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
-
-        return $this->getRelated(
-            $request,
-            $fragment->images(),
-            'images'
-        );
-    }
-    /*
-     * get relationships
-     */
-    public function getImagesRelationships(Request $request, $fragment_id)
-    {
-        $fragment = $this->validateResourceExists(Fragment::find($fragment_id));
-        // return relationship
-        return $this->getRelationship([
-            'ids' => $fragment->images->lists('id'),
-            'type' => 'images',
-            'parent_id' => $fragment_id,
-            'parent_type' => 'fragments'
-        ]);
-    }
 
 }

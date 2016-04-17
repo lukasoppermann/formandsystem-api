@@ -3,7 +3,6 @@
 namespace App\Api\V1\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Api\V1\Traits\Uuid;
 
 class Metadetail extends BaseModel
 {

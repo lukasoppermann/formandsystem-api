@@ -3,12 +3,6 @@
 class PageTest extends TestCase
 {
     protected $resource = 'pages';
-
-    protected $relationships = [
-        'metadetails',
-        'collections',
-        // 'fragments'
-    ];
     // /**
     //  * @test
     //  */

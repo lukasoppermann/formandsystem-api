@@ -2,12 +2,17 @@
 
 namespace App\Api\V1\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Image extends Model
+class Image extends BaseModel
 {
     use SoftDeletes;
+    /**
+     * If uuid is used instead of autoincementing id
+     *
+     * @var bool
+     */
+    protected $uuid = true;
     /**
      * The attributes that should be mutated to dates.
      *
@@ -27,10 +32,23 @@ class Image extends Model
      */
     public $incrementing = false;
     /**
-     * The fragments that belong to the file.
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['id','link','slug','bytesize','height','width'];
+    /**
+     * The fragments that belong to the image.
      */
     public function fragments()
     {
-        return $this->morphedByMany('App\Api\V1\Models\Fragment', 'imageable');
+        return $this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable');
+    }
+    /**
+     * The images that belong to the image.
+     */
+    public function images()
+    {
+        return $this->morphedByMany('App\Api\V1\Models\Image', 'imageable');
     }
 }

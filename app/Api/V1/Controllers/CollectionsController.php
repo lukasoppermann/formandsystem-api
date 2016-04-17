@@ -27,33 +27,9 @@ class CollectionsController extends ApiController
         'pages'
     ];
     /**
-     * The filters that are allowed in requests
+     * The resources name
      *
      * @var array
      */
     protected $resource = 'collections';
-
-    public function getPages(Request $request, $collection_id)
-    {
-        $collection = $this->validateResourceExists(Collection::find($collection_id));
-
-        return $this->response->paginator(
-            $collection->pages()->paginate($this->perPage),
-            new PageTransformer ,
-            ['key' => 'pages']
-        );
-    }
-
-    public function getPagesRelationships(Request $request, $collection_id){
-        $collection = $this->validateResourceExists(Collection::find($collection_id));
-        // return relationship
-        return $this->getRelationship([
-            'ids' => $collection->pages->lists('id'),
-            'type' => 'pages',
-            'parent_id' => $collection_id,
-            'parent_type' => 'collections'
-        ]);
-
-    }
-
 }

@@ -18,6 +18,18 @@ class MetadetailResource extends ApiResource{
         ];
     }
     /**
+     * returns available filters
+     *
+     * @method filter
+     *
+     * @return array
+     */
+    public function relationships(){
+        return [
+            'pages'
+        ];
+    }
+    /**
      * returns expected blueprint
      *
      * @method blueprint

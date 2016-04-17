@@ -63,7 +63,6 @@ abstract class ApiValidator{
                 }
             }
         }
-
         return $output;
     }
     /**

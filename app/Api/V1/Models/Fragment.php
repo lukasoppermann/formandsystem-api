@@ -2,12 +2,17 @@
 
 namespace App\Api\V1\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Fragment extends Model
+class Fragment extends BaseModel
 {
     use SoftDeletes;
+    /**
+     * If uuid is used instead of autoincementing id
+     *
+     * @var bool
+     */
+    protected $uuid = true;
     /**
      * The attributes that should be mutated to dates.
      *
@@ -28,6 +33,12 @@ class Fragment extends Model
      */
     public $incrementing = false;
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['id','type','name','data'];
+    /**
      * The pages that belong to the fragment.
      */
     public function pages()
@@ -39,13 +50,13 @@ class Fragment extends Model
      */
     public function fragments()
     {
-        return $this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable');
+        return $this->morphedByMany('App\Api\V1\Models\Fragment', 'fragmentable');
     }
     /**
      * The images that belong to the fragment.
      */
     public function images()
     {
-        return $this->morphToMany('App\Api\V1\Models\Image', 'imageable');
+        return $this->morphedByMany('App\Api\V1\Models\Image', 'fragmentable');
     }
 }

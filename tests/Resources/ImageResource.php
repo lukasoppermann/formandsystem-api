@@ -4,7 +4,7 @@ namespace Lukasoppermann\Testing\Resources;
 
 use Lukasoppermann\Testing\Resources\ApiResource;
 
-class PageResource extends ApiResource{
+class ImageResource extends ApiResource{
     /**
      * returns available filters
      *
@@ -26,9 +26,8 @@ class PageResource extends ApiResource{
      */
     public function relationships(){
         return [
-            'metadetails',
-            'collections',
-            'fragments'
+            'fragments',
+            'images'
         ];
     }
     /**
@@ -41,14 +40,13 @@ class PageResource extends ApiResource{
     public function blueprint(){
         return [
             'id' => 'string',
-            'type' => 'in:pages',
+            'type' => 'in:images',
             'attributes' => [
-                'menu_label' => 'string',
+                'link' => 'url',
                 'slug' => 'string',
-                'published' => 'bool',
-                'language' => 'in:de,en',
-                'title' => 'string',
-                'description' => 'string'
+                'bytesize' => 'int',
+                'width' => 'int',
+                'height' => 'int',
             ]
         ];
     }
@@ -61,14 +59,13 @@ class PageResource extends ApiResource{
      */
     public function data(){
         return [
-            "type" => "pages",
-            'attributes' => [
-                'menu_label' => 'menu label',
-                'slug' => 'page-slug',
-                'published' => '1',
-                'language' => 'en',
-                'title' => 'Title of the page',
-                'description' => 'Description of the page'
+            "type" => "images",
+            "attributes" => [
+                "link" => "http://lorempixel.com/1511/1254/cats/?12207",
+                'slug' => 'image-slug',
+                'bytesize' => 122345,
+                'width' => 300,
+                'height' => 500,
             ]
         ];
     }
@@ -81,11 +78,9 @@ class PageResource extends ApiResource{
      */
     public function incomplete(){
         return [
-            "type" => "pages",
-            'attributes' => [
-                'slug' => 'new-page-slug',
-                'published' => '0',
-                'language' => 'de',
+            "type" => "images",
+            "attributes" => [
+                'slug' => 'new-image-slug',
             ]
         ];
     }

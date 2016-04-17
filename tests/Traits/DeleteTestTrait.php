@@ -48,7 +48,7 @@ trait DeleteTestTrait
      */
     public function deleteRelationships()
     {
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships() as $relationship){
             // PREPARE
             $model = $this->addRelatedItems($relationship);
             $relationshipId = $model->{$relationship}()->first()->id;
@@ -75,7 +75,7 @@ trait DeleteTestTrait
      */
     public function deleteRelationshipsWrongRelationshipData()
     {
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships() as $relationship){
             // PREPARE
             $model = $this->addRelatedItems($relationship);
             $relationshipId = $model->{$relationship}()->first()->id;
@@ -106,7 +106,7 @@ trait DeleteTestTrait
      */
     public function deleteRelationshipsWithWrongResourceId()
     {
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships()as $relationship){
             // DELETE WITH WRONG ID
             $response = $this->client->request('DELETE', '/'.$this->resource.'/1/relationships/1'.$relationship, [
                'headers' => ['Accept' => 'application/json'],

@@ -20,5 +20,11 @@ class ImagesTableSeeder extends Seeder
                 App\Api\V1\Models\Image::all()->random()->fragments()->save($fragment);
             }
         });
+        App\Api\V1\Models\Image::all()->each(function($image) {
+            // connect this section to 1 to 5 pages
+            for( $i = rand(0,5); $i > 0; $i--) {
+                App\Api\V1\Models\Image::all()->random()->images()->save($image);
+            }
+        });
     }
 }

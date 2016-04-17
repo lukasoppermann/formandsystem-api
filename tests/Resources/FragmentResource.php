@@ -4,7 +4,7 @@ namespace Lukasoppermann\Testing\Resources;
 
 use Lukasoppermann\Testing\Resources\ApiResource;
 
-class PageResource extends ApiResource{
+class FragmentResource extends ApiResource{
     /**
      * returns available filters
      *
@@ -14,7 +14,7 @@ class PageResource extends ApiResource{
      */
     public function filter(){
         return [
-            'slug'
+            'type'
         ];
     }
     /**
@@ -26,8 +26,8 @@ class PageResource extends ApiResource{
      */
     public function relationships(){
         return [
-            'metadetails',
-            'collections',
+            'pages',
+            // 'images',
             'fragments'
         ];
     }
@@ -41,14 +41,11 @@ class PageResource extends ApiResource{
     public function blueprint(){
         return [
             'id' => 'string',
-            'type' => 'in:pages',
+            'type' => 'in:fragments',
             'attributes' => [
-                'menu_label' => 'string',
-                'slug' => 'string',
-                'published' => 'bool',
-                'language' => 'in:de,en',
-                'title' => 'string',
-                'description' => 'string'
+                'name' => 'string',
+                'type' => 'required|string',
+                'data' => '',
             ]
         ];
     }
@@ -61,14 +58,14 @@ class PageResource extends ApiResource{
      */
     public function data(){
         return [
-            "type" => "pages",
+            "type" => "fragments",
             'attributes' => [
-                'menu_label' => 'menu label',
-                'slug' => 'page-slug',
-                'published' => '1',
-                'language' => 'en',
-                'title' => 'Title of the page',
-                'description' => 'Description of the page'
+                'name' => 'new fragment image',
+                'type' => 'image',
+                'data' => json_encode([
+                    'title' => 'image title',
+                    'description' => 'image description'
+                ]),
             ]
         ];
     }
@@ -81,11 +78,12 @@ class PageResource extends ApiResource{
      */
     public function incomplete(){
         return [
-            "type" => "pages",
+            "type" => "fragments",
             'attributes' => [
-                'slug' => 'new-page-slug',
-                'published' => '0',
-                'language' => 'de',
+                'name' => 'new fragment name',
+                'data' => json_encode([
+                    'title' => 'title of image'
+                ]),
             ]
         ];
     }

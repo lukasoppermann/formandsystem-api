@@ -15,7 +15,7 @@ trait GetTestTrait
         $received = $this->getResponseArray($response)['data'][0];
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-        $this->assertValidArray($this->resource()->blueprint(), $received);
+        $this->assertValid($received, $this->resource()->blueprint());
     }
     /*
      * test getting the main resource by id
@@ -28,7 +28,7 @@ trait GetTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
         $this->assertEquals($this->model->first()->id, $received['id']);
-        $this->assertValidArray($this->resource()->blueprint(), $received);
+        $this->assertValid($received, $this->resource()->blueprint());
     }
     /*
      * test getting the main resource by wrong id
@@ -53,7 +53,7 @@ trait GetTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
         $this->assertEquals($this->model->first()->{$filter}, $received['attributes'][$filter]);
-        $this->assertValidArray($this->resource()->blueprint(), $received);
+        $this->assertValid($received, $this->resource()->blueprint());
     }
     /**
      * test getting the main resource by wrong filter
@@ -83,7 +83,7 @@ trait GetTestTrait
      */
     public function getRelated()
     {
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships() as $relationship){
             $model = $this->addRelatedItems($relationship);
             // CALL
             $response = $this->getClientResponse('/'.$this->resource.'/'.$model->id.'/'.$relationship);
@@ -93,14 +93,14 @@ trait GetTestTrait
             $received = $this->getResponseArray($response)['data'][0];
             // ASSERTIONS
             $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-            $this->assertValidArray($this->resources[$relationship]->blueprint(), $received);
+            $this->assertValid($received, $this->resources[$relationship]->blueprint());
         }
     }
     /**
      * test getting the related resource e.g. /pages using a wrong resource id
      */
     public function getRelatedNoRelatedItems(){
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships()as $relationship){
             $this->model->first()->{$relationship}()->detach();
             // CALL
             $response = $this->getClientResponse('/'.$this->resource.'/'.$this->model->first()->id.'/'.$relationship);
@@ -114,7 +114,7 @@ trait GetTestTrait
      * test getting the related resource e.g. /pages using a wrong resource id
      */
     public function getRelatedWithWrongResourceId(){
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships()as $relationship){
             $response = $this->getClientResponse($this->resource.'/1/'.$relationship);
             // ASSERTIONS
             $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
@@ -125,7 +125,7 @@ trait GetTestTrait
      */
     public function getRelationships()
     {
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships()as $relationship){
             $model = $this->addRelatedItems($relationship);
             // CALL
             $response = $this->getClientResponse('/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship);
@@ -133,17 +133,17 @@ trait GetTestTrait
             $received = $this->getResponseArray($response)['data'][0];
             // ASSERTIONS
             $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-            $this->assertValidArray([
+            $this->assertValid($received, [
                 'id' => 'string',
                 'type' => 'in:'.$relationship,
-            ], $received);
+            ]);
         }
     }
     /**
      * test getting the related resource e.g. /pages using a wrong resource id
      */
     public function getRelationshipsNoRelatedItems(){
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships()as $relationship){
             $this->model->first()->{$relationship}()->detach();
             // CALL
             $response = $this->getClientResponse('/'.$this->resource.'/'.$this->model->first()->id.'/relationships/'.$relationship);
@@ -155,7 +155,7 @@ trait GetTestTrait
      * test getting the related resource e.g. /pages using a wrong resource id
      */
     public function getRelationshipsWithWrongResourceId(){
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships()as $relationship){
             $response = $this->getClientResponse($this->resource.'/1/relationships/'.$relationship);
             // ASSERTIONS
             $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');

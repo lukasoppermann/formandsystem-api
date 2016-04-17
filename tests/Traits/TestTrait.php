@@ -2,59 +2,88 @@
 
 namespace Lukasoppermann\Testing\Traits;
 
-use PHPUnit_Framework_Assert as Assertion;
-use Illuminate\Support\Facades\Validator;
-
 trait TestTrait
 {
-    /*
-     * Validation errors
+    /**
+     * return current resource
+     *
+     * @method resource
+     *
+     * @return resource object
      */
-    private $errors = [];
-    /*
-     * Validate an array against predefined rules.
+    public function resource(){
+        return $this->resources[$this->resource];
+    }
+    /**
+     * return current resources relationships
+     *
+     * @method relationships
+     *
+     * @return resource object
      */
-    protected function assertValidArray(array $rules, array $resourceData)
+    public function relationships(){
+        return $this->resources[$this->resource]->relationships();
+    }
+    /**
+     * Decode json response to array
+     *
+     * @return array
+     */
+    public function getResponseArray($response)
     {
-        $this->validateArray($rules, $resourceData);
-
-        if (count($this->errors) >= 1) {
-            Assertion::fail(implode(PHP_EOL, $this->errors));
-        }
+        return json_decode((string) $response->getBody(), true);
+    }
+    /**
+     * get the response from server
+     */
+    public function getClientResponse($url, $headers = [])
+    {
+        return $this->client->get($url, [
+            'headers' => array_merge([
+                'Accept' => 'application/json',
+            ], $headers),
+        ]);
     }
 
-    /*
-     * Get validation rules and run validator
+    /**
+     * test error response
      */
-    protected function validateArray($rules, $resourceData)
-    {
-        // set all rules to required
-        foreach ($rules as $key => $rule) {
-            // if the attribute has no children, validate it
-            if (!is_array($rule)) {
-                $rules[$key] = $rule;
-                // add required if not explicitly set to not required
-                if(!strpos($rule,'not_required')){
-                    $rules[$key] = $rules[$key].'|required';
-                }
-                $rules[$key] = str_replace('|not_required','',$rules[$key]);
-            // if the attribute has children, do a sub-loop
-            } else {
-                $rules[$key] = 'required';
-                if (array_key_exists($key, $resourceData)) {
-                    $this->validateArray($rule, $resourceData[$key]);
-                }
-            }
+    public function checkErrorResponse($response, $errorType){
+        $received = $this->getResponseArray($response);
+        // check status code
+        $this->assertEquals(constant("self::$errorType"), $response->getStatusCode());
+        // check for correct structure
+        $expected = [
+            'error' => [
+                'message' => 'string',
+                'status_code' => 'integer|in:'.constant("self::$errorType")
+            ]
+        ];
 
+        $this->assertValid($received, $expected);
+    }
+    /**
+     * test for pagination
+     */
+    public function isPaginated($response){
+        // get response
+        $reponse = $this->getResponseArray($response);
+        // test for meta
+        if(!isset($reponse['meta'])){
+            $this->fail('No Pagination or meta object missing.');
         }
-        // run validator
-        Validator::extend('stringOrArray', function($attribute, $value, $parameters, $validator) {
-            return (is_string($value) || is_array($value));
-        });
-        $validator = Validator::make($resourceData, $rules);
-        // store errors
-        foreach ($validator->messages()->toArray() as $error) {
-            $this->errors[] =  "\e[1;31m× \033[0m".$error[0];
-        }
+        // compare pagination
+        $expected = [
+            'pagination' => [
+                'total' => 'required|integer',
+                'count' => 'required|integer',
+                "per_page" => 'required|integer',
+                "current_page" => 'required|integer|in:1',
+                "total_pages" => 'required|integer',
+                "links" => 'array'
+            ]
+        ];
+        // ASSERTION
+        $this->assertValid($reponse['meta'], $expected);
     }
 }

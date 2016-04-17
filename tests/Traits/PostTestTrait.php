@@ -21,7 +21,7 @@ trait PostTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
         $this->assertNotNull($this->model->find($data['id']));
-        $this->assertValidArray($this->resource()->blueprint(), $data);
+        $this->assertValid($data, $this->resource()->blueprint());
     }
     /**
      * post new resource with relationships
@@ -29,7 +29,7 @@ trait PostTestTrait
     public function postResourceWithMultipleRelationships(){
         // PREPARE
         $relationshipData = [];
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships()as $relationship){
             // get related model
             $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
             // build relationship data
@@ -59,9 +59,9 @@ trait PostTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
         $this->assertNotNull($this->model->find($data['id']));
-        $this->assertValidArray($this->resource()->blueprint(), $data);
+        $this->assertValid($data, $this->resource()->blueprint());
         // ASSERT RELATIONSHIPS
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships()as $relationship){
             $this->assertNotNull($this->model->find($data['id'])->{$relationship}->first());
         }
     }
@@ -71,7 +71,7 @@ trait PostTestTrait
     public function postResourceWithOneRelationship(){
         // PREPARE
         $relationshipData = [];
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships()as $relationship){
             // get related model
             $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
             // build relationship data
@@ -95,9 +95,9 @@ trait PostTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
         $this->assertNotNull($this->model->find($data['id']));
-        $this->assertValidArray($this->resource()->blueprint(), $data);
+        $this->assertValid($data, $this->resource()->blueprint());
         // ASSERT RELATIONSHIPS
-        foreach($this->relationships as $relationship){
+        foreach($this->relationships()as $relationship){
             $this->assertNotNull($this->model->find($data['id'])->{$relationship}->first());
         }
     }
@@ -200,7 +200,7 @@ trait PostTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
         $this->assertNotNull($this->model->find($data['id']));
-        $this->assertValidArray($this->resource()->blueprint(), $data);
+        $this->assertValid($data, $this->resource()->blueprint());
     }
     /**
      * post new resource with no body

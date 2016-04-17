@@ -22,6 +22,14 @@ abstract class ApiResource
         }
     }
     /**
+     * returns available relationships
+     *
+     * @method relationships
+     *
+     * @return array
+     */
+    abstract public function relationships();
+    /**
      * returns available filters
      *
      * @method filter

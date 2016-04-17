@@ -1,6 +1,6 @@
 <?php
 
-class FragmentTest extends TestCase
+class FragmentTests extends TestCase
 {
     /**
      * @test

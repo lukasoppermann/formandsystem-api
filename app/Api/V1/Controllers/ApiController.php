@@ -2,78 +2,38 @@
 
 namespace App\Api\V1\Controllers;
 
-use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use App\Api\V1\Requests\ApiRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ApiController extends BaseController
+abstract class ApiController extends Controller
 {
-    // trait
-    use \Dingo\Api\Routing\Helpers;
-    /**
-     * The main model that for the resource
-     *
-     * @var model
-     */
-    protected $model;
-    /**
-     * The main transformer that for the resource
-     *
-     * @var transformer
-     */
-    protected $transformer;
-    /**
-     * The validator for the resource
-     *
-     * @var validator
-     */
-    protected $validator;
-    /**
-     * The filters that are allowed in requests
-     *
-     * @var array
-     */
-    protected $availableFilters = [];
     /**
      * The number of items returned per page
      *
      * @var int
      */
     protected $perPage = 20;
-    /**
-     * @method __construct
-     */
-    public function __construct(){
-        // get name from resources
-        $name = ucfirst(substr($this->resource,0,-1));
-        // init model
-        $model = "App\Api\V1\Models\\".$name;
-        $this->model = new $model;
-        // init transfomer
-        $this->transformer = "App\Api\V1\Transformers\\".$name."Transformer";
-        // init validator
-        $this->validator = "App\Api\V1\Validators\\".$name."Validator";
-    }
     /*
      * index
      */
-    public function index(Request $request)
+    public function index()
     {
-        // remove s from resource name
-        $name = ucfirst(substr($this->resource,0,-1));
         // get filter resource
-        $resource = $this->getFilteredResult($this->model, $request->input('filter'));
+        $resource = $this->getFilteredResult($this->newModel(), $this->request->input('filter'));
         // return result
-        return $this->response->paginator($resource, new $this->transformer, ['key' => $this->resource]);
+        return $this->response->paginator($resource, $this->newTransformer(), ['key' => $this->resource]);
     }
     /*
      * show
      */
     public function show($id)
     {
-        $item = $this->validateResourceExists($this->model->find($id));
-
-        return $this->response->item($item, new $this->transformer, ['key' => $this->resource]);
+        // validate that the requested resource exists
+        $item = $this->validateResourceExists($this->newModel()->find($id));
+        // return resource items
+        return $this->response->item($item, $this->newTransformer(), ['key' => $this->resource]);
     }
     /*
      * store
@@ -82,15 +42,16 @@ class ApiController extends BaseController
     {
         // get data from request
         $receivedData = $this->getRecivedData($request);
+
         $receivedRelationships = $this->getRecivedRelationships($request);
         // validate data
-        $errors = (new $this->validator)->validatePost($request->json('data'));
+        $errors = $this->newValidator()->validatePost($request->json('data'));
         // return errors if vaildation fails
         if( $errors ){
             return $this->response->error($errors, 400);
         }
         // create item
-        $model = $this->model->create($receivedData);
+        $model = $this->newModel()->create($receivedData['data']);
         // add relationships
         foreach($receivedRelationships as $key => $relationships){
             // check if relationship is valid
@@ -109,8 +70,18 @@ class ApiController extends BaseController
                 }
             }
         }
+        $returnData = $model;
+        // TODO: Streamline meta
+        $meta = [];
+        if($receivedData['ignored'] === true ){
+            $meta['Attributes ignored'] = 'Some attributes of the request have been ignored.';
+        }
         // return result
-        return $this->response->item($model, new $this->transformer, ['key' => $this->resource])->setStatusCode(201)->withHeader('Location', $_ENV['API_DOMAIN'].'/'.$this->resource.'/'.$model->id);
+        return $this->response
+            ->item($returnData, $this->newTransformer(), ['key' => $this->resource])
+            ->setStatusCode(201)
+            ->setMeta($meta)
+            ->withHeader('Location', $_ENV['API_DOMAIN'].'/'.$this->resource.'/'.$model->id);
     }
     /*
     * update
@@ -121,18 +92,18 @@ class ApiController extends BaseController
         $receivedData = $this->getRecivedData($request);
         $receivedRelationships = $this->getRecivedRelationships($request);
         // validate data
-        $errors = (new $this->validator)->validatePatch($request->json('data'));
+        $errors = $this->newValidator()->validatePatch($request->json('data'));
         // return errors if vaildation fails
         if( $errors ){
             return $this->response->error($errors, 400);
         }
         // update item
-        $model = $this->model->find($id);
+        $model = $this->newModel()->find($id);
         if($model === null){
             return $this->response->errorNotFound();
         }
 
-        $model->fill($receivedData);
+        $model->fill($receivedData['data']);
         $model->save();
 
         // add relationships
@@ -148,14 +119,14 @@ class ApiController extends BaseController
             }
         }
         // return result
-        return $this->response->item($this->model->find($id), new $this->transformer, ['key' => $this->resource])->setStatusCode(200);
+        return $this->response->item($this->newModel()->find($id), $this->newTransformer(), ['key' => $this->resource])->setStatusCode(200);
     }
     /*
      * delete
      */
     public function delete($resource_id){
         // if resource doesn't exist
-        if($this->model->destroy($resource_id) === 0){
+        if($this->newModel()->destroy($resource_id) === 0){
             return $this->response->errorNotFound();
         }
 
@@ -166,7 +137,7 @@ class ApiController extends BaseController
      */
     public function deleteRelationships(Request $request, $relationship, $id){
         // Validate resource
-        $model = $this->validateResourceExists($this->model->find($id));
+        $model = $this->validateResourceExists($this->newModel()->find($id));
         // validate relationship
         if( !in_array($relationship, $this->relationships) ){
             return $this->response->errorNotFound();
@@ -194,7 +165,6 @@ class ApiController extends BaseController
     public function getFilteredResult($model, $filterList){
 
         $filters = $this->prepFilters($filterList);
-
         foreach($filters as $key => $value){
 
             if(!in_array($key, $this->availableFilters)){
@@ -239,12 +209,15 @@ class ApiController extends BaseController
     /**
      * get paginated related data
      */
-    public function getRelated(Request $request, $relatedModel, $type){
-        //
+    public function getRelated(Request $request, $resource_id, $type){
+        // validate
+        $model = $this->validateResourceExists($this->newModel()->find($resource_id));
+        $this->validateRelationship($type);
+        // prepare transformer
         $transformer = "App\Api\V1\Transformers\\".ucfirst(substr($type,0,-1))."Transformer";
-
+        // return paginated result
         return $this->response->paginator(
-            $relatedModel->paginate($this->perPage),
+            $model->{$type}()->paginate($this->perPage),
             new $transformer,
             ['key' => $type]
         );
@@ -254,41 +227,28 @@ class ApiController extends BaseController
     /**
      * get relationship data
      */
-     public function getRelationship($data){
+     public function getRelationships(Request $request, $resource_id, $type){
+         // validate
+         $model = $this->validateResourceExists($this->newModel()->find($resource_id));
+         $this->validateRelationship($type);
+         //
          $relationships = [];
          // build relationship array
-         foreach($data['ids'] as $id){
+         foreach($model->{$type}->lists('id')->toArray() as $id){
              $relationships[] = [
                  'id' => $id,
-                 'type' => $data['type']
+                 'type' => $type
              ];
          }
 
          return $this->response->array([
              'data' => $relationships,
              'links' => [
-                 'self' => $_ENV['API_DOMAIN'].'/'.$data['parent_type'].'/'.$data['parent_id'].'/relationships/'.$data['type'],
-                 'related' => $_ENV['API_DOMAIN'].'/'.$data['parent_type'].'/'.$data['parent_id'].'/'.$data['type']
+                 'self' => $_ENV['API_DOMAIN'].'/'.$this->resource.'/'.$resource_id.'/relationships/'.$type,
+                 'related' => $_ENV['API_DOMAIN'].'/'.$this->resource.'/'.$resource_id.'/'.$type
              ],
          ]);
      }
-    /**
-     * validate if the resource exists, if not, throws 404
-     *
-     * @method validateResourceExists
-     *
-     * @param  resource object $resource
-     *
-     * @return resource object $resource
-     */
-    public function validateResourceExists($resource){
-        // throw 404 exception if resource does not exists
-        if ($resource === null) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-        }
-        // return resource if it does exist
-        return $resource;
-    }
     /**
      * update relationship
      *
@@ -305,7 +265,7 @@ class ApiController extends BaseController
         // get ids
         $relationshipIds = $this->getRelationshipsIds($request->json('data'), $type);
         // get model
-        $model = $this->model->find($id);
+        $model = $this->newModel()->find($id);
         // detach old relationships
         $model->{$type}()->detach();
         // attach new relationships
@@ -336,7 +296,7 @@ class ApiController extends BaseController
         // get ids
         $relationshipIds = $this->getRelationshipsIds($data, $type);
         // get model
-        $model = $this->model->find($id);
+        $model = $this->newModel()->find($id);
         // attach new relationships
         try{
             $model->{$type}()->attach($relationshipIds);
@@ -359,12 +319,14 @@ class ApiController extends BaseController
         if(!is_array($attributes)){
             $attributes = [];
         }
-        // get fiels from model
-        $fields = $this->model->getFillable();
+        // get fields from model
+        $fields = $this->newModel()->getFillable();
+
         // remove id
         array_splice($fields, array_search('id', $fields ), 1);
         // grab data for accepted fields
         $output = [];
+        $ignored = false;
         foreach($attributes as $key => $value){
             if( in_array($key,$fields) ){
                 if(is_array($value)){
@@ -372,9 +334,15 @@ class ApiController extends BaseController
                 }
                 $output[$key] = $value;
             }
+            else {
+                $ignored = true;
+            }
         }
         // return data
-        return $output;
+        return [
+            'data' => $output,
+            'ignored' => $ignored
+        ];
     }
     /**
      * gets relationships from received data, for

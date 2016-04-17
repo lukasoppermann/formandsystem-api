@@ -12,6 +12,15 @@ class FragmentTransformer extends ApiTransformer
     protected $defaultIncludes = [
         'fragments'
     ];
+    /**
+      * List of resources possible to include
+      *
+      * @var array
+      */
+    protected $availableIncludes = [
+      'fragments',
+      'images'
+    ];
 
     public function transform(Fragment $fragment)
     {
@@ -30,5 +39,10 @@ class FragmentTransformer extends ApiTransformer
     public function includeFragments( Fragment $fragment )
     {
         return $this->collection( $fragment->fragments, new FragmentTransformer, 'fragments' );
+    }
+
+    public function includeImages( Fragment $fragment )
+    {
+        return $this->collection( $fragment->images, new ImageTransformer, 'images' );
     }
 }
