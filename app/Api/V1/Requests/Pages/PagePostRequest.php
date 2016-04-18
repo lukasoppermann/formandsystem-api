@@ -33,8 +33,7 @@ class PagePostRequest extends PostRequest
             'attributes.published' => 'required|boolean',
             'attributes.language' => 'required|string|size:2',
             'attributes.title' => 'string',
-            'attributes.description' => 'string',
-            'relationships.collections.data.*.type' => 'in:collections'
+            'attributes.description' => 'string'
         ];
     }
     /**

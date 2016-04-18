@@ -52,7 +52,7 @@ abstract class ApiController extends Controller
             $relatedModel = "App\Api\V1\Models\\".substr(ucfirst($key),0,-1);
             foreach($relationships['data'] as $relationship){
                 $related = (new $relatedModel)->find($relationship['id']);
-                if( $related && in_array($relationship['type'], $this->relationships)){
+                if( $related ){
                     $model->{$key}()->save($related);
                 }
                 else {
