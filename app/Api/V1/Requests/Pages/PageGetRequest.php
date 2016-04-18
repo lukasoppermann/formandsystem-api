@@ -1,11 +1,21 @@
 <?php
 
-namespace App\Api\V1\Requests\Metadetails;
+namespace App\Api\V1\Requests\Pages;
 
-use App\Api\V1\Requests\PostRequest;
+use App\Api\V1\Requests\GetRequest;
 
-class MetadetailPostRequest extends PostRequest
+class PageGetRequest extends GetRequest
 {
+    /**
+     * The filters that are allowed in requests
+     *
+     * @return array
+     */
+    protected function filters(){
+        return[
+            'slug'
+        ];
+    }
     /**
      * The relationships a resource can have
      *
@@ -13,7 +23,9 @@ class MetadetailPostRequest extends PostRequest
      */
      protected function relationships(){
          return[
-             'pages'
+             'collections',
+             'metadetails',
+             'fragments'
          ];
      }
     /**
@@ -24,11 +36,7 @@ class MetadetailPostRequest extends PostRequest
      * @return array
      */
     protected function rules(){
-        return [
-            'type'              => 'required|in:metadetails',
-            'attributes.type'   => 'required|string|alpha_dash',
-            'attributes.value'  => 'required|string_or_array'
-        ];
+
     }
     /**
      * check if request is authorized

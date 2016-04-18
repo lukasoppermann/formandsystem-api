@@ -73,7 +73,12 @@ abstract class ApiRequest
      * @return void | Exception
      */
     protected function validate(Request $request){
-        $validator = app('validator')->make((array) $request->json('data'), (array) $this->rules());
+        // get rules
+        $rules = (array) $this->rules();
+        // add rule to on allow available Relationships to be submitted
+        $rules = $this->addRelationshipRules($rules);
+        // run validation
+        $validator = app('validator')->make((array) $request->json('data'), $rules);
         // throw error if validation fails
         if($validator->fails()){
             $this->resourceException($this->error('Request data validation failed.'),$validator->errors());
@@ -152,6 +157,25 @@ abstract class ApiRequest
         if(!$this->authorize($request)){
             throw new \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException('Unauthorized request.');
         }
+    }
+    /**
+     * add rules for resources relationships to rule array
+     *
+     * @method addRelationshipRules
+     *
+     * @param  [array]               $rules
+     *
+     * @return [array]
+     */
+    protected function addRelationshipRules($rules = []){
+        // allow only available relationships
+        $rules['relationships'] = 'array_has_only:'.implode(',',$this->availableRelationships());
+        // add rule to check type & id of relationships
+        foreach($this->availableRelationships() as $relationship){
+            $rules['relationships'] = 'array_has_only:'.implode(',',$this->availableRelationships());
+        }
+        // return fules
+        return $rules;
     }
     /**
      * throw new resource exception

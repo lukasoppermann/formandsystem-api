@@ -42,23 +42,13 @@ abstract class ApiController extends Controller
     {
         // get data from request
         $receivedData = $this->getRecivedData($request);
-
+        // get relationship data from request
         $receivedRelationships = $this->getRecivedRelationships($request);
-        // validate data
-        $errors = $this->newValidator()->validatePost($request->json('data'));
-        // return errors if vaildation fails
-        if( $errors ){
-            return $this->response->error($errors, 400);
-        }
         // create item
         $model = $this->newModel()->create($receivedData['data']);
         // add relationships
         foreach($receivedRelationships as $key => $relationships){
-            // check if relationship is valid
-            if(!in_array($key, $this->relationships)){
-                return $this->response()->errorBadRequest('Invalid relationship');
-            }
-            //
+
             $relatedModel = "App\Api\V1\Models\\".substr(ucfirst($key),0,-1);
             foreach($relationships['data'] as $relationship){
                 $related = (new $relatedModel)->find($relationship['id']);
@@ -91,12 +81,6 @@ abstract class ApiController extends Controller
         // get data from request
         $receivedData = $this->getRecivedData($request);
         $receivedRelationships = $this->getRecivedRelationships($request);
-        // validate data
-        $errors = $this->newValidator()->validatePatch($request->json('data'));
-        // return errors if vaildation fails
-        if( $errors ){
-            return $this->response->error($errors, 400);
-        }
         // update item
         $model = $this->newModel()->find($id);
         if($model === null){

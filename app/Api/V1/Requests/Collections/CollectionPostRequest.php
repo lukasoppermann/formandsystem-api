@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api\V1\Requests\Metadetails;
+namespace App\Api\V1\Requests\Collections;
 
 use App\Api\V1\Requests\PostRequest;
 
-class MetadetailPostRequest extends PostRequest
+class CollectionPostRequest extends PostRequest
 {
     /**
      * The relationships a resource can have
@@ -25,9 +25,9 @@ class MetadetailPostRequest extends PostRequest
      */
     protected function rules(){
         return [
-            'type'              => 'required|in:metadetails',
-            'attributes.type'   => 'required|string|alpha_dash',
-            'attributes.value'  => 'required|string_or_array'
+            'type' => 'required|in:collections',
+            'attributes.name' => 'required|string',
+            'attributes.slug' => 'required|string|alpha_dash',
         ];
     }
     /**

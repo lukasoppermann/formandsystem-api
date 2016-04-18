@@ -61,9 +61,9 @@ trait GetTestTrait
     public function getResourceByWrongFilter()
     {
         // CALL
-        $response = $this->getClientResponse('/'.$this->resource.'?filter=[wrongFilter=someValue]');
+        $response = $this->getClientResponse('/'.$this->resource.'?filter[wrongFilter]=someValue]');
         // TEST PAGINATION
-        $this->checkErrorResponse($response, 'HTTP_BAD_REQUEST');
+        $this->checkErrorResponse($response, 'HTTP_UNPROCESSABLE_ENTITY');
     }
     /**
      * test getting the main resource by wrong filter
@@ -73,9 +73,12 @@ trait GetTestTrait
         // PREPARE
         $filter = $this->resource()->filter->first();
         // CALL
-        $response = $this->getClientResponse('/'.$this->resource.'?filter=['.$filter.'=wrongParameter]');
+        $response = $this->getClientResponse('/'.$this->resource.'?filter['.$filter.']=wrongParameter');
         // TEST PAGINATION
-        $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
+        $this->isPaginated($response);
+        // ASSERTIONS
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals($this->model->first()->{$filter}, $this->getResponseArray($response)['data'][0]['attributes'][$filter]);
     }
 
     /**

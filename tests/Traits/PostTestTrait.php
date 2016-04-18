@@ -150,7 +150,7 @@ trait PostTestTrait
             ])
         ]);
         // ASSERTIONS
-        $this->assertEquals(self::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
         // POST with NO Type
         $data = $this->resource()->data();
         unset($data['type']);
@@ -161,7 +161,7 @@ trait PostTestTrait
             ])
         ]);
         // ASSERTIONS
-        $this->assertEquals(self::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
     }
     /**
      * post new resource with incomplete data
@@ -177,7 +177,7 @@ trait PostTestTrait
             ])
         ]);
         // ASSERTIONS
-        $this->assertEquals(self::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
     }
     /**
      * post new resource with additional data
@@ -211,7 +211,7 @@ trait PostTestTrait
             'headers' => ['Accept' => 'application/json']
         ]);
         // ASSERTIONS
-        $this->assertEquals(self::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
     }
     /**
      * post new resource with incomplete relationship

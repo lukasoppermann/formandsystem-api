@@ -2,9 +2,9 @@
 
 namespace App\Api\V1\Requests\Metadetails;
 
-use App\Api\V1\Requests\PostRequest;
+use App\Api\V1\Requests\PatchRequest;
 
-class MetadetailPostRequest extends PostRequest
+class MetadetailPatchRequest extends PatchRequest
 {
     /**
      * The relationships a resource can have
@@ -25,9 +25,10 @@ class MetadetailPostRequest extends PostRequest
      */
     protected function rules(){
         return [
+            'id'                => 'required|string',
             'type'              => 'required|in:metadetails',
-            'attributes.type'   => 'required|string|alpha_dash',
-            'attributes.value'  => 'required|string_or_array'
+            'attributes.type'   => 'string|alpha_dash|not',
+            'attributes.value'  => 'string_or_array'
         ];
     }
     /**

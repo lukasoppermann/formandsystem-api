@@ -68,7 +68,7 @@ trait PatchTestTrait
             'headers' => ['Accept' => 'application/json']
         ]);
         // ASSERTIONS
-        $this->assertEquals(self::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
     }
     /*
      * patch the main resource by id with wrong body
@@ -84,7 +84,7 @@ trait PatchTestTrait
             ])
         ]);
         // ASSERTIONS
-        $this->assertEquals(self::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
         // PREPARE FOR NO TYPE
         $data = array_merge(
             $this->resource()->incomplete(),
@@ -99,7 +99,7 @@ trait PatchTestTrait
             ])
         ]);
         // ASSERTIONS
-        $this->assertEquals(self::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
     }
 // END OF FILE
 }

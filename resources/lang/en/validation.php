@@ -85,12 +85,8 @@ return [
     | specify a specific custom language line for a given attribute rule.
     |
     */
-
-    'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
-        ],
-    ],
+    'string_or_array' => 'The :attribute must be a string or an array.',
+    'array_has_only' => 'The :attribute array must only contain any or all of the following values: :array_values.',
 
     /*
     |--------------------------------------------------------------------------
@@ -103,6 +99,7 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+    ],
 
 ];
