@@ -94,57 +94,21 @@ abstract class ApiRequest
             $this->resourceException($this->error('Request data validation failed.'),$validator->errors());
         }
     }
+    /**
+     * return rules prefixed with data
+     *
+     * @method dataRules
+     *
+     * @return [array]
+     */
     protected function dataRules(){
-        foreach($this->rules() as $key => $value){
+        $rules = [];
+        // add data. to every rule
+        foreach((array) $this->rules() as $key => $value){
             $rules['data.'.$key] = $value;
         }
+
         return $rules;
-    }
-    /**
-     * validate that all fields are allowed to exist
-     *
-     * @method validateFieldsAreAllowed
-     *
-     * @param  Validator              $validator
-     *
-     * @return [type]
-     */
-    protected function validateFieldsAreAllowed($validator){
-        // get rules from validator
-        $rules = $validator->getRules();
-        $allowed_rules = [];
-        foreach($rules as $key => $value){
-            if(strpos($key,'.')){
-                $subkey = substr($key,strpos($key,'.')+1);
-                $key = substr($key,0,strpos($key,'.'));
-                if($key === 'attributes'){
-                    if(strpos($subkey,'.')){
-                        $subkey = substr($subkey,0,strpos($subkey,'.'));
-                    }
-                    $allowed_rules['attributes'][$subkey] = $subkey;
-                }
-
-            }
-            $allowed_rules['data'][$key] = $key;
-        }
-
-        $validator->after(function($validator) use($allowed_rules) {
-            foreach(array_keys($validator->getData()) as $key){
-                if(!in_array($key,$allowed_rules['data'])){
-                    $validator->errors()->add('Field invalid', 'Invalid field '.$key.'. Only '.implode(', ',$allowed_rules['data']).' are allowed as immediate children of the data element.');
-                }
-            }
-        });
-
-        $validator->after(function($validator) use($allowed_rules) {
-            foreach(array_keys($validator->getData()['attributes']) as $key){
-                if(!in_array($key,$allowed_rules['attributes'])){
-                    $validator->errors()->add('Field invalid', 'Invalid field '.$key.'. Only '.implode(', ',$allowed_rules['attributes']).' are valid attributes for this request.');
-                }
-            }
-        });
-
-        return $validator;
     }
     /**
      * validate the different parameters available for requests
@@ -221,29 +185,6 @@ abstract class ApiRequest
         }
     }
     /**
-     * add rules for resources relationships to rule array
-     *
-     * @method addRelationshipRules
-     *
-     * @param  [array]               $rules
-     *
-     * @return [array]
-     */
-    protected function addRelationshipRules($rules = []){
-        // allow only available relationships
-        $rules['relationships'] = 'array_has_only:'.implode(',',$this->availableRelationships());
-        // add rule to check type & id of relationships
-        foreach($this->availableRelationships() as $relationship){
-            // get base relationship validation path
-            $relationship_data = 'relationships.'.$relationship.'.data.*';
-            // validate relationship type & id
-            $rules[$relationship_data.'.type'] = 'in:'.$relationship.'|required_with:'.$relationship_data.'.id';
-            $rules[$relationship_data.'.id']   = 'string|alpha_dash|min:3|required_with:'.$relationship_data.'.type';
-        }
-        // return fules
-        return $rules;
-    }
-    /**
      * returns rules for resources relationships
      *
      * @method relationshipRules
@@ -273,7 +214,11 @@ abstract class ApiRequest
      */
     protected function allowedDataFields(){
         // values that are allowed within data in jsonapi
-        $jsonapiAllowed = ['type','id','relationships','attributes','links','meta'];
+        $jsonapiAllowed = ['type','relationships','attributes','links','meta'];
+        // add id only if request is PATCH
+        if($this->request->method() === "PATCH"){
+            $jsonapiAllowed[] = 'id';
+        }
         // return rule
         return [
             'data' => 'array_has_only:'.implode(',',$jsonapiAllowed)
@@ -292,45 +237,11 @@ abstract class ApiRequest
             if(substr($key,0,10) === 'attributes'){
                 return substr($key,11);
             }
-        }, array_keys($this->rules())));
+        }, array_keys((array) $this->rules())));
         // return
         return [
             'data.attributes' => 'array_has_only:'.implode(',',$attributes)
         ];
-    }
-    /**
-     * returns validation for fields that are allowed to exist
-     *
-     * @method allowedFields
-     *
-     * @param  Validator              $validator
-     *
-     * @return [array]
-     */
-    protected function allowedFields($input_rules){
-        // get rules from validator
-        foreach($input_rules as $key => $value){
-
-            if($pos = strpos(str_replace('data.','',$key),'.')){
-                // add main key to data
-                $data_key = substr($key,0,$pos+5);
-                $allowed['data'][$data_key] = $data_key;
-                // subitem
-                $subkey = substr(str_replace($data_key,'',$key),strpos(str_replace($data_key,'',$key),'.')+1);
-                $allowed[$data_key][$subkey] = $subkey;
-            }
-            else {
-                $allowed['data'][$key] = $key;
-            }
-
-
-        }
-
-        foreach($allowed as $key => $array){
-            $rules[$key] = 'array_has_only:'.implode(',',$array);
-        }
-
-        return $rules;
     }
     /**
      * throw new resource exception

@@ -195,12 +195,8 @@ trait PostTestTrait
                 )
             ])
         ]);
-        // GET DATA
-        $data = $this->getResponseArray($response)['data'];
         // ASSERTIONS
-        $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
-        $this->assertNotNull($this->model->find($data['id']));
-        $this->assertValid($data, $this->resource()->blueprint());
+        $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
     }
     /**
      * post new resource with no body

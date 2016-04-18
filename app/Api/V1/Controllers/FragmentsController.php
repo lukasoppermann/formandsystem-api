@@ -26,7 +26,8 @@ class FragmentsController extends ApiController
      * @var array
      */
     protected $availableFilters = [
-        'type'
+        'type',
+        'name'
     ];
     /**
      * The resources name
