@@ -18,9 +18,9 @@ trait PostTest
         // POST RESOURECE WITH SINGLE RELATIONSHIP
         $this->postResourceWithOneRelationship();
         // POST RESOURECE WITH WRONG RELATIONSHIPS
-        // $this->postResourceWithWrongRelationships();
+        $this->postResourceWithWrongRelationships();
         // POST RESOURECE WITH WRONG RELATIONSHIP TYPE
-        // $this->postResourceWithWrongRelationshipTypes();
+        $this->postResourceWithWrongRelationshipTypes();
         // POST RESOURECE WITH WRONG TYPE
         $this->postResourceWrongType();
         // POST RESOURECE WITH INCOMPLETE DATA
@@ -30,10 +30,7 @@ trait PostTest
         // POST RESOURECE WITH NO BODY
         $this->postResourceNoBody();
         // POST RESOURECE WITH INCOMPLETE RELATIONSHIP
-        // $this->postResourceIncompleteRelationship();
-        // POST RESOURECE WITH WRONG RELATIONSHIP
-        // $this->postResourceWrongRelationship();
-        $this->fail('Some tests deactivated');
+        $this->postResourceIncompleteRelationship();
     }
     /**
      * @test

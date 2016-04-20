@@ -36,10 +36,32 @@ abstract class Controller extends LumenController
      * @return request
      */
     public function newRequest(Request $request){
-        // get model namespace
-        $requestName = $this->api_namespace."Requests\\".$this->resourceName().'s\\'.$this->resourceName().ucfirst(strtolower($request->getMethod())).'Request';
+        // request namespace
+        $request_name = $this->api_namespace."Requests\\".$this->resourceName().'s\\'.
+            // build request file name
+            $this->resourceName().
+            // add method
+            ucfirst(strtolower($request->getMethod())).
+            // add relationship, if it is
+            $this->isRelationshipRequest($request).
+            // add request
+            'Request';
         // return a new mode
-        return new $requestName($request);
+        return new $request_name($request);
+    }
+    /**
+     * return 'Relationship' or void
+     *
+     * @method isRelationshipRequest
+     *
+     * @param  Request               $request
+     *
+     * @return [string|void]
+     */
+    protected function isRelationshipRequest(Request $request){
+        if($request->segment(3) === 'relationships'){
+            return 'Relationship';
+        }
     }
     /**
      * returns current resources model
@@ -99,10 +121,10 @@ abstract class Controller extends LumenController
      *
      * @return resource object $resource
      */
-    public function validateResourceExists($resource){
+    public function validateResourceExists($resource, $msg = 'Resource not found.'){
         // throw 404 exception if resource does not exists
         if ($resource === null) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException($msg);
         }
         // return resource if it does exist
         return $resource;
@@ -116,7 +138,7 @@ abstract class Controller extends LumenController
      */
     protected function validateRelationship($related = null){
         if(!$this->isRelated($related)){
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Relationship does not exists');
+            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('The resource "'.$this->resource.'" has no relationship to "'.$related.'".');
         }
     }
     /**
@@ -128,5 +150,29 @@ abstract class Controller extends LumenController
      */
     protected function isRelated($related = null){
         return in_array($related, $this->relationships);
+    }
+    /**
+     * turns relationship data into array
+     *
+     * @method getRelationshipsIds
+     *
+     * @param  $data
+     *
+     * @return array
+     */
+    protected function getRelationshipsIds($relationships, $type){
+        // wrap in case of single item
+        if(isset($relationships['id'])){
+            $relationships = [$relationships];
+        }
+        // grab ids and return
+        foreach((array) $relationships as $relationship){
+            if($relationship['type'] !== $type){
+                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Invalid relationship with type "'.$relationship['type'].'".');
+            }
+            $ids[] = $relationship['id'];
+        }
+        // return
+        return $ids;
     }
 }

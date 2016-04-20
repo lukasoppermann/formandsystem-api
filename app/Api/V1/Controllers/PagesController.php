@@ -18,7 +18,9 @@ class PagesController extends ApiController
      * @var array
      */
     protected $availableFilters = [
-        'slug'
+        'slug',
+        'published',
+        'language',
     ];
     /**
      * The relationships a resource can have

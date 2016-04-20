@@ -15,7 +15,8 @@ class PagePostRequest extends PostRequest
          return[
              'pages',
              'collections',
-             'fragments'
+             'fragments',
+             'metadetails'
          ];
      }
     /**

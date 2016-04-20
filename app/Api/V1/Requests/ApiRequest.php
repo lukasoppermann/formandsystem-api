@@ -31,6 +31,19 @@ abstract class ApiRequest
         'patch'     => 'Dingo\Api\Exception\UpdateResourceFailedException'
     ];
     /**
+     * all allowed query parameters
+     *
+     * @var array
+     */
+    private $queryParameters = [
+        'filter',
+        'page',
+        'limit',
+        'sort',
+        'fields',
+        'include'
+    ];
+    /**
      * get original request
      *
      * @method __construct
@@ -44,6 +57,8 @@ abstract class ApiRequest
         $this->validate($request);
         // validate request parameters
         $this->validateParameters($request);
+        // validate query parameters
+        $this->validateQueryParameters($request);
     }
     /**
      * if method does not exist, delegate to request class
@@ -74,16 +89,20 @@ abstract class ApiRequest
      */
     protected function validate(Request $request){
         // get rules
-        $rules = array_merge(
-            // rules from resource Request
-            $this->dataRules(),
-            // rules for resource specific relationships
-            $this->relationshipRules(),
-            // add field existence validation for top level (data)
-            $this->allowedDataFields(),
-            // add field existence validation for top level (data)
-            $this->allowedAttributes()
-        );
+        $rules = $this->dataRules();
+        // add rules for main resource
+        if(!$this->isRelationshipRequest()){
+            $rules = array_merge(
+                // rules from resource Request
+                $rules,
+                // rules for resource specific relationships
+                $this->relationshipRules(),
+                // add field existence validation for top level (data)
+                $this->allowedDataFields(),
+                // add field existence validation for top level (data)
+                $this->allowedAttributes()
+            );
+        }
         // run validation
         $validator = app('validator')->make(
             // wrap in data for field validation
@@ -171,6 +190,21 @@ abstract class ApiRequest
         }
     }
     /**
+     * validate query parameters
+     *
+     * @method validateQueryParameters
+     *
+     * @param  Request         $request
+     *
+     * @return  void | Exception
+     */
+    protected function validateQueryParameters(Request $request){
+        $unknown_parameters = array_diff( array_keys($request->query()), $this->queryParameters );
+        if(count($unknown_parameters) > 0){
+            throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Invalid query parameter supplied: "'.trim(implode(', ',$unknown_parameters),', ').'".');
+        }
+    }
+    /**
      * validate includes used in request
      *
      * @method validateIncludes
@@ -197,8 +231,11 @@ abstract class ApiRequest
         // add rule to check type & id of relationships
         foreach($this->availableRelationships() as $relationship){
             // get base relationship validation path
-            $relationship_data = 'data.relationships.'.$relationship.'.data.*';
-            // validate relationship type & id
+            $relationship_data = 'data.relationships.'.$relationship.'.data';
+            // validate relationship type & id of relationship ARRAY
+            $rules[$relationship_data.'.*.type'] = 'in:'.$relationship.'|required_with:'.$relationship_data.'.*.id';
+            $rules[$relationship_data.'.*.id']   = 'string|alpha_dash|min:3|required_with:'.$relationship_data.'.*.type';
+            // validate relationship type & id of SINGLE relationship
             $rules[$relationship_data.'.type'] = 'in:'.$relationship.'|required_with:'.$relationship_data.'.id';
             $rules[$relationship_data.'.id']   = 'string|alpha_dash|min:3|required_with:'.$relationship_data.'.type';
         }
@@ -265,18 +302,20 @@ abstract class ApiRequest
      * @return [string]
      */
     protected function error($default = ""){
-        // return generic error
-        return $this->errorMessage() ? $this->errorMessage() : $default;
+        if(method_exists($this, 'errorMessage')){
+            return $this->errorMessage();
+        }
+        return $default;
     }
     /**
-     * the error message for a request
+     * check if the current request is a relationship request
      *
-     * @method errorMessage
+     * @method isRelationshipRequest
      *
-     * @return string
+     * @return [bool]
      */
-    protected function errorMessage(){
-        return false;
+    protected function isRelationshipRequest(){
+        return $this->request->segment(3) === 'relationships';
     }
     /**
      * The filters that are allowed in requests

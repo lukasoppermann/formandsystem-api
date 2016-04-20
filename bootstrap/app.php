@@ -20,7 +20,6 @@ $app = new Laravel\Lumen\Application(
 );
 
 $app->withFacades();
-
 $app->withEloquent();
 
 /*
@@ -55,16 +54,17 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
+$app->middleware([
+        // App\Http\Middleware\CorsMiddleware::class
 //     // Illuminate\Cookie\Middleware\EncryptCookies::class,
 //     // Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
 //     // Illuminate\Session\Middleware\StartSession::class,
 //     // Illuminate\View\Middleware\ShareErrorsFromSession::class,
 //     // Laravel\Lumen\Http\Middleware\VerifyCsrfToken::class,
-// ]);
+]);
 
 // $app->routeMiddleware([
-
+//     'preflight' => ,
 // ]);
 
 /*
@@ -79,7 +79,6 @@ $app->singleton(
 */
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Dingo Configureation

@@ -15,7 +15,8 @@ class PagePatchRequest extends PatchRequest
          return[
              'pages',
              'collections',
-             'fragments'
+             'fragments',
+             'metadetails'
          ];
      }
     /**

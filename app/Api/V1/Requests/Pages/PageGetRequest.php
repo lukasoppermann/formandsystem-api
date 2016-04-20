@@ -25,7 +25,8 @@ class PageGetRequest extends GetRequest
          return[
              'collections',
              'metadetails',
-             'fragments'
+             'fragments',
+             'metadetails'
          ];
      }
     /**
