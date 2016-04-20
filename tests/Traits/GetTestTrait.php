@@ -45,7 +45,7 @@ trait GetTestTrait
     {
         $filter = $this->resource()->filter->first();
         // CALL
-        $response = $this->getClientResponse('/'.$this->resource.'?filter=['.$filter.'='.$this->model->first()->{$filter}.']');
+        $response = $this->getClientResponse('/'.$this->resource.'?filter['.$filter.']='.$this->model->first()->{$filter});
         // GET DATA
         $received = $this->getResponseArray($response)['data'][0];
         // TEST PAGINATION
@@ -78,7 +78,6 @@ trait GetTestTrait
         $this->isPaginated($response);
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals($this->model->first()->{$filter}, $this->getResponseArray($response)['data'][0]['attributes'][$filter]);
     }
 
     /**

@@ -73,8 +73,8 @@ abstract class ApiRequest
         // if method does not exist in this class
         if (!method_exists($this, $method_name)){
             // check request class
-            if (method_exists($this, $this->request)){
-                $this->request->{$method_name}($arguments);
+            if (method_exists($this->request, $method_name)){
+                return $this->request->{$method_name}($arguments);
             }
         }
     }
@@ -199,7 +199,9 @@ abstract class ApiRequest
      * @return  void | Exception
      */
     protected function validateQueryParameters(Request $request){
+        // get suporfluous parameters
         $unknown_parameters = array_diff( array_keys($request->query()), $this->queryParameters );
+        // return error of invalid argumens are supplied
         if(count($unknown_parameters) > 0){
             throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Invalid query parameter supplied: "'.trim(implode(', ',$unknown_parameters),', ').'".');
         }

@@ -98,7 +98,7 @@ trait DeleteTestTrait
                ]]])
             ]);
             // ASSERTIONS
-            $this->assertEquals(self::HTTP_BAD_REQUEST, $response->getStatusCode());
+            $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
         }
     }
     /**

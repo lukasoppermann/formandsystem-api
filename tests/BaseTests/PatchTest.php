@@ -21,11 +21,28 @@ trait PatchTest
         $this->patchResourceByIdNoBody();
         // PATCH RESOURCE BODY MISSING ID
         $this->patchResourceIncompleteData();
+        // PATCH RESOURCE WITH MULTIPLE RELATIONSHIPS
+        // $this->patchResourceWithMultipleRelationships();
+        // POST RESOURECE WITH SINGLE RELATIONSHIP
+        // $this->patchResourceWithOneRelationship();
+        // POST RESOURECE WITH WRONG RELATIONSHIPS
+        // $this->patchResourceWithWrongRelationships();
+        // POST RESOURECE WITH WRONG RELATIONSHIP TYPE
+        // $this->patchResourceWithWrongRelationshipTypes();
+        $this->fail('Some tests deactivated');
     }
     /**
      * @test
      */
     public function patch_relationships(){
+        // PATCH RELATIONSHIPS
+        // $this->patchRelationships();
+        // PATCH RELATIONSHIPS USING WRONG RESOURCE ID
+        // $this->patchRelationshipsWithWrongResourceId();
+        // PATCH RELATIONSHIPS WITH NO ITEMS
+        // $this->patchRelationshipsWrongRelationshipData();
+        // PATCH RELATIONSHIPS TO WRONG TYPE URL
+        $this->patchRelationshipsToWrongUrl();
         $this->fail('Some tests deactivated');
     }
 }

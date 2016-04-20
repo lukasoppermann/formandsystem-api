@@ -26,10 +26,14 @@ abstract class ApiController extends Controller
      */
     public function index()
     {
-        // get filter resource
-        $resource = $this->getFilteredResult($this->newModel());
+        // get model instance
+        $model = $this->newModel();
+        // apply filters
+        foreach((array) $this->request->input('filter') as $key => $value){
+            $model = $model->where($key, $value);
+        }
         // return result
-        return $this->response->paginator($resource, $this->newTransformer(), ['key' => $this->resource]);
+        return $this->response->paginator($model->paginate($this->perPage), $this->newTransformer(), ['key' => $this->resource]);
     }
     /*
      * show
@@ -122,93 +126,24 @@ abstract class ApiController extends Controller
         // respond no content
         return $this->response->noContent();
     }
-
     /**
-     * return filtered result
+     * get the related items data for the main resource
      *
-     */
-    public function getFilteredResult($model){
-
-        $filters = $this->prepFilters($this->request->input('filter'));
-        foreach($filters as $key => $value){
-            if(!in_array($key, $this->availableFilters)){
-                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Filter "'.$key.'" is not available for for this resource.');
-            }
-            $model = $model->where($key, $value);
-
-        }
-        // return filtered result
-        return $model->paginate($this->perPage);
-    }
-    /**
-     * save an array of relationship to a model
+     * @method getRelated
      *
-     * @method saveRelationships
+     * @param  Request    $request
+     * @param  [string]     $resource_id
+     * @param  [string]     $type
      *
-     * @param  [model]            $model
-     * @param  [array]            $relationships
-     */
-    protected function saveRelationships($model, $relationships = []){
-        foreach($relationships as $type => $items){
-            foreach($items as $related){
-                $model->{$type}()->save($related);
-            }
-        }
-    }
-    /**
-     * remove relationships from a model
-     *
-     * @method removeRelationships
-     *
-     * @param  [model]            $model
-     * @param  [array]            $relationships
-     */
-    protected function removeRelationships($model, $relationships = []){
-        // loop through all provided relationship changes
-        foreach($relationships as $type => $items){
-            // reset ids
-            $ids = [];
-            // get ids for current relationship of $type
-            foreach($items as $related){
-                $ids[] = $related['id'];
-            }
-            // remive items
-            $model->{$type}()->detach($ids);
-        }
-    }
-    /**
-     * prepare filter items
-     */
-    public function prepFilters($filterList){
-        if( trim($filterList) === "")
-        {
-            return [];
-        }
-        \LOG::debug('Fix filters, no format validation needed.');
-        // check for correct format
-        if( substr($filterList,0,1) !== "[" || substr($filterList,-1) !== "]" ){
-            throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Malformed filter syntax.');
-        }
-
-        // buld filter array
-        $filterList = explode(',',substr($filterList,1,-1));
-        foreach($filterList as $filter){
-            $filter = explode('=',$filter);
-            $filters[$filter[0]] = $filter[1];
-        }
-
-        return $filters;
-    }
-
-    /**
-     * get paginated related data
+     * @return [Response]
      */
     public function getRelated(Request $request, $resource_id, $type){
-        // validate
+        // validate resource
         $model = $this->validateResourceExists(
             $this->newModel()->find($resource_id),
             'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
         );
+        // validate realtionship
         $this->validateRelationship($type);
         // prepare transformer
         $transformer = $this->api_namespace."Transformers\\".ucfirst(substr($type,0,-1))."Transformer";
@@ -222,7 +157,15 @@ abstract class ApiController extends Controller
     }
 
     /**
-     * get relationship data
+     * get the relationships array (id & type) for the given resource
+     *
+     * @method getRelationships
+     *
+     * @param  Request          $request
+     * @param  [string]           $resource_id
+     * @param  [string]           $type
+     *
+     * @return [Response]
      */
      public function getRelationships(Request $request, $resource_id, $type){
          // validate
@@ -230,38 +173,65 @@ abstract class ApiController extends Controller
             $this->newModel()->find($resource_id),
             'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
         );
-         $this->validateRelationship($type);
-         //
-         $relationships = [];
-         // build relationship array
-         foreach($model->{$type}->lists('id')->toArray() as $id){
-             $relationships[] = [
-                 'id' => $id,
-                 'type' => $type
-             ];
-         }
-
-         return $this->response->array([
-             'data' => $relationships,
-             'links' => [
-                 'self' => $_ENV['API_DOMAIN'].'/'.$this->resource.'/'.$resource_id.'/relationships/'.$type,
-                 'related' => $_ENV['API_DOMAIN'].'/'.$this->resource.'/'.$resource_id.'/'.$type
-             ],
-         ]);
+        // validate relationship
+        $this->validateRelationship($type);
+        // build relationship array
+        $relationships = [];
+        foreach($model->{$type}->lists('id')->toArray() as $id){
+            $relationships[] = [
+                'id' => $id,
+                'type' => $type
+            ];
+        }
+        // return response
+        return $this->response->array([
+            'data' => $relationships,
+            'links' => [
+                'self' => $_ENV['API_DOMAIN'].'/'.$this->resource.'/'.$resource_id.'/relationships/'.$type,
+                'related' => $_ENV['API_DOMAIN'].'/'.$this->resource.'/'.$resource_id.'/'.$type
+            ],
+        ]);
+     }
+     /**
+      * add new relationships
+      *
+      * @method storeRelationships
+      *
+      * @param  Request $request
+      * @param  Int $id
+      *
+      * @return array
+      */
+     public function storeRelationships(Request $request, $resource_id, $relatedType){
+         // validate main resource
+         $model = $this->validateResourceExists(
+            $this->newModel()->find($resource_id),
+            'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
+        );
+        // validate relationship
+        $this->validateRelationship($relatedType);
+        // get ids
+        $relationshipIds = $this->getRelationshipsIds($request->json('data'), $relatedType);
+        // validate ids
+        $this->validateRelationshipsIds($relationshipIds, $relatedType);
+        // attach new relationships
+        $model->{$relatedType}()->attach($relationshipIds);
+        // return HTTP_NO_CONTENT
+        return $this->response->noContent();
      }
     /**
-     * update relationship
+     * update relationships
      *
      * @method updateRelationships
      *
-     * @param  Request $request
-     * @param  Int $id
+     * @param  [Request] $request
+     * @param  [int] $id
      *
-     * @return array
+     * @return [Response]
      */
-    public function updateRelationships(Request $request, $id){
+    public function updateRelationships(Request $request, $id, $type){
         // get type from url
-        $type = $request->segment(4);
+        dd($type);
         // get ids
         $relationshipIds = $this->getRelationshipsIds($request->json('data'), $type);
         // get model
@@ -274,32 +244,6 @@ abstract class ApiController extends Controller
         }catch(\Exception $e){
             return $this->response->error('', 403);
         }
-        return $this->response->noContent();
-    }
-    /**
-     * add new relationships
-     *
-     * @method storeRelationships
-     *
-     * @param  Request $request
-     * @param  Int $id
-     *
-     * @return array
-     */
-    public function storeRelationships(Request $request, $resource_id, $relatedType){
-        // validate main resource
-        $model = $this->validateResourceExists(
-           $this->newModel()->find($resource_id),
-           'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
-       );
-       // validate relationship
-       $this->validateRelationship($relatedType);
-        // get ids
-        $relationshipIds = $this->getRelationshipsIds($request->json('data'), $relatedType);
-
-        // attach new relationships
-        $model->{$relatedType}()->attach($relationshipIds);
-        // return HTTP_NO_CONTENT
         return $this->response->noContent();
     }
     /**
@@ -373,5 +317,42 @@ abstract class ApiController extends Controller
         }
         // return data
         return isset($relationships) ? $relationships : [];
+    }
+
+    /**
+     * save an array of relationship to a model
+     *
+     * @method saveRelationships
+     *
+     * @param  [model]            $model
+     * @param  [array]            $relationships
+     */
+    protected function saveRelationships($model, $relationships = []){
+        foreach($relationships as $type => $items){
+            foreach($items as $related){
+                $model->{$type}()->save($related);
+            }
+        }
+    }
+    /**
+     * remove relationships from a model
+     *
+     * @method removeRelationships
+     *
+     * @param  [model]            $model
+     * @param  [array]            $relationships
+     */
+    protected function removeRelationships($model, $relationships = []){
+        // loop through all provided relationship changes
+        foreach($relationships as $type => $items){
+            // reset ids
+            $ids = [];
+            // get ids for current relationship of $type
+            foreach($items as $related){
+                $ids[] = $related['id'];
+            }
+            // remive items
+            $model->{$type}()->detach($ids);
+        }
     }
 }

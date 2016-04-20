@@ -300,42 +300,126 @@ trait PostTestTrait
     // RELATIONSHIPS
     //
     /**
-     * post new resource with wrong relationship
+     * post relationship
      */
     public function postRelationships(){
         $model = $this->model->first();
         // PREPARE
-        $relationshipData = [];
         foreach($this->relationships() as $relationship){
-            $model->{$relationship}()->detach();
-            $this->assertEquals(count($model->{$relationship}),0);
             // get related model
             $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
-            // build relationship data
-            $relationshipData[$relationship] = [
-                'id' => (new $relatedModel)->all()->random(1)->id,
-                'type' => $relationship
-            ];
+            // delete all relationships for testing
+            $model->{$relationship}()->detach();
+            $this->assertEquals(count($model->{$relationship}),0);
+            // POST WITH SINGLE ITEM
+            $response = $this->client->request('POST', '/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship, [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode([
+                    "data" => [
+                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'type' => $relationship
+                    ]
+                ])
+            ]);
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_NO_CONTENT, $response->getStatusCode());
+            $this->assertNotNull($this->model->find($model->id)->{$relationship}->first());
+            // delete all relationships for testing
+            $model->{$relationship}()->detach();
+            $this->assertEquals(count($model->{$relationship}),0);
+            // POST WITH SINGLE ITEM
+            $response = $this->client->request('POST', '/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship, [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode([
+                    "data" => [[
+                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'type' => $relationship
+                    ]]
+                ])
+            ]);
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_NO_CONTENT, $response->getStatusCode());
+            $this->assertNotNull($this->model->find($model->id)->{$relationship}->first());
+        }
+    }
+    /**
+     * post relationship with wrong data
+     */
+    public function postRelationshipsWrongRelationshipData(){
+        $model = $this->model->first();
+        // PREPARE
+        foreach($this->relationships() as $relationship){
+            // get related model
+            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
             // POST
             $response = $this->client->request('POST', '/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship, [
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
-                    "data" => array_merge(
-                        $relationshipData[$relationship]
-                    )
+                    "data" => [
+                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'type' => 'wrongType'
+                    ]
                 ])
             ]);
-            dd($this->getResponseArray($response));
-            // GET DATA
-            $data = $this->getResponseArray($response)['data'];
             // ASSERTIONS
-            $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
-            $this->assertNotNull($this->model->find($data['id']));
-            $this->assertValid($data, $this->resource()->blueprint());
-            // ASSERT RELATIONSHIPS
-            foreach($this->relationships()as $relationship){
-                $this->assertNotNull($this->model->find($data['id'])->{$relationship}->first());
-            }
+            $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
+            // POST
+            $response = $this->client->request('POST', '/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship, [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode([
+                    "data" => [
+                        'id' => 'wrongId',
+                        'type' => $relationship
+                    ]
+                ])
+            ]);
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_BAD_REQUEST, $response->getStatusCode());
         }
     }
+    /**
+     * post relationship to wrong resource
+     */
+    public function postRelationshipsWithWrongResourceId(){
+        foreach($this->relationships() as $relationship){
+            // get related model
+            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            // POST
+            $response = $this->client->request('POST', '/'.$this->resource.'/1/relationships/'.$relationship, [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode([
+                    "data" => [
+                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'type' => $relationship
+                    ]
+                ])
+            ]);
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_NOT_FOUND, $response->getStatusCode());
+        }
+    }
+    /**
+     * post relationship to wrong relationship
+     */
+    public function postRelationshipsToWrongUrl(){
+        $model = $this->model->first();
+        foreach($this->relationships() as $relationship){
+            // get related model
+            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            // POST
+            $response = $this->client->request('POST', '/'.$this->resource.'/'.$model->id.'/relationships/wrongRelationship', [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode([
+                    "data" => [
+                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'type' => $relationship
+                    ]
+                ])
+            ]);
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_NOT_FOUND, $response->getStatusCode());
+        }
+    }
+
+// END OF CLASS
 }

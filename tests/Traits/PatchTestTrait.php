@@ -101,5 +101,33 @@ trait PatchTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
     }
+    //////////////////////////////////////////
+    //
+    // RELATIONSHIPS
+    //
+    //
+    //
+    /**
+     * patch relationship to wrong relationship
+     */
+    public function patchRelationshipsToWrongUrl(){
+        $model = $this->model->first();
+        foreach($this->relationships() as $relationship){
+            // get related model
+            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            // POST
+            $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$model->id.'/relationships/wrongRelationship', [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode([
+                    "data" => [
+                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'type' => $relationship
+                    ]
+                ])
+            ]);
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_NOT_FOUND, $response->getStatusCode());
+        }
+    }
 // END OF FILE
 }

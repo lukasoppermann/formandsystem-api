@@ -37,12 +37,13 @@ trait PostTest
      */
     public function post_relationships()
     {
-        // DELETE RELATIONSHIPS
+        // POST RELATIONSHIPS
         $this->postRelationships();
-        // DELETE RELATIONSHIPS WITH NO ITEMS
-        // $this->postRelationshipsWrongRelationshipData();
-        // DELETE RELATIONSHIPS USING WRONG RESOURCE ID
-        // $this->postRelationshipsWithWrongResourceId();
-        $this->fail('Some tests deactivated');
+        // POST RELATIONSHIPS USING WRONG RESOURCE ID
+        $this->postRelationshipsWithWrongResourceId();
+        // POST RELATIONSHIPS WITH NO ITEMS
+        $this->postRelationshipsWrongRelationshipData();
+        // POST RELATIONSHIPS TO WRONG TYPE URL
+        $this->postRelationshipsToWrongUrl();
     }
 }

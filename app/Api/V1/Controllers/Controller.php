@@ -167,12 +167,35 @@ abstract class Controller extends LumenController
         }
         // grab ids and return
         foreach((array) $relationships as $relationship){
-            if($relationship['type'] !== $type){
-                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Invalid relationship with type "'.$relationship['type'].'".');
+            // return error if wrong type or item does not exist
+            if($relationship['type'] !== $type ){
+                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Invalid relationship with type "'.$relationship['type'].'" and id "'.$relationship['id'].'".');
             }
+            // grab id
             $ids[] = $relationship['id'];
         }
         // return
         return $ids;
+    }
+    /**
+     * check if relationships exist
+     *
+     * @method validateRelationshipsIds
+     *
+     * @param  $data
+     *
+     * @return array
+     */
+    protected function validateRelationshipsIds($ids=[], $type){
+        // relatedModel
+        $relatedModel = $this->api_namespace.'Models\\'.ucfirst(substr($type,0,-1));
+        $relatedModel = new $relatedModel;
+        // check ids
+        foreach($ids as $id){
+            // return error if wrong type or item does not exist
+            if($relatedModel->find($id) === NULL ){
+                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Invalid relationship with type "'.$type.'" and id "'.$id.'".');
+            }
+        }
     }
 }
