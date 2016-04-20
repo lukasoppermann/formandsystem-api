@@ -349,6 +349,9 @@ trait PostTestTrait
         $model = $this->model->first();
         // PREPARE
         foreach($this->relationships() as $relationship){
+            // delete all relationships for testing
+            $model->{$relationship}()->detach();
+            $this->assertEquals(count($model->{$relationship}),0);
             // get related model
             $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
             // POST
@@ -363,6 +366,7 @@ trait PostTestTrait
             ]);
             // ASSERTIONS
             $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
+            $this->assertEquals($model->find($model->id)->{$relationship}->count(),0);
             // POST
             $response = $this->client->request('POST', '/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship, [
                 'headers' => ['Accept' => 'application/json'],
@@ -375,6 +379,7 @@ trait PostTestTrait
             ]);
             // ASSERTIONS
             $this->assertEquals(self::HTTP_BAD_REQUEST, $response->getStatusCode());
+            $this->assertEquals($model->find($model->id)->{$relationship}->count(),0);
         }
     }
     /**

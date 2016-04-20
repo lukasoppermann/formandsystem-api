@@ -229,21 +229,23 @@ abstract class ApiController extends Controller
      *
      * @return [Response]
      */
-    public function updateRelationships(Request $request, $id, $type){
-        // get type from url
-        dd($type);
+    public function updateRelationships(Request $request, $resource_id, $relatedType){
+        // validate main resource
+        $model = $this->validateResourceExists(
+           $this->newModel()->find($resource_id),
+           'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
+       );
+       // validate relationship
+       $this->validateRelationship($relatedType);
         // get ids
-        $relationshipIds = $this->getRelationshipsIds($request->json('data'), $type);
-        // get model
-        $model = $this->newModel()->find($id);
+        $relationshipIds = $this->getRelationshipsIds($request->json('data'), $relatedType);
+        // validate ids
+        $this->validateRelationshipsIds($relationshipIds, $relatedType);
         // detach old relationships
-        $model->{$type}()->detach();
+        $model->{$relatedType}()->detach();
         // attach new relationships
-        try{
-            $model->{$type}()->attach($relationshipIds);
-        }catch(\Exception $e){
-            return $this->response->error('', 403);
-        }
+        $model->{$relatedType}()->attach($relationshipIds);
+        // return no content
         return $this->response->noContent();
     }
     /**

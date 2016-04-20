@@ -175,7 +175,7 @@ abstract class Controller extends LumenController
             $ids[] = $relationship['id'];
         }
         // return
-        return $ids;
+        return isset($ids) ? $ids : [];
     }
     /**
      * check if relationships exist

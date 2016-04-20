@@ -22,7 +22,7 @@ trait PatchTest
         // PATCH RESOURCE BODY MISSING ID
         $this->patchResourceIncompleteData();
         // PATCH RESOURCE WITH MULTIPLE RELATIONSHIPS
-        // $this->patchResourceWithMultipleRelationships();
+        $this->patchResourceWithMultipleRelationships();
         // POST RESOURECE WITH SINGLE RELATIONSHIP
         // $this->patchResourceWithOneRelationship();
         // POST RESOURECE WITH WRONG RELATIONSHIPS
@@ -36,13 +36,12 @@ trait PatchTest
      */
     public function patch_relationships(){
         // PATCH RELATIONSHIPS
-        // $this->patchRelationships();
+        $this->patchRelationships();
         // PATCH RELATIONSHIPS USING WRONG RESOURCE ID
-        // $this->patchRelationshipsWithWrongResourceId();
+        $this->patchRelationshipsWithWrongResourceId();
         // PATCH RELATIONSHIPS WITH NO ITEMS
-        // $this->patchRelationshipsWrongRelationshipData();
+        $this->patchRelationshipsWrongRelationshipData();
         // PATCH RELATIONSHIPS TO WRONG TYPE URL
         $this->patchRelationshipsToWrongUrl();
-        $this->fail('Some tests deactivated');
     }
 }
