@@ -21,9 +21,10 @@ trait PatchTestTrait
                 )
             ])
         ]);
+        $data = $this->getResponseArray($response)['data'];
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-        $this->assertValid(json_decode($response->getBody(), true)['data'], $this->resource()->blueprint());
+        $this->assertValid($data, $this->resource()->blueprint());
     }
     /*
      * patch the main resource by wrong id
@@ -36,6 +37,23 @@ trait PatchTestTrait
                 "data" => array_merge(
                     $this->resource()->incomplete(),
                     ['id' => $this->model->first()->id]
+                )
+            ])
+        ]);
+        // ASSERTIONS
+        $this->assertEquals(self::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+    /*
+     * patch the main resource by id
+     */
+    public function patchResourceWrongType(){
+        // PATCH
+        $response = $this->client->request('PATCH', '/wrongResource/1', [
+            'headers' => ['Accept' => 'application/json'],
+            'body' => json_encode([
+                "data" => array_merge(
+                    $this->resource()->incomplete(),
+                    ['id' => '1']
                 )
             ])
         ]);
@@ -106,6 +124,7 @@ trait PatchTestTrait
      */
     public function patchResourceWithMultipleRelationships(){
         // PREPARE
+        $model = $this->model->first();
         $relationshipData = [];
         foreach($this->relationships() as $relationship){
             // get related model
@@ -123,20 +142,143 @@ trait PatchTestTrait
             ];
         }
         // POST
-        $response = $this->client->request('PATCH', '/'.$this->resource, [
+        $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$model->id, [
             'headers' => ['Accept' => 'application/json'],
             'body' => json_encode([
                 "data" => array_merge(
+                    $this->resource()->data(),
+                    ['id' => $model->id],
+                    ['relationships' => $relationshipData]
+                )
+            ])
+        ]);
+        // GET DATA
+        $data = $this->getResponseArray($response)['data'];
+        // ASSERTIONS
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        $this->assertValid($data, $this->resource()->blueprint());
+        // ASSERT RELATIONSHIPS
+        foreach($this->relationships() as $relationship){
+            $this->assertEquals(2,$this->model->find($model->id)->{$relationship}->count());
+        }
+    }
+    /**
+     * patch resource with one relationship item as object
+     */
+    public function patchResourceWithOneRelationship(){
+        // PREPARE
+        $model = $this->model->first();
+        $relationshipData = [];
+        foreach($this->relationships() as $relationship){
+            // get related model
+            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            // build relationship data
+            $relationshipData[$relationship]['data'] = [
+                'id' => (new $relatedModel)->all()->random(1)->id,
+                'type' => $relationship
+            ];
+        }
+        // POST
+        $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$model->id, [
+            'headers' => ['Accept' => 'application/json'],
+            'body' => json_encode([
+                "data" => array_merge(
+                    ['id' => $model->id],
                     $this->resource()->data(),
                     ['relationships' => $relationshipData]
                 )
             ])
         ]);
+        // GET DATA
+        $data = $this->getResponseArray($response)['data'];
         // ASSERTIONS
-        $this->assertEquals(self::HTTP_NO_CONTENT, $response->getStatusCode());
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        $this->assertValid($data, $this->resource()->blueprint());
         // ASSERT RELATIONSHIPS
-        foreach($this->relationships() as $relationship){
+        foreach($this->relationships()as $relationship){
             $this->assertNotNull($this->model->find($data['id'])->{$relationship}->first());
+        }
+    }
+    /**
+     * patch resource with wrong relationships, that is not allowed
+     */
+    public function patchResourceWithWrongRelationships(){
+        // PREPARE
+        $model = $this->model->first();
+        if(count($this->relationships()) !== 0){
+            // PREPARE
+            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($this->relationships()[0],0,-1));
+            // POST
+            $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$model->id, [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode([
+                    "data" => array_merge(
+                        ['id' => $model->id],
+                        $this->resource()->data(),
+                        ['relationships' =>
+                            ['wrongRelationship' =>
+                                ['data' => [
+                                    'id' => (new $relatedModel)->all()->random(1)->id,
+                                    'type' => $this->relationships()[0]
+                                ]]
+                            ]
+                        ]
+                    )
+                ])
+            ]);
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
+        }
+    }
+    /**
+     * patch resource with wrong relationships with wrong type in data
+     */
+    public function patchResourceWithWrongRelationshipTypes(){
+        // PREPARE
+        $model = $this->model->first();
+        if(count($this->relationships()) !== 0){
+            // PREPARE
+            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($this->relationships()[0],0,-1));
+            // POST
+            $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$model->id, [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode([
+                    "data" => array_merge(
+                        ['id' => $model->id],
+                        $this->resource()->data(),
+                        ['relationships' =>
+                            [$this->relationships()[0] =>
+                                ['data' => [
+                                    'id' => (new $relatedModel)->all()->random(1)->id,
+                                    'type' => 'wrongRelationship'
+                                ]]
+                            ]
+                        ]
+                    )
+                ])
+            ]);
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
+            // POST RELATIONSHIP ARRAY
+            $response = $this->client->request('POST', '/'.$this->resource, [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode([
+                    "data" => array_merge(
+                        $this->resource()->data(),
+                        ['id' => $model->id],
+                        ['relationships' =>
+                            [$this->relationships()[0] =>
+                                ['data' => [[
+                                    'id' => (new $relatedModel)->all()->random(1)->id,
+                                    'type' => 'wrongRelationship'
+                                ]]]
+                            ]
+                        ]
+                    )
+                ])
+            ]);
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
         }
     }
     //////////////////////////////////////////

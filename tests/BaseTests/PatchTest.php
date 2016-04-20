@@ -15,6 +15,8 @@ trait PatchTest
         $this->patchResourceById();
         // PATCH RESOURCE WRONG ID
         $this->patchResourceWrongId();
+        // PATCH RESOURCE WRONG TYPE
+        $this->patchResourceWrongType();
         // PATCH RESOURCE BY ID WITHOUT ATTRIBUTES
         $this->patchResourceByIdWithoutAttributes();
         // PATCH RESOURCE NO BODY
@@ -24,12 +26,11 @@ trait PatchTest
         // PATCH RESOURCE WITH MULTIPLE RELATIONSHIPS
         $this->patchResourceWithMultipleRelationships();
         // POST RESOURECE WITH SINGLE RELATIONSHIP
-        // $this->patchResourceWithOneRelationship();
+        $this->patchResourceWithOneRelationship();
         // POST RESOURECE WITH WRONG RELATIONSHIPS
-        // $this->patchResourceWithWrongRelationships();
+        $this->patchResourceWithWrongRelationships();
         // POST RESOURECE WITH WRONG RELATIONSHIP TYPE
-        // $this->patchResourceWithWrongRelationshipTypes();
-        $this->fail('Some tests deactivated');
+        $this->patchResourceWithWrongRelationshipTypes();
     }
     /**
      * @test
