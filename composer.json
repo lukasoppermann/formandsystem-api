@@ -8,7 +8,8 @@
         "vlucas/phpdotenv": "~1.0",
         "dingo/api": "@dev",
         "lukasoppermann/http-status": "~1.0",
-        "ramsey/uuid": "^3.3"
+        "ramsey/uuid": "^3.3",
+        "league/flysystem": "^1.0"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "~6.0",
