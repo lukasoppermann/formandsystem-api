@@ -2,19 +2,18 @@
 
 namespace App\Api\V1\Requests\Pages;
 
-use App\Api\V1\Requests\GetRelationshipRequest;
+use App\Api\V1\Requests\Pages\PageRelationshipRequest;
 
-class PageGetRelationshipRequest extends GetRelationshipRequest
+class PageGetRelationshipRequest extends PageRelationshipRequest
 {
     /**
-     * check if request is authorized
-     *
-     * @method authorize
+     * The scopes needed to do this request
      *
      * @return array
      */
-    protected function authorize(){
-        return true;
-    }
+    protected function scopes(){
+        return [
 
+        ];
+    }
 }

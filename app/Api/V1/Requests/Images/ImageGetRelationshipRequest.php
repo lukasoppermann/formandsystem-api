@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api\V1\Requests\Pages;
+namespace App\Api\V1\Requests\Images;
 
-use App\Api\V1\Requests\Pages\PageRelationshipRequest;
+use App\Api\V1\Requests\Images\ImageRelationshipRequest;
 
-class PagePatchRelationshipRequest extends PageRelationshipRequest
+class ImageGetRelationshipRequest extends ImageRelationshipRequest
 {
     /**
      * The scopes needed to do this request

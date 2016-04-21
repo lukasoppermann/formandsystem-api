@@ -156,10 +156,17 @@ abstract class ApiRequest
      * @return  void | Exception
      */
     protected function validateFilters(Request $request){
-        // check if filters are available
-        foreach((array) $this->request->input('filter') as $key => $filter){
-            if(!in_array($key, $this->availableFilters())){
-                $errors[$key][] = 'The filter "'.$key.'" is not available.';
+        $filters = $this->request->input('filter');
+        if(isset($filters)){
+            // check if filter is array
+            if(!is_array($filters) ){
+                return $this->resourceException($this->error('Malformed filter syntax.'));
+            }
+            // check if filters are available
+            foreach($filters as $key => $filter){
+                if(!in_array($key, $this->filters())){
+                    $errors[$key][] = 'The filter "'.$key.'" is not available.';
+                }
             }
         }
         // throw exception in case of errors
@@ -180,7 +187,7 @@ abstract class ApiRequest
         $includes = array_filter(explode(',',$this->request->input('include')));
         // check if filters are available
         foreach($includes as $relationship){
-            if(!in_array($relationship, $this->availableRelationships())){
+            if(!in_array($relationship, $this->relationships())){
                 $errors[$relationship][] = 'The resources has not available relationship to "'.$relationship.'".';
             }
         }
@@ -229,9 +236,9 @@ abstract class ApiRequest
      */
     protected function relationshipRules(){
         // allow only available relationships
-        $rules['data.relationships'] = 'array_has_only:'.implode(',',$this->availableRelationships());
+        $rules['data.relationships'] = 'array_has_only:'.implode(',',$this->relationships());
         // add rule to check type & id of relationships
-        foreach($this->availableRelationships() as $relationship){
+        foreach($this->relationships() as $relationship){
             // get base relationship validation path
             $relationship_data = 'data.relationships.'.$relationship.'.data';
             // validate relationship type & id of relationship ARRAY
@@ -320,27 +327,13 @@ abstract class ApiRequest
         return $this->request->segment(3) === 'relationships';
     }
     /**
-     * The filters that are allowed in requests
+     * filters available for the request
+     *
+     * @method filters
      *
      * @return array
      */
-    public function availableFilters(){
-        if(method_exists($this, 'filters')){
-            return $this->filters();
-        }
-        return [];
-    }
-    /**
-     * The relationships a resource can have
-     *
-     * @return array
-     */
-     public function availableRelationships(){
-         if(method_exists($this, 'relationships')){
-             return $this->relationships();
-         }
-         return [];
-     }
+    abstract protected function filters();
     /**
      * validation rules
      *
@@ -357,4 +350,12 @@ abstract class ApiRequest
      * @return bool
      */
     abstract protected function authorize();
+    /**
+     * The relationships the main resource can have
+     *
+     * @method relationships
+     *
+     * @return array
+     */
+    abstract protected function relationships();
 }

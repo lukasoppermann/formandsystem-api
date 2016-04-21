@@ -7,7 +7,11 @@ use App\Api\V1\Transformers\CollectionTransformer;
 use App\Api\V1\Transformers\PageTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
-
+/**
+ * Collection resource representation.
+ *
+ * @Resource("Collections", uri="/collections")
+ */
 class CollectionsController extends ApiController
 {
     /**

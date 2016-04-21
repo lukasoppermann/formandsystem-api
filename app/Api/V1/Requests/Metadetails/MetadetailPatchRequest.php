@@ -2,20 +2,20 @@
 
 namespace App\Api\V1\Requests\Metadetails;
 
-use App\Api\V1\Requests\PatchRequest;
+use App\Api\V1\Requests\Metadetails\MetadetailRequest;
 
-class MetadetailPatchRequest extends PatchRequest
+class MetadetailPatchRequest extends MetadetailRequest
 {
     /**
-     * The relationships a resource can have
+     * The scopes needed to do this request
      *
      * @return array
      */
-     protected function relationships(){
-         return[
-             'pages'
-         ];
-     }
+    protected function scopes(){
+        return [
+
+        ];
+    }
     /**
      * validation rules
      *
@@ -27,19 +27,8 @@ class MetadetailPatchRequest extends PatchRequest
         return [
             'id'                => 'required|string',
             'type'              => 'required|in:metadetails',
-            'attributes.type'   => 'string|alpha_dash|not',
+            'attributes.type'   => 'string|alpha_dash',
             'attributes.value'  => 'string_or_array'
         ];
     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
-
 }

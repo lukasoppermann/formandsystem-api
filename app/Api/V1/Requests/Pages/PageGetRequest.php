@@ -2,10 +2,20 @@
 
 namespace App\Api\V1\Requests\Pages;
 
-use App\Api\V1\Requests\GetRequest;
+use App\Api\V1\Requests\Pages\PageRequest;
 
-class PageGetRequest extends GetRequest
+class PageGetRequest extends PageRequest
 {
+    /**
+     * The scopes needed to do this request
+     *
+     * @return array
+     */
+    protected function scopes(){
+        return [
+
+        ];
+    }
     /**
      * The filters that are allowed in requests
      *
@@ -17,19 +27,6 @@ class PageGetRequest extends GetRequest
         ];
     }
     /**
-     * The relationships a resource can have
-     *
-     * @return array
-     */
-     protected function relationships(){
-         return[
-             'collections',
-             'metadetails',
-             'fragments',
-             'metadetails'
-         ];
-     }
-    /**
      * validation rules
      *
      * @method rules
@@ -39,15 +36,4 @@ class PageGetRequest extends GetRequest
     protected function rules(){
 
     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
-
 }

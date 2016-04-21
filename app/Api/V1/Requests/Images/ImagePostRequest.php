@@ -2,21 +2,20 @@
 
 namespace App\Api\V1\Requests\Images;
 
-use App\Api\V1\Requests\PostRequest;
+use App\Api\V1\Requests\Images\ImageRequest;
 
-class ImagePostRequest extends PostRequest
+class ImagePostRequest extends ImageRequest
 {
     /**
-     * The relationships a resource can have
+     * The scopes needed to do this request
      *
      * @return array
      */
-     protected function relationships(){
-         return[
-             'images',
-             'fragments',
-         ];
-     }
+    protected function scopes(){
+        return [
+
+        ];
+    }
     /**
      * validation rules
      *
@@ -34,15 +33,4 @@ class ImagePostRequest extends PostRequest
             'attributes.height' => 'int|required',
         ];
     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
-
 }

@@ -22,6 +22,7 @@ $api->group([
     $api->get('collections/{id}/{relationship}', 'CollectionsController@getRelated');
     $api->get('collections/{id}/relationships/{relationship}', 'CollectionsController@getRelationships');
     $api->post('collections/{id}/relationships/{relationship}', 'CollectionsController@storeRelationships');
+    $api->patch('collections/{id}/relationships/{relationship}', 'CollectionsController@updateRelationships');
     $api->delete('collections/{id}/relationships/{relationship}', 'CollectionsController@deleteRelationships');
     // ---------------------------
     // pages
@@ -47,6 +48,7 @@ $api->group([
     $api->get('fragments/{id}/{relationship}', 'FragmentsController@getRelated');
     $api->get('fragments/{id}/relationships/{relationship}', 'FragmentsController@getRelationships');
     $api->post('fragments/{id}/relationships/{relationship}', 'FragmentsController@storeRelationships');
+    $api->patch('fragments/{id}/relationships/{relationship}', 'FragmentsController@updateRelationships');
     $api->delete('fragments/{id}/relationships/{relationship}', 'FragmentsController@deleteRelationships');
     // ---------------------------
     // metadetails (like settings)
@@ -59,6 +61,7 @@ $api->group([
     $api->get('metadetails/{id}/{relationship}', 'MetadetailsController@getRelated');
     $api->get('metadetails/{id}/relationships/{relationship}', 'MetadetailsController@getRelationships');
     $api->post('metadetails/{id}/relationships/{relationship}', 'MetadetailsController@storeRelationships');
+    $api->patch('metadetails/{id}/relationships/{relationship}', 'MetadetailsController@updateRelationships');
     $api->delete('metadetails/{id}/relationships/{relationship}', 'MetadetailsController@deleteRelationships');
     // ---------------------------
     // images
@@ -71,5 +74,6 @@ $api->group([
     $api->get('images/{id}/{relationship}', 'ImagesController@getRelated');
     $api->get('images/{id}/relationships/{relationship}', 'ImagesController@getRelationships');
     $api->post('images/{id}/relationships/{relationship}', 'ImagesController@storeRelationships');
+    $api->patch('images/{id}/relationships/{relationship}', 'ImagesController@updateRelationships');
     $api->delete('images/{id}/relationships/{relationship}', 'ImagesController@deleteRelationships');
 });

@@ -2,23 +2,20 @@
 
 namespace App\Api\V1\Requests\Pages;
 
-use App\Api\V1\Requests\PatchRequest;
+use App\Api\V1\Requests\Pages\PageRequest;
 
-class PagePatchRequest extends PatchRequest
+class PagePatchRequest extends PageRequest
 {
     /**
-     * The relationships a resource can have
+     * The scopes needed to do this request
      *
      * @return array
      */
-     protected function relationships(){
-         return[
-             'pages',
-             'collections',
-             'fragments',
-             'metadetails'
-         ];
-     }
+    protected function scopes(){
+        return [
+
+        ];
+    }
     /**
      * validation rules
      *
@@ -38,15 +35,4 @@ class PagePatchRequest extends PatchRequest
             'attributes.description' => 'string',
         ];
     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
-
 }

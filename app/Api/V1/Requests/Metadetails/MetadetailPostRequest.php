@@ -2,20 +2,20 @@
 
 namespace App\Api\V1\Requests\Metadetails;
 
-use App\Api\V1\Requests\PostRequest;
+use App\Api\V1\Requests\Metadetails\MetadetailRequest;
 
-class MetadetailPostRequest extends PostRequest
+class MetadetailPostRequest extends MetadetailRequest
 {
     /**
-     * The relationships a resource can have
+     * The scopes needed to do this request
      *
      * @return array
      */
-     protected function relationships(){
-         return[
-             'pages'
-         ];
-     }
+    protected function scopes(){
+        return [
+
+        ];
+    }
     /**
      * validation rules
      *
@@ -30,15 +30,4 @@ class MetadetailPostRequest extends PostRequest
             'attributes.value'  => 'required|string_or_array'
         ];
     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
-
 }

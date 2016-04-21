@@ -2,10 +2,20 @@
 
 namespace App\Api\V1\Requests\Images;
 
-use App\Api\V1\Requests\GetRequest;
+use App\Api\V1\Requests\Images\ImageRequest;
 
-class ImageGetRequest extends GetRequest
+class ImageGetRequest extends ImageRequest
 {
+    /**
+     * The scopes needed to do this request
+     *
+     * @return array
+     */
+    protected function scopes(){
+        return [
+
+        ];
+    }
     /**
      * The filters that are allowed in requests
      *
@@ -17,17 +27,6 @@ class ImageGetRequest extends GetRequest
         ];
     }
     /**
-     * The relationships a resource can have
-     *
-     * @return array
-     */
-     protected function relationships(){
-         return[
-             'images',
-             'fragments',
-         ];
-     }
-    /**
      * validation rules
      *
      * @method rules
@@ -37,15 +36,4 @@ class ImageGetRequest extends GetRequest
     protected function rules(){
 
     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
-
 }

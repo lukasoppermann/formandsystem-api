@@ -2,22 +2,20 @@
 
 namespace App\Api\V1\Requests\Fragments;
 
-use App\Api\V1\Requests\PostRequest;
+use App\Api\V1\Requests\Fragments\FragmentRequest;
 
-class FragmentPostRequest extends PostRequest
+class FragmentPostRequest extends FragmentRequest
 {
     /**
-     * The relationships a resource can have
+     * The scopes needed to do this request
      *
      * @return array
      */
-     protected function relationships(){
-         return[
-             'pages',
-             'fragments',
-             'images'
-         ];
-     }
+    protected function scopes(){
+        return [
+
+        ];
+    }
     /**
      * validation rules
      *
@@ -33,15 +31,4 @@ class FragmentPostRequest extends PostRequest
             'attributes.data' => '',
         ];
     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
-
 }

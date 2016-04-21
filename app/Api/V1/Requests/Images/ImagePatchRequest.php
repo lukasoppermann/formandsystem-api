@@ -2,21 +2,20 @@
 
 namespace App\Api\V1\Requests\Images;
 
-use App\Api\V1\Requests\PatchRequest;
+use App\Api\V1\Requests\Images\ImageRequest;
 
-class ImagePatchRequest extends PatchRequest
+class ImagePatchRequest extends ImageRequest
 {
     /**
-     * The relationships a resource can have
+     * The scopes needed to do this request
      *
      * @return array
      */
-     protected function relationships(){
-         return[
-             'images',
-             'fragments',
-         ];
-     }
+    protected function scopes(){
+        return [
+
+        ];
+    }
     /**
      * validation rules
      *
@@ -35,15 +34,4 @@ class ImagePatchRequest extends PatchRequest
             'attributes.height' => 'int|required_if:link,bytesize,width',
         ];
     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
-
 }

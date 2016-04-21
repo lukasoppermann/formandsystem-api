@@ -2,10 +2,20 @@
 
 namespace App\Api\V1\Requests\Collections;
 
-use App\Api\V1\Requests\DeleteRequest;
+use App\Api\V1\Requests\Collections\CollectionRequest;
 
-class CollectionDeleteRequest extends DeleteRequest
+class CollectionDeleteRequest extends CollectionRequest
 {
+    /**
+     * The scopes needed to do this request
+     *
+     * @return array
+     */
+    protected function scopes(){
+        return [
+
+        ];
+    }
     /**
      * validation rules
      *
@@ -16,15 +26,4 @@ class CollectionDeleteRequest extends DeleteRequest
     protected function rules(){
 
     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
-
 }

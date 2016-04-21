@@ -2,22 +2,20 @@
 
 namespace App\Api\V1\Requests\Fragments;
 
-use App\Api\V1\Requests\PatchRequest;
+use App\Api\V1\Requests\Fragments\FragmentRequest;
 
-class FragmentPatchRequest extends PatchRequest
+class FragmentPatchRequest extends FragmentRequest
 {
     /**
-     * The relationships a resource can have
+     * The scopes needed to do this request
      *
      * @return array
      */
-     protected function relationships(){
-         return[
-            'pages',
-            'fragments',
-            'images'
-         ];
-     }
+    protected function scopes(){
+        return [
+
+        ];
+    }
     /**
      * validation rules
      *
@@ -34,15 +32,4 @@ class FragmentPatchRequest extends PatchRequest
             'attributes.data' => '',
         ];
     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
-
 }

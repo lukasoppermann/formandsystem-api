@@ -2,10 +2,20 @@
 
 namespace App\Api\V1\Requests\Collections;
 
-use App\Api\V1\Requests\GetRequest;
+use App\Api\V1\Requests\Collections\CollectionRequest;
 
-class CollectionGetRequest extends GetRequest
+class CollectionGetRequest extends CollectionRequest
 {
+    /**
+     * The scopes needed to do this request
+     *
+     * @return array
+     */
+    protected function scopes(){
+        return [
+
+        ];
+    }
     /**
      * The filters that are allowed in requests
      *
@@ -17,16 +27,6 @@ class CollectionGetRequest extends GetRequest
         ];
     }
     /**
-     * The relationships a resource can have
-     *
-     * @return array
-     */
-     protected function relationships(){
-         return[
-             'pages'
-         ];
-     }
-    /**
      * validation rules
      *
      * @method rules
@@ -36,15 +36,4 @@ class CollectionGetRequest extends GetRequest
     protected function rules(){
 
     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
-
 }

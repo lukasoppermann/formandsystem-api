@@ -2,10 +2,20 @@
 
 namespace App\Api\V1\Requests\Fragments;
 
-use App\Api\V1\Requests\DeleteRequest;
+use App\Api\V1\Requests\Fragments\FragmentRequest;
 
-class FragmentDeleteRequest extends DeleteRequest
+class FragmentDeleteRequest extends FragmentRequest
 {
+    /**
+     * The scopes needed to do this request
+     *
+     * @return array
+     */
+    protected function scopes(){
+        return [
+
+        ];
+    }
     /**
      * validation rules
      *
@@ -16,15 +26,4 @@ class FragmentDeleteRequest extends DeleteRequest
     protected function rules(){
 
     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
-
 }

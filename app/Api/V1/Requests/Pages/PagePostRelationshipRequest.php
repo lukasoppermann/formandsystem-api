@@ -2,32 +2,18 @@
 
 namespace App\Api\V1\Requests\Pages;
 
-use App\Api\V1\Requests\PostRelationshipRequest;
+use App\Api\V1\Requests\Pages\PageRelationshipRequest;
 
-class PagePostRelationshipRequest extends PostRelationshipRequest
+class PagePostRelationshipRequest extends PageRelationshipRequest
 {
     /**
-     * The relationships the main resource can have
+     * The scopes needed to do this request
      *
      * @return array
      */
-     protected function parentRelationships(){
-         return[
-             'pages',
-             'collections',
-             'fragments',
-             'metadetails'
-         ];
-     }
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        return true;
-    }
+    protected function scopes(){
+        return [
 
+        ];
+    }
 }
