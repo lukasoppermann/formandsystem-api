@@ -12,10 +12,7 @@ trait DeleteTestTrait
         // PREPARE
         $id = $this->model->first()->id;
         // CHECK BEFORE
-        $response = $this->client->request('GET', '/'.$this->resource.'/'.$id, [
-            'headers' => ['Accept' => 'application/json']
-        ]);
-        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        $this->assertNotNull($this->model->find($id));
         // DELETE
         $response = $this->client->request('DELETE', '/'.$this->resource.'/'.$id, [
             'headers' => [

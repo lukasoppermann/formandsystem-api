@@ -10,24 +10,6 @@ trait GetTest
     /**
      * @test
      */
-    public function get_resource()
-    {
-        // get index
-        $this->getResource();
-        // BY ID
-        $this->getResourceById();
-        // BY WRONG ID
-        $this->getResourceByWrongId();
-        // BY FILTER
-        $this->getResourceByFilter();
-        // BY WRONG FILTER
-        $this->getResourceByWrongFilter();
-        // BY WRONG FILTER PARAMETER
-        $this->getResourceByWrongFilterParameter();
-    }
-    /**
-     * @test
-     */
     public function get_related()
     {
         // GET RELATED

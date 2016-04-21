@@ -5,8 +5,13 @@ namespace Lukasoppermann\Testing\Traits;
 
 trait GetTestTrait
 {
-    /*
-     * test getting the main resource
+    /**
+     * @test getting the main resource listing
+     *
+     * @method getResource
+     *
+     * @link GET /resource
+     *
      */
     public function getResource(){
         // CALL
@@ -17,8 +22,11 @@ trait GetTestTrait
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
         $this->assertValid($received, $this->resource()->blueprint());
     }
-    /*
-     * test getting the main resource by id
+    /**
+     * @test getting the main resource by id
+     *
+     * @method getResourceById
+     *
      */
     public function getResourceById(){
         // CALL
@@ -30,16 +38,22 @@ trait GetTestTrait
         $this->assertEquals($this->model->first()->id, $received['id']);
         $this->assertValid($received, $this->resource()->blueprint());
     }
-    /*
-     * test getting the main resource by wrong id
-     */
+    /**
+    * @test getting the main resource by wrong id
+    *
+    * @method getResourceByWrongId
+    *
+    */
     public function getResourceByWrongId(){
         $response = $this->getClientResponse($this->resource.'/1');
         // ASSERTIONS
         $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
     }
     /**
-     * test getting the main resource by filter
+     * @test getting the main resource by filter
+     *
+     * @method getResourceByFilter
+     *
      */
     public function getResourceByFilter()
     {
@@ -56,7 +70,10 @@ trait GetTestTrait
         $this->assertValid($received, $this->resource()->blueprint());
     }
     /**
-     * test getting the main resource by wrong filter
+     * @test getting the main resource by wrong filter
+     *
+     * @method getResourceByWrongFilter
+     *
      */
     public function getResourceByWrongFilter()
     {
@@ -66,7 +83,10 @@ trait GetTestTrait
         $this->checkErrorResponse($response, 'HTTP_UNPROCESSABLE_ENTITY');
     }
     /**
-     * test getting the main resource by wrong filter
+     * @test getting the main resource by wrong filter parameter
+     *
+     * @method getResourceByWrongFilter
+     *
      */
     public function getResourceByWrongFilterParameter()
     {

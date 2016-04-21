@@ -32,5 +32,13 @@ class ImagesController extends ApiController
      * @var array
      */
     protected $resource = 'images';
-
+    /*
+     * uplload image
+     */
+    public function upload(Request $request, $id)
+    {
+        $model = $this->newModel()->find($id);
+        $file = $request->file('file');
+        $file->move(base_path().'/public/test/', $model->slug.'.'.$file->guessExtension());
+    }
 }

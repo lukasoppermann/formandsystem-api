@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         bootstrap="bootstrap/app.php"
+<phpunit bootstrap="bootstrap/app.php"
          colors="true"
+         backupGlobals="false"
+         backupStaticAttributes="false"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
@@ -29,4 +29,18 @@
         <env name="API_DOMAIN" value="http://api.formandsystem.app"/>
         <env name="API_VERSION" value="v1"/>
     </php>
+    <listeners>
+        <!-- <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener">
+            <arguments>
+                <array>
+                    <element key="slowThreshold">
+                        <integer>1000</integer>
+                    </element>
+                    <element key="reportLength">
+                        <integer>10</integer>
+                    </element>
+                </array>
+            </arguments>
+        </listener> -->
+    </listeners>
 </phpunit>
