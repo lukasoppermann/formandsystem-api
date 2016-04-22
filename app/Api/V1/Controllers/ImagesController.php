@@ -6,6 +6,10 @@ use App\Api\V1\Models\Image;
 use App\Api\V1\Transformers\ImageTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
+use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Ftp as FtpAdapter;
+use League\Flysystem\Sftp\SftpAdapter;
+
 
 class ImagesController extends ApiController
 {
@@ -39,6 +43,23 @@ class ImagesController extends ApiController
     {
         $model = $this->newModel()->find($id);
         $file = $request->file('file');
-        $file->move(base_path().'/public/test/', $model->slug.'.'.$file->guessExtension());
+        \LOG::debug('TEST');
+        \LOG::debug($file);
+        dd($file);
+
+        $adapter = new SftpAdapter([
+            'host' => 'ftp.formandsystem.com',
+            'username' => '373917-test',
+            'password' => 'test1234s',
+            'ssl' => false,
+            'timeout' => 30,
+        ]);
+
+        $filesystem = new Filesystem($adapter);
+
+        if($filesystem->has('/images/'.$model->slug.'.'.$file->guessExtension())){
+            throw new \Dingo\Api\Exception\StoreResourceFailedException('The file already exists.');
+        }
+        $filesystem->write('/images/'.$model->slug.'.'.$file->guessExtension(), $file);
     }
 }
