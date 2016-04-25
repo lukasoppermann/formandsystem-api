@@ -2,10 +2,11 @@
 
 namespace App\Api\V1\Controllers;
 
-use Illuminate\Http\Request;
 use App\Api\V1\Requests\ApiRequest;
+
+use Illuminate\Http\Request;
+
 use Illuminate\Pagination\LengthAwarePaginator;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class ApiController extends Controller
 {
@@ -32,6 +33,7 @@ abstract class ApiController extends Controller
         foreach((array) $this->request->input('filter') as $key => $value){
             $model = $model->where($key, $value);
         }
+
         // return result
         return $this->response->paginator($model->paginate($this->perPage), $this->newTransformer(), ['key' => $this->resource]);
     }

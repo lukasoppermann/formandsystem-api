@@ -54,12 +54,7 @@ abstract class ApiRequest
         // store current request
         $this->request = $request;
         // validate request data
-        if($this->isFile()){
-            $this->validateFile($request);
-        }
-        else {
-            $this->validate($request);
-        }
+        $this->validate($request);
         // validate request parameters
         $this->validateParameters($request);
         // validate query parameters
@@ -116,23 +111,6 @@ abstract class ApiRequest
         // throw error if validation fails
         if($validator->fails()){
             $this->resourceException($this->error('Request data validation failed.'),$validator->errors());
-        }
-    }
-    /**
-     * validate current request file
-     *
-     * @method validateFile
-     *
-     * @param  Request $request
-     *
-     * @return void | Exception
-     */
-    protected function validateFile(Request $request){
-        // run validation
-        $validator = app('validator')->make($request->all(), $this->fileRules());
-        // throw error if validation fails
-        if($validator->fails()){
-            $this->resourceException($this->error('Uploaded file is invalid.'),$validator->errors());
         }
     }
     /**
@@ -356,7 +334,10 @@ abstract class ApiRequest
      * @return [bool]
      */
     protected function isFile(){
-        return count($this->request->allFiles()) > 0;
+        if(isset($this->mimeTypes)){
+            return in_array($this->request->header('Content-Type'),$this->mimeTypes);
+        }
+        return false;
     }
     /**
      * filters available for the request
@@ -366,16 +347,6 @@ abstract class ApiRequest
      * @return array
      */
     abstract protected function filters();
-    /**
-     * image validation rules
-     *
-     * @method fileRules
-     *
-     * @return array
-     */
-    protected function fileRules(){
-        return [];
-    }
     /**
      * validation rules
      *

@@ -146,7 +146,7 @@ trait PatchTestTrait
             'headers' => ['Accept' => 'application/json'],
             'body' => json_encode([
                 "data" => array_merge(
-                    $this->resource()->data(),
+                    $this->resource()->incomplete(),
                     ['id' => $model->id],
                     ['relationships' => $relationshipData]
                 )
@@ -184,7 +184,7 @@ trait PatchTestTrait
             'body' => json_encode([
                 "data" => array_merge(
                     ['id' => $model->id],
-                    $this->resource()->data(),
+                    $this->resource()->incomplete(),
                     ['relationships' => $relationshipData]
                 )
             ])
@@ -214,7 +214,7 @@ trait PatchTestTrait
                 'body' => json_encode([
                     "data" => array_merge(
                         ['id' => $model->id],
-                        $this->resource()->data(),
+                        $this->resource()->incomplete(),
                         ['relationships' =>
                             ['wrongRelationship' =>
                                 ['data' => [
@@ -245,7 +245,7 @@ trait PatchTestTrait
                 'body' => json_encode([
                     "data" => array_merge(
                         ['id' => $model->id],
-                        $this->resource()->data(),
+                        $this->resource()->incomplete(),
                         ['relationships' =>
                             [$this->relationships()[0] =>
                                 ['data' => [
@@ -264,7 +264,7 @@ trait PatchTestTrait
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
                     "data" => array_merge(
-                        $this->resource()->data(),
+                        $this->resource()->incomplete(),
                         ['id' => $model->id],
                         ['relationships' =>
                             [$this->relationships()[0] =>

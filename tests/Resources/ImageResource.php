@@ -42,7 +42,7 @@ class ImageResource extends ApiResource{
             'id' => 'string',
             'type' => 'in:images',
             'attributes' => [
-                'link' => 'url',
+                'link' => 'string',
                 'slug' => 'string',
                 'bytesize' => 'int',
                 'width' => 'int',
@@ -61,7 +61,7 @@ class ImageResource extends ApiResource{
         return [
             "type" => "images",
             "attributes" => [
-                "link" => "http://lorempixel.com/1511/1254/cats/?12207",
+                'link' => "image-slug.gif",
                 'slug' => 'image-slug',
                 'bytesize' => 122345,
                 'width' => 300,

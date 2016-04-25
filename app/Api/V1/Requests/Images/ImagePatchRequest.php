@@ -27,11 +27,7 @@ class ImagePatchRequest extends ImageRequest
         return [
             'id' => 'required|string',
             'type' => 'required|in:images',
-            'attributes.link' => 'url|required_if:bytesize,width,height',
             'attributes.slug' => 'string',
-            'attributes.bytesize' => 'int|required_if:link,width,height',
-            'attributes.width' => 'int|required_if:link,bytesize,height',
-            'attributes.height' => 'int|required_if:link,bytesize,width',
         ];
     }
 }
