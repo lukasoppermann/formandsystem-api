@@ -83,7 +83,7 @@ class ImagesController extends ApiController
             return $this->response->item($model, $this->newTransformer(), ['key' => $this->resource])->setStatusCode(201);
         }
         // File could not be saved
-        throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Faild storing image.');
+        throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Failed storing image.');
     }
     /**
      * Create a new Filesystem with the given credentials
