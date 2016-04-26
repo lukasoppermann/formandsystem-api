@@ -10,7 +10,8 @@
         "lukasoppermann/http-status": "~1.0",
         "ramsey/uuid": "^3.3",
         "league/flysystem": "^1.0",
-        "league/flysystem-sftp": "^1.0"
+        "league/flysystem-sftp": "^1.0",
+        "lucadegasperi/oauth2-server-laravel": "^5.1"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "~6.0",
