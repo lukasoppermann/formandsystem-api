@@ -42,18 +42,17 @@ class ImageTest extends TestCase
     protected $invalidTestFiles = [
         'image/png'     => "/tests/files/php-image.png",
         'image/png'     => "/tests/files/php-image.php",
-        'image/png'     => "/tests/files/php-image2.png",
         'text/x-php'     => "/tests/files/php-image.php",
         'image/x-ms-bmp'     => "/tests/files/bmp-image.bmp",
     ];
     /**
-     * @test upload image
+     * upload image
      */
-    public function postResource(){
+    public function postResourceS(){
         // Setup the FTP
-        $adapter = new SftpAdapter($this->testSftp);
+        // $adapter = new SftpAdapter($this->testSftp);
         // return the system
-        $filesystem = new Filesystem($adapter);
+        // $filesystem = new Filesystem($adapter);
         // Loop through all valida files
         foreach($this->testFiles as $contentType => $file){
             // POST
@@ -69,17 +68,16 @@ class ImageTest extends TestCase
             $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
             $this->assertNotNull($this->model->find($data['id']));
             $this->assertValid($data, $this->resource()->blueprint());
-
             // Upload image
-            $response = $this->client->request('POST', $response->getHeader('Location'), [
+            $response = $this->client->request('PUT', $data['links']['upload'], [
                 'headers' => ['Content-Type' => $contentType],
                 'body' => fopen(base_path().$file,'r')
             ]);
-            // GET DATA
+            // // GET DATA
             $data = $this->getResponseArray($response)['data'];
-            // ASSERTIONS
+            // // ASSERTIONS
             $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
-            $this->assertTrue($filesystem->has('/images/'.$data['attributes']['link']));
+            // // $this->assertTrue($filesystem->has('/images/'.$data['attributes']['link']));
             $this->assertValid($data, $this->resource()->blueprint());
         }
     }
@@ -89,12 +87,21 @@ class ImageTest extends TestCase
     public function uploadInvalidImage(){
         // Loop through all valida files
         foreach($this->invalidTestFiles as $contentType => $file){
-            // remove link from item
-            $model = $this->model->first();
-            $model->link = NULL;
-            $model->save();
             // POST
-            $response = $this->client->request('POST', '/'.$this->resource.'/'.$model->id, [
+            $response = $this->client->request('POST', '/'.$this->resource, [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode([
+                    "data" => $this->resource()->data()
+                ])
+            ]);
+            // GET DATA
+            $data = $this->getResponseArray($response)['data'];
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
+            $this->assertNotNull($this->model->find($data['id']));
+            $this->assertValid($data, $this->resource()->blueprint());
+            // POST
+            $response = $this->client->request('PUT', $data['links']['upload'], [
                     'headers' => ['Content-Type' => $contentType],
                     'body' => fopen(base_path().$file,'r')
             ]);
