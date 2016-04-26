@@ -8,8 +8,14 @@ use League\Flysystem\Adapter\Ftp as FtpAdapter;
 use League\Flysystem\Sftp\SftpAdapter;
 
 
-class ImagesController extends ApiController
+class UploadsController extends ApiController
 {
+    /**
+     * The resources name
+     *
+     * @var array
+     */
+    protected $resource = 'uploads';
     /**
      * allowed image mime types
      *
@@ -27,7 +33,7 @@ class ImagesController extends ApiController
     /*
      * upload image
      */
-    public function upload(Request $request, $id)
+    public function update(Request $request, $id)
     {
         // get resource type
         $resourceType = $this->getResourceType($request->header('Content-Type'));
@@ -44,7 +50,7 @@ class ImagesController extends ApiController
         // respond
         if($file === true){
             // return true
-            return $this->response->item($model, $this->newTransformer(), ['key' => $this->resource])->setStatusCode(201);
+            return $this->response->item($model, $this->newTransformer(), ['key' => $resourceType])->setStatusCode(201);
         }
         // File could not be saved
         throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Failed storing image.');

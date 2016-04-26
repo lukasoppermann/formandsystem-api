@@ -53,12 +53,15 @@ abstract class ApiRequest
     public function __construct(Request $request){
         // store current request
         $this->request = $request;
-        // validate request data
-        $this->validate($request);
-        // validate request parameters
-        $this->validateParameters($request);
-        // validate query parameters
-        $this->validateQueryParameters($request);
+        // run validation if not file request
+        if(!isset($this->fileRequest) || $this->fileRequest !== TRUE){
+            // validate request data
+            $this->validate($request);
+            // validate request parameters
+            $this->validateParameters($request);
+            // validate query parameters
+            $this->validateQueryParameters($request);
+        }
     }
     /**
      * if method does not exist, delegate to request class

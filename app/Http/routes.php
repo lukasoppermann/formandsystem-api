@@ -78,5 +78,5 @@ $api->group([
     $api->delete('images/{id}/relationships/{relationship}', 'ImagesController@deleteRelationships');
     // ---------------------------
     // uploads
-    $api->put('uploads/{id}', 'UploadsController@store');
+    $api->put('uploads/{id}', 'UploadsController@update');
 });

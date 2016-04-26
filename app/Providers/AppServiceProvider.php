@@ -14,6 +14,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // extend the validator
+        $this->extendValidator();
+    }
+    /**
+     * extend the validator
+     *
+     * @method extendValidator
+     *
+     * @return [void]
+     */
+    protected function extendValidator(){
         // item to be string or array
         Validator::extend('string_or_array', function($attribute, $value, $parameters, $validator) {
             return (is_string($value) || is_array($value));
