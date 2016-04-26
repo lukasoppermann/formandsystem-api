@@ -113,11 +113,12 @@ class ImagePostRequest extends ImageRequest
     protected function rules(){
         return [
             'type' => 'required|in:images',
-            'attributes.link' => 'string|required_without_all:data.attributes.bytesize,data.attributes.width,data.attributes.height',
-            'attributes.slug' => 'string|required',
-            'attributes.bytesize' => 'int|required_without:data.attributes.link',
-            'attributes.width' => 'int|required_without:data.attributes.link',
-            'attributes.height' => 'int|required_without:data.attributes.link',
+            'attributes.slug'       => 'string|required',
+            'attributes.link'       => 'string|required_without:data.attributes.filename',
+            'attributes.filename'   => 'string|required_without:data.attributes.link',
+            'attributes.bytesize'   => 'int|required_with:data.attributes.filename',
+            'attributes.width'      => 'int|required_with:data.attributes.filename',
+            'attributes.height'     => 'int|required_with:data.attributes.filename',
         ];
     }
 }

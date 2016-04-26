@@ -49,21 +49,31 @@ class ImageTest extends TestCase
     /**
      * @test upload image
      */
-    public function uploadImage(){
+    public function postResource(){
         // Setup the FTP
         $adapter = new SftpAdapter($this->testSftp);
         // return the system
         $filesystem = new Filesystem($adapter);
         // Loop through all valida files
         foreach($this->testFiles as $contentType => $file){
-            // remove link from item
-            $model = $this->model->first();
-            $model->link = NULL;
-            $model->save();
             // POST
-            $response = $this->client->request('POST', '/'.$this->resource.'/'.$model->id, [
-                    'headers' => ['Content-Type' => $contentType],
-                    'body' => fopen(base_path().$file,'r')
+            $response = $this->client->request('POST', '/'.$this->resource, [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode([
+                    "data" => $this->resource()->data()
+                ])
+            ]);
+            // GET DATA
+            $data = $this->getResponseArray($response)['data'];
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
+            $this->assertNotNull($this->model->find($data['id']));
+            $this->assertValid($data, $this->resource()->blueprint());
+
+            // Upload image
+            $response = $this->client->request('POST', $response->getHeader('Location'), [
+                'headers' => ['Content-Type' => $contentType],
+                'body' => fopen(base_path().$file,'r')
             ]);
             // GET DATA
             $data = $this->getResponseArray($response)['data'];

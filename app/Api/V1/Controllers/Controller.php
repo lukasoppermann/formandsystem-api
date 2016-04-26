@@ -70,9 +70,12 @@ abstract class Controller extends LumenController
      *
      * @return model
      */
-    public function newModel(){
+    public function newModel($model = NULL){
         // get model namespace
-        $model = $this->api_namespace."Models\\".$this->resourceName();
+        if($model === NULL){
+            $model = $this->resourceName();
+        }
+        $model = $this->api_namespace."Models\\".$model;
         // return a new mode
         return new $model;
     }

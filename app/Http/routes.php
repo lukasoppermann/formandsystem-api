@@ -68,13 +68,15 @@ $api->group([
     $api->get('images', 'ImagesController@index');
     $api->get('images/{id}', 'ImagesController@show');
     $api->post('images', 'ImagesController@store');
-    $api->post('images/{id}', 'ImagesController@upload');
     $api->patch('images/{id}', 'ImagesController@update');
     $api->delete('images/{id}', 'ImagesController@delete');
-    // metadetails/relationships
+    // images/relationships
     $api->get('images/{id}/{relationship}', 'ImagesController@getRelated');
     $api->get('images/{id}/relationships/{relationship}', 'ImagesController@getRelationships');
     $api->post('images/{id}/relationships/{relationship}', 'ImagesController@storeRelationships');
     $api->patch('images/{id}/relationships/{relationship}', 'ImagesController@updateRelationships');
     $api->delete('images/{id}/relationships/{relationship}', 'ImagesController@deleteRelationships');
+    // ---------------------------
+    // uploads
+    $api->put('uploads/{id}', 'UploadsController@store');
 });

@@ -26,9 +26,13 @@ class ImageTransformer extends ApiTransformer
 
     public function transform(Image $image)
     {
+        // add upload link if not external
+        $links['upload'] = $_ENV['API_DOMAIN'].'/uploads/'.$image->id;
+
         return [
             'id'            => $image->id,
             'link'          => $image->link,
+            'filename'      => $image->filename,
             'slug'          => $image->slug,
             'bytesize'      => (int)$image->bytesize,
             'width'         => (int)$image->width,
@@ -36,6 +40,7 @@ class ImageTransformer extends ApiTransformer
             'created_at'    => (string)$image->created_at,
             'updated_at'    => (string)$image->updated_at,
             'relationships' => $this->relationshipsLinks('images/'.$image->id),
+            'links'         => $links,
         ];
     }
     /*
