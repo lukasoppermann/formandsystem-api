@@ -48,7 +48,7 @@ class ImageTest extends TestCase
     /**
      * upload image
      */
-    public function postResourceS(){
+    public function postResource(){
         // Setup the FTP
         // $adapter = new SftpAdapter($this->testSftp);
         // return the system
@@ -59,7 +59,7 @@ class ImageTest extends TestCase
             $response = $this->client->request('POST', '/'.$this->resource, [
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
-                    "data" => $this->resource()->data()
+                    "data" => $this->resource()->data(substr($file,-3))
                 ])
             ]);
             // GET DATA
@@ -91,7 +91,7 @@ class ImageTest extends TestCase
             $response = $this->client->request('POST', '/'.$this->resource, [
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
-                    "data" => $this->resource()->data()
+                    "data" => $this->resource()->data(substr($file,-3))
                 ])
             ]);
             // GET DATA

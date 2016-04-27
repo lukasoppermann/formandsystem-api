@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Collection;
 
 abstract class ApiResource
 {
+    protected $faker;
+
+    public function __construct(){
+        $this->faker = \Faker\Factory::create();
+    }
     /**
      * return properties as collections
      *

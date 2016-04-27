@@ -60,7 +60,7 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
     public function createApplication()
     {
         $app = require __DIR__ . '/../bootstrap/app.php';
-        app('config')->set('database.default', 'testingSql');
+        app('config')->set('database.default', 'sqlite');
 
         return $app;
 

@@ -46,11 +46,11 @@ class UploadsController extends ApiController
         $this->validateUploadable($model);
         // write file to remote disk
         \LOG::debug('missing credentials');
-        $file = $this->newFilesystem([])->write('/images/'.$model->link, $request->getContent());
+        $file = $this->newFilesystem([])->put('/'.$resourceType.'/'.$model->link, $request->getContent());
         // respond
         if($file === true){
             // return true
-            return $this->response->item($model, $this->newTransformer(), ['key' => $resourceType])->setStatusCode(201);
+            return $this->response->item($model, $this->newTransformer(ucfirst(substr($resourceType,0,-1))), ['key' => $resourceType])->setStatusCode(201);
         }
         // File could not be saved
         throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Failed storing image.');

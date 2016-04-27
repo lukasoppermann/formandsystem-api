@@ -57,12 +57,13 @@ class ImageResource extends ApiResource{
      *
      * @return array
      */
-    public function data(){
+    public function data($extension = 'png'){
+        $slug = $this->faker->slug();
         return [
             "type" => "images",
             "attributes" => [
-                'link' => "image-slug.gif",
-                'slug' => 'image-slug',
+                'link' => $slug.'.'.$extension,
+                'slug' => $slug,
                 'bytesize' => 122345,
                 'width' => 300,
                 'height' => 500,

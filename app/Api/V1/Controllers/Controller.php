@@ -86,9 +86,13 @@ abstract class Controller extends LumenController
      *
      * @return transformer
      */
-    public function newTransformer(){
+    public function newTransformer($transformer = NULL){
         // get transformer namespace
-        $transformer = $this->api_namespace."Transformers\\".$this->resourceName()."Transformer";
+        if($transformer === NULL){
+            $transformer = $this->resourceName();
+        }
+        // get transformer namespace
+        $transformer = $this->api_namespace."Transformers\\".$transformer."Transformer";
         // return a new transformer
         return new $transformer;
     }
