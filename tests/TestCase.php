@@ -59,8 +59,9 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
      */
     public function createApplication()
     {
-        // putenv('DB_CONNECTION=testing');
         $app = require __DIR__ . '/../bootstrap/app.php';
+        app('config')->set('database.default', 'testingSql');
+
         return $app;
 
     }
