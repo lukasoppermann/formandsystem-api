@@ -41,7 +41,8 @@ abstract class ApiRequest
         'limit',
         'sort',
         'fields',
-        'include'
+        'include',
+        'access_token'
     ];
     /**
      * get original request
@@ -53,6 +54,8 @@ abstract class ApiRequest
     public function __construct(Request $request){
         // store current request
         $this->request = $request;
+        // store current request
+        $this->isAuthorized();
         // run validation if not file request
         if(!isset($this->fileRequest) || $this->fileRequest !== TRUE){
             // validate request data
@@ -79,6 +82,18 @@ abstract class ApiRequest
             if (method_exists($this->request, $method_name)){
                 return $this->request->{$method_name}($arguments);
             }
+        }
+    }
+    /**
+     * check if request is authorized
+     *
+     * @method isAuthorized
+     *
+     * @return void|exception
+     */
+    protected function isAuthorized(){
+        if($this->authorize() !== true){
+            throw new Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
         }
     }
     /**
@@ -146,8 +161,6 @@ abstract class ApiRequest
         $this->validateFilters($request);
         // validate includes
         $this->validateIncludes($request);
-        // validate includes
-        $this->validateAuthorization($request);
     }
     /**
      * validate filters used in request
@@ -214,20 +227,6 @@ abstract class ApiRequest
         // return error of invalid argumens are supplied
         if(count($unknown_parameters) > 0){
             throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Invalid query parameter supplied: "'.trim(implode(', ',$unknown_parameters),', ').'".');
-        }
-    }
-    /**
-     * validate includes used in request
-     *
-     * @method validateIncludes
-     *
-     * @param  Request         $request
-     *
-     * @return  void | Exception
-     */
-    protected function validateAuthorization(Request $request){
-        if(!$this->authorize($request)){
-            throw new \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException('Unauthorized request.');
         }
     }
     /**
@@ -365,7 +364,46 @@ abstract class ApiRequest
      *
      * @return bool
      */
-    abstract protected function authorize();
+    protected function authorize()
+    {
+        $authorizer = app('oauth2-server.authorizer');
+        // dd(app('oauth2-server.authorizer'));
+        // \LOG::debug(app('oauth2-server.authorizer')->hasScope('foo'));
+        // dd(app('oauth2-server.authorizer')->getClientId());
+        // varify correct scopes
+        // if ( !is_object($authorizer) OR ( !empty($this->request->scopes) and !$this->checkScopes($this->scopes) ) )
+        // {
+        //     return false;
+        // }
+
+        // app('oauth2-server.authorizer')->hasScope('foo');
+
+        // varify owner exists
+        // if( !$owner = $userRepository->getByOwnerId( $authorizer->getResourceOwnerId() ) )
+        // {
+        //     return false;
+        // }
+
+        // set db connection
+        // $db = array(
+        //     'driver'    => 'mysql',
+        //     'host'      => $owner->service_host,
+        //     'database'  => $owner->service_name,
+        //     'username'  => $owner->service_user,
+        //     'password'  => $owner->service_key,
+        //     'charset'   => 'utf8',
+        //     'collation' => 'utf8_unicode_ci',
+        //     'prefix'    => '',
+        // );
+        //
+        // Config::set("database.connections.user", $db);
+        //
+        // // save owner data for Accept cross origin url header
+        // Config::set("owner", $owner);
+
+        // return true to make authorize pass
+        return true;
+    }
     /**
      * The relationships the main resource can have
      *

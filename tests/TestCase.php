@@ -43,7 +43,7 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
         // run setup
         parent::setUp();
         // RUN migrations
-        $this->initDb();
+        // $this->initDb();
         // Boot up HTTP Client
         $this->initHttpClient();
         // Create resources

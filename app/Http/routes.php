@@ -8,7 +8,7 @@ $api = app('Dingo\Api\Routing\Router');
 $api->group([
     'version' => 'v1',
     'namespace' => 'App\Api\V1\Controllers',
-    // 'middleware' => 'cors',
+    'middleware' => 'api.auth',
 ], function($api)
 {
     // ---------------------------
@@ -79,4 +79,14 @@ $api->group([
     // ---------------------------
     // uploads
     $api->put('uploads/{id}', 'UploadsController@update');
+    // ---------------------------
+    // authentications
+    $api->post('tokens', 'TokensController@store');
+    $api->patch('tokens/{id}', 'TokensController@update');
+    $api->delete('tokens/{id}', 'TokensController@delete');
+    // ---------------------------
+    // Clients
+    $api->get('clients/{id}', 'ClientsController@show');
+    $api->post('clients', 'ClientsController@store');
+    $api->delete('clients/{id}', 'ClientsController@delete');
 });

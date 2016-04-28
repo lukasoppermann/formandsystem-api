@@ -24,15 +24,4 @@ abstract class ResourceRequest extends ApiRequest
      * @return array
      */
     abstract protected function scopes();
-    /**
-     * check if request is authorized
-     *
-     * @method authorize
-     *
-     * @return array
-     */
-    protected function authorize(){
-        // check scopes
-        return true;
-    }
 }
