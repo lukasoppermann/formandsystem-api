@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCollectionablesTable extends Migration
+class CreateCollectionPageTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +12,14 @@ class CreateCollectionablesTable extends Migration
      */
      public function up()
      {
-         Schema::create('collectionables', function (Blueprint $table) {
+         Schema::create('collection_page', function (Blueprint $table) {
              $table->increments('id');
 
              $table->uuid('collection_id')->index();
-             $table->foreign('collection_id')->references('id')->on('images')->onDelete('cascade');
+             $table->foreign('collection_id')->references('id')->on('collections')->onDelete('cascade');
 
-             $table->uuid('collectionable_id')->index();
-             $table->string('collectionable_type');
+             $table->uuid('page_id')->index();
+             $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
          });
      }
      /**
@@ -29,6 +29,6 @@ class CreateCollectionablesTable extends Migration
       */
      public function down()
      {
-         Schema::drop('collectionables');
+         Schema::drop('collection_page');
      }
 }
