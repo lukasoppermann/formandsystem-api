@@ -57,7 +57,7 @@ class Page extends BaseModel
      */
     public function collections()
     {
-        return $this->belongsToMany('App\Api\V1\Models\Collection');
+        return $this->morphedByMany('App\Api\V1\Models\Collection');
     }
     /**
      * The metadetails that belongs to the page.
@@ -65,5 +65,19 @@ class Page extends BaseModel
     public function metadetails()
     {
         return $this->morphToMany('App\Api\V1\Models\Metadetail', 'metadetailable');
+    }
+    /**
+     * The pages that belongs to the page.
+     */
+    public function pages()
+    {
+        return $this->hasMany('App\Api\V1\Models\Page', 'parent_id');
+    }
+    /**
+     * The pages that belongs to the page.
+     */
+    public function ownedbypages()
+    {
+        return $this->belongsTo('App\Api\V1\Models\Page', 'parent_id');
     }
 }

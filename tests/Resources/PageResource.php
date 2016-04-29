@@ -28,7 +28,8 @@ class PageResource extends ApiResource{
         return [
             'metadetails',
             'collections',
-            'fragments'
+            'fragments',
+            // 'pages'
         ];
     }
     /**

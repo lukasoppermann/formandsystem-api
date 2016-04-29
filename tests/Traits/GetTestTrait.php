@@ -192,10 +192,8 @@ trait GetTestTrait
      */
     public function addRelatedItems($relationship){
         // get model with relationships
-        $model = $this->model->all()->first(function($key, $item) use ($relationship){
-            return count($item->{$relationship}) > 0;
-        });
-
+        $model = $this->model->first();
+        // remove relationships
         $model->{$relationship}()->detach();
         // Prepare related model
         $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));

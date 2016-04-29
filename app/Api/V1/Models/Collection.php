@@ -33,6 +33,6 @@ class Collection extends BaseModel
      */
     public function pages()
     {
-        return $this->belongsToMany('App\Api\V1\Models\Page');
+        return $this->morphToMany('App\Api\V1\Models\Page');
     }
 }

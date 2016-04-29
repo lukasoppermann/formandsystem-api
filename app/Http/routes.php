@@ -8,7 +8,7 @@ $api = app('Dingo\Api\Routing\Router');
 $api->group([
     'version' => 'v1',
     'namespace' => 'App\Api\V1\Controllers',
-    'middleware' => 'api.auth',
+    // 'middleware' => 'api.auth',
 ], function($api)
 {
     // ---------------------------

@@ -366,7 +366,10 @@ abstract class ApiRequest
      */
     protected function authorize()
     {
-        $authorizer = app('oauth2-server.authorizer');
+        // $authorizer = app('oauth2-server.authorizer');
+        // $authorizer->validateAccessToken();
+        // \Log::debug($authorizer->getResourceOwnerId());
+        // \Log::debug('none');
         // dd(app('oauth2-server.authorizer'));
         // \LOG::debug(app('oauth2-server.authorizer')->hasScope('foo'));
         // dd(app('oauth2-server.authorizer')->getClientId());

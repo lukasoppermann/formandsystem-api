@@ -11,11 +11,11 @@ class CmsUser extends Seeder {
 	 */
 	public function run()
 	{
-		// DB::table('oauth_clients')->insert([
-		// 	'id' 		=> 'formandsystem',
-		// 	'secret' 	=> bin2hex(random_bytes(30)),
-		// 	'name' 		=> 'Form&System'
-		// ]);
+		DB::table('oauth_clients')->insert([
+			'id' 		=> 'formandsystem',
+			'secret' 	=> bin2hex(random_bytes(30)),
+			'name' 		=> 'Form&System'
+		]);
 		DB::table('oauth_client_scopes')->where('client_id', 'formandsystem')->delete();
 
 		DB::table('oauth_client_scopes')->insert(

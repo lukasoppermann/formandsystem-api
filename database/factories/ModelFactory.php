@@ -32,7 +32,7 @@ $factory->define(App\Api\V1\Models\Page::class, function ($faker) {
         'description'       => $faker->paragraph(4),
         'slug'              => str_replace(' ','-',$pageName),
         'published'         => (int)$faker->boolean(80),
-        'language'          => $faker->randomElement(['de', 'en']),
+        'language'          => $faker->randomElement(['de', 'en'])
     ];
 });
 

@@ -30,7 +30,9 @@ class PagesController extends ApiController
     protected $relationships = [
         'metadetails',
         'collections',
-        'fragments'
+        'fragments',
+        'pages',
+        'ownedbypages'
     ];
     /**
      * The resources name
