@@ -2,8 +2,11 @@
 
 namespace App\Api\V1\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Collection extends BaseModel
 {
+    use SoftDeletes;
     /**
      * If uuid is used instead of autoincementing id
      *

@@ -7,6 +7,9 @@ trait PatchTestTrait
 {
     /*
      * patch the main resource by id
+     * @test
+     * @group patch
+     * @group main
      */
     public function patchResourceById(){
         // PREPARE
@@ -28,6 +31,9 @@ trait PatchTestTrait
     }
     /*
      * patch the main resource by wrong id
+     * @test
+     * @group patch
+     * @group main
      */
     public function patchResourceWrongId(){
         // PATCH
@@ -45,6 +51,9 @@ trait PatchTestTrait
     }
     /*
      * patch the main resource by id
+     * @test
+     * @group patch
+     * @group main
      */
     public function patchResourceWrongType(){
         // PATCH
@@ -62,6 +71,9 @@ trait PatchTestTrait
     }
     /*
      * patch the main resource by id without attributes
+     * @test
+     * @group patch
+     * @group main
      */
     public function patchResourceByIdWithoutAttributes(){
         // PATCH
@@ -79,6 +91,9 @@ trait PatchTestTrait
     }
     /*
      * patch the main resource by id without body
+     * @test
+     * @group patch
+     * @group main
      */
     public function patchResourceByIdNoBody(){
         // PATCH
@@ -90,6 +105,9 @@ trait PatchTestTrait
     }
     /*
      * patch the main resource by id with wrong body
+     * @test
+     * @group patch
+     * @group main
      */
     public function patchResourceIncompleteData(){
         // PATCH
@@ -121,12 +139,17 @@ trait PatchTestTrait
     }
     /**
      * patch new resource with relationships
+     * @test
+     * @group patch
+     * @group main
      */
     public function patchResourceWithMultipleRelationships(){
         // PREPARE
         $model = $this->model->first();
         $relationshipData = [];
         foreach($this->relationships() as $relationship){
+            // remove related
+            $model->{$relationship}()->detach();
             // get related model
             $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
             // build relationship data
@@ -164,6 +187,9 @@ trait PatchTestTrait
     }
     /**
      * patch resource with one relationship item as object
+     * @test
+     * @group patch
+     * @group main
      */
     public function patchResourceWithOneRelationship(){
         // PREPARE
@@ -201,6 +227,9 @@ trait PatchTestTrait
     }
     /**
      * patch resource with wrong relationships, that is not allowed
+     * @test
+     * @group patch
+     * @group main
      */
     public function patchResourceWithWrongRelationships(){
         // PREPARE
@@ -232,6 +261,9 @@ trait PatchTestTrait
     }
     /**
      * patch resource with wrong relationships with wrong type in data
+     * @test
+     * @group patch
+     * @group main
      */
     public function patchResourceWithWrongRelationshipTypes(){
         // PREPARE
@@ -289,6 +321,9 @@ trait PatchTestTrait
     //
     /**
      * patch relationship
+     * @test
+     * @group patch
+     * @group rel
      */
     public function patchRelationships(){
         $model = $this->model->first();
@@ -340,6 +375,9 @@ trait PatchTestTrait
     }
     /**
      * patch relationship to wrong resource
+     * @test
+     * @group patch
+     * @group rel
      */
     public function patchRelationshipsWithWrongResourceId(){
         foreach($this->relationships() as $relationship){
@@ -361,6 +399,9 @@ trait PatchTestTrait
     }
     /**
      * patch relationship with wrong data
+     * @test
+     * @group patch
+     * @group rel
      */
     public function patchRelationshipsWrongRelationshipData(){
         $model = $this->model->first();
@@ -401,6 +442,9 @@ trait PatchTestTrait
     }
     /**
      * patch relationship to wrong relationship
+     * @test
+     * @group patch
+     * @group rel
      */
     public function patchRelationshipsToWrongUrl(){
         $model = $this->model->first();

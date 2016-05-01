@@ -31,22 +31,9 @@ class MetadetailTransformer extends ApiTransformer
             'value'          => $this->decode($metadetails->value),
             'created_at'    => (string)$metadetails->created_at,
             'updated_at'    => (string)$metadetails->updated_at,
+            'is_trashed'    => $this->isTrashed($metadetails),
             'relationships' => $this->relationshipsLinks('metadetails/'.$metadetails->id),
         ];
-    }
-    /*
-     * transform data received via post
-     */
-    public function transformPostData($data){
-        if( count($data) > 0){
-            return [
-                'type'          => (string) $data['type'],
-                'value'         => $this->encode($data['value']),
-            ];
-            isset($data['name']) ? $output['name'] = (string) $data['name'] : '';
-            isset($data['slug']) ? $output['slug'] = (string) $data['slug'] : '';
-        }
-        return [];
     }
     /*
      * include Pages

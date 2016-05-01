@@ -16,6 +16,7 @@ class CreateCollectionsTable extends Migration
             $table->uuid('id');
             $table->string('name', 100);
             $table->string('slug', 100);
+            $table->softDeletes();
         });
     }
 

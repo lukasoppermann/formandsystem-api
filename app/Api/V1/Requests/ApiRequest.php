@@ -20,6 +20,12 @@ abstract class ApiRequest
      */
     protected $errors = [];
     /**
+     * define if trashed items should be included
+     *
+     * @var bool
+     */
+    public $withTrashed = false;
+    /**
      * the resource exceptions for given methods
      *
      * @var array
@@ -158,7 +164,9 @@ abstract class ApiRequest
      */
     protected function validateParameters(Request $request){
         // validate filters
-        $this->validateFilters($request);
+        $this->validateFilters();
+        // process fitler
+        $this->processFilter($request);
         // validate includes
         $this->validateIncludes($request);
     }
@@ -171,8 +179,8 @@ abstract class ApiRequest
      *
      * @return  void | Exception
      */
-    protected function validateFilters(Request $request){
-        $filters = $this->request->input('filter');
+    protected function validateFilters(){
+        $filters = $this->filter();
         if(isset($filters)){
             // check if filter is array
             if(!is_array($filters) ){
@@ -189,6 +197,41 @@ abstract class ApiRequest
         if(isset($errors) && count($errors) > 0){
             $this->resourceException($this->error('Malformed or unavailable filters used.'), $errors);
         }
+    }
+    /**
+     * process special filter
+     *
+     * @method processFilter
+     *
+     * @param  Request       $request
+     *
+     * @return [void]
+     */
+    protected function processFilter(Request $request){
+        $filter = $request->input('filter');
+        if(isset($filter['trashed']) && $filter['trashed'] === 'true'){
+            $this->withTrashed = true;
+        }
+    }
+    /**
+     * get valid filters
+     *
+     * @method filter
+     *
+     * @return [array]
+     */
+    public function filter(){
+        // get all filter
+        $filter = $this->request->input('filter');
+        // remove special filters
+        $specialFilter = ['trashed'];
+        foreach($specialFilter as $key){
+            if(isset($filter[$key])){
+                unset($filter[$key]);
+            }
+        }
+        // return filter
+        return $filter;
     }
     /**
      * validate includes used in request
@@ -407,12 +450,4 @@ abstract class ApiRequest
         // return true to make authorize pass
         return true;
     }
-    /**
-     * The relationships the main resource can have
-     *
-     * @method relationships
-     *
-     * @return array
-     */
-    abstract protected function relationships();
 }

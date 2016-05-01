@@ -7,6 +7,8 @@ trait GetTestTrait
 {
     /**
      * @test getting the main resource listing
+     * @group get
+     * @group main
      *
      * @method getResource
      *
@@ -24,6 +26,8 @@ trait GetTestTrait
     }
     /**
      * @test getting the main resource by id
+     * @group get
+     * @group main
      *
      * @method getResourceById
      *
@@ -40,6 +44,8 @@ trait GetTestTrait
     }
     /**
     * @test getting the main resource by wrong id
+    * @group get
+    * @group main
     *
     * @method getResourceByWrongId
     *
@@ -51,6 +57,8 @@ trait GetTestTrait
     }
     /**
      * @test getting the main resource by filter
+     * @group get
+     * @group main
      *
      * @method getResourceByFilter
      *
@@ -71,6 +79,8 @@ trait GetTestTrait
     }
     /**
      * @test getting the main resource by wrong filter
+     * @group get
+     * @group main
      *
      * @method getResourceByWrongFilter
      *
@@ -84,6 +94,8 @@ trait GetTestTrait
     }
     /**
      * @test getting the main resource by wrong filter parameter
+     * @group get
+     * @group main
      *
      * @method getResourceByWrongFilter
      *
@@ -101,7 +113,9 @@ trait GetTestTrait
     }
 
     /**
-     * test getting the related resource e.g. /pages
+     * @test getting the related resource e.g. /pages
+     * @group get
+     * @group rel
      */
     public function getRelated()
     {
@@ -119,7 +133,9 @@ trait GetTestTrait
         }
     }
     /**
-     * test getting the related resource e.g. /pages using a wrong resource id
+     * @test getting the related resource e.g. /pages using a wrong resource id
+     * @group get
+     * @group rel
      */
     public function getRelatedNoRelatedItems(){
         foreach($this->relationships()as $relationship){
@@ -133,7 +149,9 @@ trait GetTestTrait
         }
     }
     /**
-     * test getting the related resource e.g. /pages using a wrong resource id
+     * @test getting the related resource e.g. /pages using a wrong resource id
+     * @group get
+     * @group rel
      */
     public function getRelatedWithWrongResourceId(){
         foreach($this->relationships()as $relationship){
@@ -143,7 +161,9 @@ trait GetTestTrait
         }
     }
     /**
-     * test getting the relationships e.g. /relationships/pages
+     * @test getting the relationships e.g. /relationships/pages
+     * @group get
+     * @group rel
      */
     public function getRelationships()
     {
@@ -162,7 +182,7 @@ trait GetTestTrait
         }
     }
     /**
-     * test getting the related resource e.g. /pages using a wrong resource id
+     * @test getting the related resource e.g. /pages using a wrong resource id
      */
     public function getRelationshipsNoRelatedItems(){
         foreach($this->relationships()as $relationship){
@@ -174,7 +194,9 @@ trait GetTestTrait
         }
     }
     /**
-     * test getting the related resource e.g. /pages using a wrong resource id
+     * @test getting the related resource e.g. /pages using a wrong resource id
+     * @group get
+     * @group rel
      */
     public function getRelationshipsWithWrongResourceId(){
         foreach($this->relationships()as $relationship){
@@ -195,9 +217,18 @@ trait GetTestTrait
         $model = $this->model->first();
         // remove relationships
         $model->{$relationship}()->detach();
-        // Prepare related model
+        // get related model
         $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
-        $ids = (new $relatedModel)->all()->random(2)->lists('id')->toArray();
+        $relatedModel = (new $relatedModel);
+        // get related items
+        $ids = $relatedModel->all()->random(2)->lists('id')->toArray();
+        // remove relationships to not have circular relationships
+        if(method_exists($relatedModel->find($ids[0]), $relationship)){
+            if(method_exists($relatedModel->find($ids[0])->{$relationship}(), 'detach')){
+                $relatedModel->find($ids[0])->{$relationship}()->detach();
+                $relatedModel->find($ids[1])->{$relationship}()->detach();
+            }
+        }
         // attach models
         $model->{$relationship}()->attach($ids);
         // return model

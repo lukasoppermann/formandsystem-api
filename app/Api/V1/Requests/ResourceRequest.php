@@ -24,4 +24,12 @@ abstract class ResourceRequest extends ApiRequest
      * @return array
      */
     abstract protected function scopes();
+    /**
+     * The relationships the main resource can have
+     *
+     * @method relationships
+     *
+     * @return array
+     */
+    abstract public function relationships();
 }

@@ -3,20 +3,20 @@
 use Lukasoppermann\Httpstatus\Httpstatuscodes;
 use Lukasoppermann\Testing\Traits\TestTrait;
 use Lukasoppermann\Testing\Traits\ValidationTrait;
-use Lukasoppermann\Testing\BaseTests\GetTest;
-use Lukasoppermann\Testing\BaseTests\PostTest;
-use Lukasoppermann\Testing\BaseTests\PatchTest;
-use Lukasoppermann\Testing\BaseTests\DeleteTest;
+use Lukasoppermann\Testing\Traits\DeleteTestTrait;
+use Lukasoppermann\Testing\Traits\GetTestTrait;
+use Lukasoppermann\Testing\Traits\PostTestTrait;
+use Lukasoppermann\Testing\Traits\PatchTestTrait;
 use Illuminate\Support\Facades\Artisan as Artisan;
 
 class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
 {
     use TestTrait;
     use ValidationTrait;
-    use GetTest;
-    use PostTest;
-    use PatchTest;
-    use DeleteTest;
+    use GetTestTrait;
+    use PostTestTrait;
+    use PatchTestTrait;
+    use DeleteTestTrait;
     // resource objects
     protected $resourceObjects = [
         'Metadetail',

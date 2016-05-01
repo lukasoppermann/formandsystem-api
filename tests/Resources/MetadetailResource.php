@@ -20,7 +20,7 @@ class MetadetailResource extends ApiResource{
     /**
      * returns available filters
      *
-     * @method filter
+     * @method relationships
      *
      * @return array
      */

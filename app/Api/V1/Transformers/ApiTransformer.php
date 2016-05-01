@@ -30,12 +30,20 @@ class ApiTransformer extends TransformerAbstract{
         }
         return $value;
     }
-
-    protected function encode($value){
-        if(is_array($value) || is_object($value)){
-            return json_encode($value);
+    /**
+     * set is_trashed for when softDelete is set
+     *
+     * @method isTrashed
+     *
+     * @param  [type]    $model
+     *
+     * @return bool
+     */
+    protected function isTrashed($model){
+        if(!is_null($model->deleted_at) && $model->trashed()){
+            return true;
         }
-        return $value;
+        return false;
     }
 
 }

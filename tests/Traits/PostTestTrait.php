@@ -7,6 +7,9 @@ trait PostTestTrait
 {
     /**
      * post new resource
+     * @test
+     * @group post
+     * @group main
      */
     public function postResource(){
         // POST
@@ -25,6 +28,9 @@ trait PostTestTrait
     }
     /**
      * post new resource with relationships
+     * @test
+     * @group post
+     * @group main
      */
     public function postResourceWithMultipleRelationships(){
         // PREPARE
@@ -67,6 +73,9 @@ trait PostTestTrait
     }
     /**
      * post new resource with one relationship item as object
+     * @test
+     * @group post
+     * @group main
      */
     public function postResourceWithOneRelationship(){
         // PREPARE
@@ -103,6 +112,9 @@ trait PostTestTrait
     }
     /**
      * post new resource with wrong relationships, that is not allowed
+     * @test
+     * @group post
+     * @group main
      */
     public function postResourceWithWrongRelationships(){
         if(count($this->relationships()) !== 0){
@@ -131,6 +143,9 @@ trait PostTestTrait
     }
     /**
      * post new resource with wrong relationships with wrong type in data
+     * @test
+     * @group post
+     * @group main
      */
     public function postResourceWithWrongRelationshipTypes(){
         if(count($this->relationships()) !== 0){
@@ -178,6 +193,9 @@ trait PostTestTrait
     }
     /**
      * post new resource with wrong type
+     * @test
+     * @group post
+     * @group main
      */
     public function postResourceWrongType(){
         // POST
@@ -206,6 +224,9 @@ trait PostTestTrait
     }
     /**
      * post new resource with incomplete data
+     * @test
+     * @group post
+     * @group main
      */
     public function postResourceIncompleteData(){
         // POST
@@ -222,6 +243,9 @@ trait PostTestTrait
     }
     /**
      * post new resource with additional data
+     * @test
+     * @group post
+     * @group main
      */
     public function postResourceAdditonalData(){
         // POST
@@ -241,6 +265,9 @@ trait PostTestTrait
     }
     /**
      * post new resource with no body
+     * @test
+     * @group post
+     * @group main
      */
     public function postResourceNoBody(){
         // POST
@@ -252,6 +279,9 @@ trait PostTestTrait
     }
     /**
      * post new resource with incomplete relationship
+     * @test
+     * @group post
+     * @group main
      */
     public function postResourceIncompleteRelationship(){
         if(count($this->relationships()) !== 0){
@@ -301,6 +331,9 @@ trait PostTestTrait
     //
     /**
      * post relationship
+     * @test
+     * @group post
+     * @group rel
      */
     public function postRelationships(){
         $model = $this->model->first();
@@ -344,6 +377,9 @@ trait PostTestTrait
     }
     /**
      * post relationship with wrong data
+     * @test
+     * @group post
+     * @group rel
      */
     public function postRelationshipsWrongRelationshipData(){
         $model = $this->model->first();
@@ -384,6 +420,9 @@ trait PostTestTrait
     }
     /**
      * post relationship to wrong resource
+     * @test
+     * @group post
+     * @group rel
      */
     public function postRelationshipsWithWrongResourceId(){
         foreach($this->relationships() as $relationship){
@@ -405,6 +444,9 @@ trait PostTestTrait
     }
     /**
      * post relationship to wrong relationship
+     * @test
+     * @group post
+     * @group rel
      */
     public function postRelationshipsToWrongUrl(){
         $model = $this->model->first();

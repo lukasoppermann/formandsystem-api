@@ -38,6 +38,7 @@ class PageTransformer extends ApiTransformer
             'description'   => $page->description,
             'created_at'    => (string)$page->created_at,
             'updated_at'    => (string)$page->updated_at,
+            'is_trashed'    => $this->isTrashed($page),
             'relationships' => $this->relationshipsLinks('pages/'.$page->id),
         ];
     }
@@ -61,7 +62,7 @@ class PageTransformer extends ApiTransformer
     {
         return $this->collection( $page->pages, new PageTransformer, 'pages' );
     }
-    
+
     public function includeOwnedbypages( Page $page )
     {
         return $this->collection( $page->ownedbypages, new PageTransformer, 'pages' );

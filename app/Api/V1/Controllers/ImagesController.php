@@ -14,15 +14,6 @@ use League\Flysystem\Sftp\SftpAdapter;
 class ImagesController extends ApiController
 {
     /**
-     * The relationships a resource can have
-     *
-     * @var array
-     */
-    protected $relationships = [
-        'images',
-        'fragments',
-    ];
-    /**
      * The filters that are allowed in requests
      *
      * @var array
@@ -30,10 +21,4 @@ class ImagesController extends ApiController
     protected $availableFilters = [
         'slug'
     ];
-    /**
-     * The resources name
-     *
-     * @var array
-     */
-    protected $resource = 'images';
 }

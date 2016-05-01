@@ -6,7 +6,7 @@ namespace Lukasoppermann\Testing\Traits;
 trait DeleteTestTrait
 {
     /*
-     * delete the main resource by id
+     * @test delete the main resource by id
      */
     public function deleteResourceById(){
         // PREPARE
@@ -24,7 +24,7 @@ trait DeleteTestTrait
         $this->assertNull($this->model->find($id));
     }
     /**
-     * delete the main resource by wrong id
+     * @test delete the main resource by wrong id
      */
     public function deleteResourceByWrongId()
     {
@@ -41,7 +41,7 @@ trait DeleteTestTrait
         $this->assertEquals(self::HTTP_NOT_FOUND, $response->getStatusCode());
     }
     /**
-     * delete the relationships
+     * @test delete the relationships
      */
     public function deleteRelationships()
     {
@@ -68,7 +68,7 @@ trait DeleteTestTrait
         }
     }
     /**
-     * delete the relationships with wrong relationship id
+     * @test delete the relationships with wrong relationship id
      */
     public function deleteRelationshipsWrongRelationshipData()
     {
@@ -99,13 +99,13 @@ trait DeleteTestTrait
         }
     }
     /**
-     * delete Relationships With Wrong Resource Id
+     * @test delete Relationships With Wrong Resource Id
      */
     public function deleteRelationshipsWithWrongResourceId()
     {
-        foreach($this->relationships()as $relationship){
+        foreach($this->relationships() as $relationship){
             // DELETE WITH WRONG ID
-            $response = $this->client->request('DELETE', '/'.$this->resource.'/1/relationships/1'.$relationship, [
+            $response = $this->client->request('DELETE', '/'.$this->resource.'/1/relationships/1/'.$relationship, [
                'headers' => ['Accept' => 'application/json'],
                'body' => json_encode(["data" => [[
                    "type" => $relationship,

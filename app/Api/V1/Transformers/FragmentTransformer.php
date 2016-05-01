@@ -32,6 +32,7 @@ class FragmentTransformer extends ApiTransformer
             'fragments' => $this->collection( $fragment->fragments, new FragmentTransformer ),
             'created_at' => (string)$fragment->created_at,
             'updated_at' => (string)$fragment->updated_at,
+            'is_trashed'    => $this->isTrashed($fragment),
             'relationships' => $this->relationshipsLinks('fragments/'.$fragment->id),
         ];
     }

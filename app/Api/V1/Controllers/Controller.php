@@ -11,6 +11,27 @@ abstract class Controller extends LumenController
     // trait
     use Helpers;
     /**
+     * All available api endpoints that have a resource
+     *
+     * @var api_endpoints
+     */
+    protected $api_endpoints = [
+        'clients',
+        'collections',
+        'fragments',
+        'images',
+        'metadetails',
+        'pages',
+        'tokens',
+        'uploads'
+    ];
+    /**
+     * The number of items returned per page
+     *
+     * @var int
+     */
+    protected $perPage = 20;
+    /**
      * The general namespace for the api
      *
      * @var api_namespace
@@ -26,7 +47,22 @@ abstract class Controller extends LumenController
      * @method __construct
      */
     public function __construct(Request $request){
+        // find resource
+        $this->resource = $this->getResourceFromUrl($request);
+        // build new request
         $this->request = $this->newRequest($request);
+    }
+    /**
+     * get requested resource and compare with allowed endpoints
+     *
+     * @method getResourceFromUrl
+     *
+     * @return [type]
+     */
+    protected function getResourceFromUrl(Request $request){
+        if(in_array($request->segment(1), $this->api_endpoints)){
+            return $request->segment(1);
+        }
     }
     /**
      * returns current request
@@ -36,32 +72,23 @@ abstract class Controller extends LumenController
      * @return request
      */
     public function newRequest(Request $request){
-        // request namespace
-        $request_name = $this->api_namespace."Requests\\".$this->resourceName().'s\\'.
+        // build relationship request name
+        $request_name = $this->api_namespace."Requests\RelationshipRequest";
+        // overwrite if not relationship request
+        if($request->segment(3) !== 'relationships'){
+            // Normal request
+            $request_name = $this->api_namespace."Requests\\".
+            // add folder
+            $this->resourceName().'s\\'.
             // build request file name
             $this->resourceName().
             // add method
             ucfirst(strtolower($request->getMethod())).
-            // add relationship, if it is
-            $this->isRelationshipRequest($request).
             // add request
             'Request';
+        }
         // return a new mode
         return new $request_name($request);
-    }
-    /**
-     * return 'Relationship' or void
-     *
-     * @method isRelationshipRequest
-     *
-     * @param  Request               $request
-     *
-     * @return [string|void]
-     */
-    protected function isRelationshipRequest(Request $request){
-        if($request->segment(3) === 'relationships'){
-            return 'Relationship';
-        }
     }
     /**
      * returns current resources model
@@ -95,19 +122,6 @@ abstract class Controller extends LumenController
         $transformer = $this->api_namespace."Transformers\\".$transformer."Transformer";
         // return a new transformer
         return new $transformer;
-    }
-    /**
-     * returns current resources validator
-     *
-     * @method newValidator
-     *
-     * @return validator
-     */
-    public function newValidator(){
-        // get validator namespace
-        $validator = $this->api_namespace."Validators\\".$this->resourceName()."Validator";
-        // return a new validator
-        return new $validator;
     }
     /**
      * returns current resources name in singular and ucfist
@@ -156,7 +170,7 @@ abstract class Controller extends LumenController
      * @return bool
      */
     protected function isRelated($related = null){
-        return in_array($related, $this->relationships);
+        return in_array($related, $this->request->relationships());
     }
     /**
      * turns relationship data into array
@@ -203,6 +217,24 @@ abstract class Controller extends LumenController
             if($relatedModel->find($id) === NULL ){
                 throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Invalid relationship with type "'.$type.'" and id "'.$id.'".');
             }
+        }
+    }
+    /**
+     * trash or restore from trash
+     *
+     * @method setTrashed
+     *
+     * @param  [type]     $model
+     * @param  bool       $is_trashed
+     */
+    protected function setTrashed($model, $is_trashed = NULL){
+        // softDelete if is_trashed is set to true
+        if($is_trashed === true){
+            $model->delete();
+        }
+        // restore if is_trashed is set to false
+        if($is_trashed === false){
+            $model->restore();
         }
     }
 }

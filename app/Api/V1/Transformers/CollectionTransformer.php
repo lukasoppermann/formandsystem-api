@@ -25,9 +25,10 @@ class CollectionTransformer extends ApiTransformer
     public function transform(Collection $collection)
     {
         return [
-            'id'    => $collection->id,
-            'name' => $collection->name,
-            'slug' => $collection->slug,
+            'id'            => $collection->id,
+            'name'          => $collection->name,
+            'slug'          => $collection->slug,
+            'is_trashed'    => $this->isTrashed($collection),
             'relationships' => $this->relationshipsLinks('collections/'.$collection->id),
         ];
     }

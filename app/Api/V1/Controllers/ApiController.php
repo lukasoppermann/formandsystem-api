@@ -29,8 +29,9 @@ abstract class ApiController extends Controller
     {
         // get model instance
         $model = $this->newModel();
+        \LOG::debug('Softdelete completly missing');
         // apply filters
-        foreach((array) $this->request->input('filter') as $key => $value){
+        foreach((array) $this->request->filter() as $key => $value){
             $model = $model->where($key, $value);
         }
 
@@ -60,7 +61,7 @@ abstract class ApiController extends Controller
         // get relationship data from request
         $relationships = $this->getRecivedRelationships($request);
         // create item
-        $model = $this->newModel()->create($receivedData['data']);
+        $model = $this->newModel()->create($receivedData);
         // add relationships
         $this->saveRelationships($model, $relationships);
         // return result
@@ -74,24 +75,30 @@ abstract class ApiController extends Controller
     */
     public function update(Request $request, $id)
     {
-        // get data from request
-        $receivedData = $this->getRecivedData($request);
-        // get relationship data from request
-        $relationships = $this->getRecivedRelationships($request);
+        // get Model
+        $model = $this->newModel()->findWithTrashed($id);
         // validate item
-        $model = $this->validateResourceExists(
-            $this->newModel()->find($id),
+        $this->validateResourceExists($model,
             'The resource of type "'.$this->resource.'" with the id "'.$id.'" does not exist.'
         );
+        // get data from request
+        $receivedData = $this->getRecivedData($request, $model->acceptedFields());
+        // get relationship data from request
+        $relationships = $this->getRecivedRelationships($request);
+        // restore or softDelete item
+        if(array_key_exists('is_trashed',$receivedData)){
+            $model->setTrashed($receivedData['is_trashed']);
+            unset($receivedData['is_trashed']);
+        }
         // Add new data to model
-        $model->fill($receivedData['data']);
+        $model->fill($receivedData);
         // Save Model
         $model->save();
         // add relationships
         $this->removeRelationships($model, $relationships);
         $this->saveRelationships($model, $relationships);
         // return result
-        return $this->response->item($this->newModel()->find($id), $this->newTransformer(), ['key' => $this->resource])->setStatusCode(200);
+        return $this->response->item($this->newModel()->withTrashed()->where('id', $id)->first(), $this->newTransformer(), ['key' => $this->resource])->setStatusCode(200);
     }
     /*
      * delete
@@ -102,154 +109,13 @@ abstract class ApiController extends Controller
             $this->newModel()->find($resource_id),
             'The resource of type "'.$this->resource.'" with the id "'.$resource_id.'" does not exist.'
         );
-        $model->destroy($resource_id);
+        // force delete to really delete soft deletes
+        $model->forceDelete();
 
         return $this->response->noContent();
     }
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // RELATIONSHIPS
-    //
-    /*
-     * delete relationship
-     */
-    public function deleteRelationships(Request $request, $relationship, $id){
-        // Validate resource
-        $model = $this->validateResourceExists(
-            $this->newModel()->find($id),
-            'The resource of type "'.$this->resource.'" with the id of "'.$id.'" does not exist.'
-        );
-        // Validate relationship
-        $this->validateRelationship($relationship);
-        // get individual relationships ids
-        $relationship_ids = $this->getRelationshipsIds($request->json('data'), $relationship);
-        // delete relationships
-        $model->{$relationship}()->detach($relationship_ids);
-        // respond no content
-        return $this->response->noContent();
-    }
-    /**
-     * get the related items data for the main resource
-     *
-     * @method getRelated
-     *
-     * @param  Request    $request
-     * @param  [string]     $resource_id
-     * @param  [string]     $type
-     *
-     * @return [Response]
-     */
-    public function getRelated(Request $request, $resource_id, $type){
-        // validate resource
-        $model = $this->validateResourceExists(
-            $this->newModel()->find($resource_id),
-            'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
-        );
-        // validate realtionship
-        $this->validateRelationship($type);
-        // prepare transformer
-        $transformer = $this->api_namespace."Transformers\\".ucfirst(substr($type,0,-1))."Transformer";
-        // return paginated result
-        return $this->response->paginator(
-            $model->{$type}()->paginate($this->perPage),
-            new $transformer,
-            ['key' => $type]
-        );
-
-    }
-
-    /**
-     * get the relationships array (id & type) for the given resource
-     *
-     * @method getRelationships
-     *
-     * @param  Request          $request
-     * @param  [string]           $resource_id
-     * @param  [string]           $type
-     *
-     * @return [Response]
-     */
-     public function getRelationships(Request $request, $resource_id, $type){
-         // validate
-         $model = $this->validateResourceExists(
-            $this->newModel()->find($resource_id),
-            'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
-        );
-        // validate relationship
-        $this->validateRelationship($type);
-        // build relationship array
-        $relationships = [];
-        foreach($model->{$type}->lists('id')->toArray() as $id){
-            $relationships[] = [
-                'id' => $id,
-                'type' => $type
-            ];
-        }
-        // return response
-        return $this->response->array([
-            'data' => $relationships,
-            'links' => [
-                'self' => $_ENV['API_DOMAIN'].'/'.$this->resource.'/'.$resource_id.'/relationships/'.$type,
-                'related' => $_ENV['API_DOMAIN'].'/'.$this->resource.'/'.$resource_id.'/'.$type
-            ],
-        ]);
-     }
-     /**
-      * add new relationships
-      *
-      * @method storeRelationships
-      *
-      * @param  Request $request
-      * @param  Int $id
-      *
-      * @return array
-      */
-     public function storeRelationships(Request $request, $resource_id, $relatedType){
-         // validate main resource
-         $model = $this->validateResourceExists(
-            $this->newModel()->find($resource_id),
-            'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
-        );
-        // validate relationship
-        $this->validateRelationship($relatedType);
-        // get ids
-        $relationshipIds = $this->getRelationshipsIds($request->json('data'), $relatedType);
-        // validate ids
-        $this->validateRelationshipsIds($relationshipIds, $relatedType);
-        // attach new relationships
-        $model->{$relatedType}()->attach($relationshipIds);
-        // return HTTP_NO_CONTENT
-        return $this->response->noContent();
-     }
-    /**
-     * update relationships
-     *
-     * @method updateRelationships
-     *
-     * @param  [Request] $request
-     * @param  [int] $id
-     *
-     * @return [Response]
-     */
-    public function updateRelationships(Request $request, $resource_id, $relatedType){
-        // validate main resource
-        $model = $this->validateResourceExists(
-           $this->newModel()->find($resource_id),
-           'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
-       );
-       // validate relationship
-       $this->validateRelationship($relatedType);
-        // get ids
-        $relationshipIds = $this->getRelationshipsIds($request->json('data'), $relatedType);
-        // validate ids
-        $this->validateRelationshipsIds($relationshipIds, $relatedType);
-        // detach old relationships
-        $model->{$relatedType}()->detach();
-        // attach new relationships
-        $model->{$relatedType}()->attach($relationshipIds);
-        // return no content
-        return $this->response->noContent();
-    }
+    ////////////////////////////////////////////
+    /// Utility
     /**
      * gets attributes from received data for fillable fields
      *
@@ -262,32 +128,18 @@ abstract class ApiController extends Controller
     protected function getRecivedData(Request $request){
         $attributes = $request->json('data.attributes');
         if(!is_array($attributes)){
-            $attributes = [];
+            return [];
         }
-        // get fields from model
-        $fields = $this->newModel()->getFillable();
-
-        // remove id
-        array_splice($fields, array_search('id', $fields ), 1);
         // grab data for accepted fields
         $output = [];
-        $ignored = false;
         foreach($attributes as $key => $value){
-            if( in_array($key,$fields) ){
-                if(is_array($value)){
-                    $value = json_encode($value);
-                }
-                $output[$key] = $value;
+            if(is_array($value)){
+                $value = json_encode($value);
             }
-            else {
-                $ignored = true;
-            }
+            $output[$key] = $value;
         }
         // return data
-        return [
-            'data' => $output,
-            'ignored' => $ignored
-        ];
+        return $output;
     }
     /**
      * gets relationships from received data, for

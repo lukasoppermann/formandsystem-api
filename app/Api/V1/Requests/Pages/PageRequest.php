@@ -4,14 +4,14 @@ namespace App\Api\V1\Requests\Pages;
 
 use App\Api\V1\Requests\ResourceRequest;
 
-abstract class PageRequest extends ResourceRequest
+class PageRequest extends ResourceRequest
 {
     /**
      * The relationships a resource can have
      *
      * @return array
      */
-    protected function relationships(){
+    public function relationships(){
          return[
              'pages',
              'collections',
@@ -19,5 +19,24 @@ abstract class PageRequest extends ResourceRequest
              'metadetails'
          ];
     }
-
+    /**
+     * Retuns needed scopes to perform a request
+     *
+     * @method scopes
+     *
+     * @return array
+     */
+    protected function scopes(){
+        return [];
+    }
+    /**
+     * Retuns rules
+     *
+     * @method rules
+     *
+     * @return array
+     */
+    protected function rules(){
+        return [];
+    }
 }
