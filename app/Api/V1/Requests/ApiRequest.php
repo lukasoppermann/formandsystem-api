@@ -14,17 +14,17 @@ abstract class ApiRequest
      */
     protected $request;
     /**
+     * the resource for the request
+     *
+     * @var resource
+     */
+    protected $resource;
+    /**
      * an array of error messages
      *
      * @var array
      */
     protected $errors = [];
-    /**
-     * define if trashed items should be included
-     *
-     * @var bool
-     */
-    public $withTrashed = false;
     /**
      * the resource exceptions for given methods
      *

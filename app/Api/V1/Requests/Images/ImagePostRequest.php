@@ -25,7 +25,7 @@ class ImagePostRequest extends ImageRequest
      */
     protected function rules(){
         return [
-            'type' => 'required|in:images',
+            'type'                  => 'required|in:images',
             'attributes.slug'       => 'string|required',
             'attributes.link'       => 'string|required_without:data.attributes.filename',
             'attributes.filename'   => 'string|required_without:data.attributes.link',

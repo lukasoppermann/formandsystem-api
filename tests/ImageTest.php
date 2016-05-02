@@ -5,6 +5,7 @@ use League\Flysystem\Sftp\SftpAdapter;
 
 class ImageTest extends TestCase
 {
+
     /**
      * the type of resource this test deals with
      *
@@ -109,4 +110,5 @@ class ImageTest extends TestCase
             $this->assertEquals(self::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
         }
     }
+
 }

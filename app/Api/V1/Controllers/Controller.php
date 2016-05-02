@@ -5,11 +5,14 @@ namespace App\Api\V1\Controllers;
 use Laravel\Lumen\Routing\Controller as LumenController;
 use Illuminate\Http\Request;
 use \Dingo\Api\Routing\Helpers;
+use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Api\V1\Traits\TranslateTrait;
 
 abstract class Controller extends LumenController
 {
     // trait
     use Helpers;
+    use TranslateTrait;
     /**
      * All available api endpoints that have a resource
      *
@@ -98,10 +101,11 @@ abstract class Controller extends LumenController
      * @return model
      */
     public function newModel($model = NULL){
-        // get model namespace
+        // use controller model if none provided
         if($model === NULL){
             $model = $this->resourceName();
         }
+        // get model namespace
         $model = $this->api_namespace."Models\\".$model;
         // return a new mode
         return new $model;
@@ -114,7 +118,7 @@ abstract class Controller extends LumenController
      * @return transformer
      */
     public function newTransformer($transformer = NULL){
-        // get transformer namespace
+        // use controller transformer if none provided
         if($transformer === NULL){
             $transformer = $this->resourceName();
         }
@@ -142,10 +146,11 @@ abstract class Controller extends LumenController
      *
      * @return resource object $resource
      */
-    public function validateResourceExists($resource, $msg = 'Resource not found.'){
+    public function validateResourceExists($resource){
         // throw 404 exception if resource does not exists
         if ($resource === null) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException($msg);
+            $error = $this->trans('errors.resource_missing');
+            throw new NotFoundHttpException($error);
         }
         // return resource if it does exist
         return $resource;
@@ -158,19 +163,10 @@ abstract class Controller extends LumenController
      * @return bool
      */
     protected function validateRelationship($related = null){
-        if(!$this->isRelated($related)){
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('The resource "'.$this->resource.'" has no relationship to "'.$related.'".');
+        if( !in_array($related, $this->request->relationships()) ){
+            $error = $this->trans('errors.not_related', ['resource' => $this->resource,'related' => $related]);
+            throw new NotFoundHttpException($error);
         }
-    }
-    /**
-     * returns true if provided relationships exists for current model
-     *
-     * @method isRelated
-     *
-     * @return bool
-     */
-    protected function isRelated($related = null){
-        return in_array($related, $this->request->relationships());
     }
     /**
      * turns relationship data into array
@@ -190,7 +186,11 @@ abstract class Controller extends LumenController
         foreach((array) $relationships as $relationship){
             // return error if wrong type or item does not exist
             if($relationship['type'] !== $type ){
-                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Invalid relationship with type "'.$relationship['type'].'" and id "'.$relationship['id'].'".');
+                $error = $this->trans('errors.invalid_relationship', [
+                    'id' => $relationship['id'],
+                    'type' => $relationship['type']
+                ]);
+                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($error);
             }
             // grab id
             $ids[] = $relationship['id'];
@@ -215,26 +215,12 @@ abstract class Controller extends LumenController
         foreach($ids as $id){
             // return error if wrong type or item does not exist
             if($relatedModel->find($id) === NULL ){
-                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Invalid relationship with type "'.$type.'" and id "'.$id.'".');
+                $error = $this->trans('errors.invalid_relationship', [
+                    'id' => $id,
+                    'type' => $type
+                ]);
+                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($error);
             }
-        }
-    }
-    /**
-     * trash or restore from trash
-     *
-     * @method setTrashed
-     *
-     * @param  [type]     $model
-     * @param  bool       $is_trashed
-     */
-    protected function setTrashed($model, $is_trashed = NULL){
-        // softDelete if is_trashed is set to true
-        if($is_trashed === true){
-            $model->delete();
-        }
-        // restore if is_trashed is set to false
-        if($is_trashed === false){
-            $model->restore();
         }
     }
 }

@@ -27,6 +27,16 @@ class BaseModel extends Model
         return $model;
     }
     /**
+     * check if model supports soft deleteing
+     *
+     * @method isSoftdeleting
+     *
+     * @return bool
+     */
+    public function isSoftdeleting(){
+        return ($this->forceDeleting === false);
+    }
+    /**
      * get the fields accepted to be send to model
      *
      * @method acceptedFields
@@ -39,7 +49,7 @@ class BaseModel extends Model
         // remove id
         array_splice($fields, array_search('id', $fields), 1);
         // add soft delete is_trashed
-        if($this->forceDeleting === false){
+        if($this->isSoftdeleting()){
             $fields[] = 'is_trashed';
         }
         // return fields
@@ -72,13 +82,15 @@ class BaseModel extends Model
      * @param  bool       $is_trashed
      */
     public function setTrashed($is_trashed = false){
-        if($this->forceDeleting === false){
+        if($this->isSoftdeleting()){
             // softDelete if is_trashed is set to true
             if($is_trashed === true){
                 $this->delete();
             }
             // restore if is_trashed is set to false
-            $this->restore();
+            if($is_trashed === false){
+                $this->restore();
+            }
         }
     }
     /**
@@ -89,7 +101,7 @@ class BaseModel extends Model
      * @param  bool       $withTrashed
      */
     public function allWithTrashed($withTrashed = true){
-        if($this->forceDeleting === false){
+        if($this->isSoftdeleting()){
             // show softDeleted
             if($withTrashed === true){
                 $this->withTrashed();

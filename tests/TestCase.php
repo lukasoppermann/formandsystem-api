@@ -13,10 +13,11 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
 {
     use TestTrait;
     use ValidationTrait;
-    use GetTestTrait;
-    use PostTestTrait;
+    // use GetTestTrait;
+    // use PostTestTrait;
     use PatchTestTrait;
-    use DeleteTestTrait;
+    // use DeleteTestTrait;
+
     // resource objects
     protected $resourceObjects = [
         'Metadetail',
@@ -34,23 +35,24 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
     /*
      * SETUP
      */
+    public static $inited = false;
+
     public function setUp()
     {
-        // kill tests on production
-        if (app()->environment() === 'production') {
-            exit("\33[1;31mNever run tests on Production!\n\n\n");
-        }
-        // run setup
         parent::setUp();
-        // RUN migrations
-        // $this->initDb();
+        if (!static::$inited) {
+            static::$inited = true;
+            // kill tests on production
+            if (app()->environment() === 'production') {
+                exit("\33[1;31mNever run tests on Production!\n\n\n");
+            }
+        }
         // Boot up HTTP Client
         $this->initHttpClient();
         // Create resources
         $this->initResources();
         // init model for current resource
         $this->initModel();
-
     }
     /**
      * Creates the application.

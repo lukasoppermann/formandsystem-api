@@ -33,6 +33,7 @@ class PagePatchRequest extends PageRequest
             'attributes.language' => 'string|size:2',
             'attributes.title' => 'string',
             'attributes.description' => 'string',
+            'attributes.is_trashed' => 'boolean',
         ];
     }
 }

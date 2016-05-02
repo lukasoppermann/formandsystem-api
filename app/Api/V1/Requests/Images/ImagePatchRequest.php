@@ -28,6 +28,7 @@ class ImagePatchRequest extends ImageRequest
             'id' => 'required|string',
             'type' => 'required|in:images',
             'attributes.slug' => 'string',
+            'attributes.is_trashed' => 'boolean',
         ];
     }
 }

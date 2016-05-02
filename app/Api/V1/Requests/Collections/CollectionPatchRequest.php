@@ -29,7 +29,7 @@ class CollectionPatchRequest extends CollectionRequest
             'type' => 'required|in:collections',
             'attributes.name' => 'string',
             'attributes.slug' => 'string|alpha_dash',
-            'attributes.is_trashed' => 'bool',
+            'attributes.is_trashed' => 'boolean',
         ];
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Lukasoppermann\Testing\Traits;
 
-
 trait PatchTestTrait
 {
     /*
@@ -11,7 +10,7 @@ trait PatchTestTrait
      * @group patch
      * @group main
      */
-    public function patchResourceById(){
+    public function testPatchResourceById(){
         // PREPARE
         $model = $this->model->first();
         // PATCH
@@ -30,12 +29,69 @@ trait PatchTestTrait
         $this->assertValid($data, $this->resource()->blueprint());
     }
     /*
+     * softdelete the main resource by id
+     * @test
+     * @group patch
+     * @group main
+     */
+    public function testPatchSoftdeleteResourceById(){
+        // PREPARE
+        $model = $this->model->first();
+        if($model->isSoftdeleting()){
+            // prepare data
+            $data = $this->resource()->incomplete();
+            $data['id'] = $model->id;
+            $data['attributes']['is_trashed'] = true;
+            // TEST BEFORE REQUEST
+            $this->assertTrue($model->deleted_at === null);
+            // PATCH
+            $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$model->id, [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode(["data" => $data])
+            ]);
+            $data = $this->getResponseArray($response)['data'];
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+            $this->assertValid($data, $this->resource()->blueprint());
+            $this->assertNotNull($this->model->findWithTrashed($model->id)->deleted_at);
+        }
+    }
+    /*
+     * softdelete the main resource by id
+     * @test
+     * @group patch
+     * @group main
+     */
+    public function testPatchRestoreResourceById(){
+        // PREPARE
+        $model = $this->model->first();
+        if($model->isSoftdeleting()){
+            // prepare data
+            $data = $this->resource()->incomplete();
+            $data['id'] = $model->id;
+            $data['attributes']['is_trashed'] = false;
+            $model->delete();
+            // TEST BEFORE REQUEST
+            $this->assertNotNull($this->model->findWithTrashed($model->id)->deleted_at);
+            // PATCH
+            $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$model->id, [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => json_encode(["data" => $data])
+            ]);
+            $data = $this->getResponseArray($response)['data'];
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+            $this->assertValid($data, $this->resource()->blueprint());
+            $this->assertNull($this->model->findWithTrashed($model->id)->deleted_at);
+        }
+    }
+    /*
      * patch the main resource by wrong id
      * @test
      * @group patch
      * @group main
      */
-    public function patchResourceWrongId(){
+    public function testPatchResourceWrongId(){
         // PATCH
         $response = $this->client->request('PATCH', '/'.$this->resource.'/1', [
             'headers' => ['Accept' => 'application/json'],
@@ -55,7 +111,7 @@ trait PatchTestTrait
      * @group patch
      * @group main
      */
-    public function patchResourceWrongType(){
+    public function testPatchResourceWrongType(){
         // PATCH
         $response = $this->client->request('PATCH', '/wrongResource/1', [
             'headers' => ['Accept' => 'application/json'],
@@ -75,7 +131,7 @@ trait PatchTestTrait
      * @group patch
      * @group main
      */
-    public function patchResourceByIdWithoutAttributes(){
+    public function testPatchResourceByIdWithoutAttributes(){
         // PATCH
         $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$this->model->first()->id, [
             'headers' => ['Accept' => 'application/json'],
@@ -95,7 +151,7 @@ trait PatchTestTrait
      * @group patch
      * @group main
      */
-    public function patchResourceByIdNoBody(){
+    public function testPatchResourceByIdNoBody(){
         // PATCH
         $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$this->model->first()->id, [
             'headers' => ['Accept' => 'application/json']
@@ -109,7 +165,7 @@ trait PatchTestTrait
      * @group patch
      * @group main
      */
-    public function patchResourceIncompleteData(){
+    public function testPatchResourceIncompleteData(){
         // PATCH
         $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$this->model->first()->id, [
             'headers' => ['Accept' => 'application/json'],
@@ -143,7 +199,7 @@ trait PatchTestTrait
      * @group patch
      * @group main
      */
-    public function patchResourceWithMultipleRelationships(){
+    public function testPatchResourceWithMultipleRelationships(){
         // PREPARE
         $model = $this->model->first();
         $relationshipData = [];
@@ -191,7 +247,7 @@ trait PatchTestTrait
      * @group patch
      * @group main
      */
-    public function patchResourceWithOneRelationship(){
+    public function testPatchResourceWithOneRelationship(){
         // PREPARE
         $model = $this->model->first();
         $relationshipData = [];
@@ -231,7 +287,7 @@ trait PatchTestTrait
      * @group patch
      * @group main
      */
-    public function patchResourceWithWrongRelationships(){
+    public function testPatchResourceWithWrongRelationships(){
         // PREPARE
         $model = $this->model->first();
         if(count($this->relationships()) !== 0){
@@ -265,7 +321,7 @@ trait PatchTestTrait
      * @group patch
      * @group main
      */
-    public function patchResourceWithWrongRelationshipTypes(){
+    public function testPatchResourceWithWrongRelationshipTypes(){
         // PREPARE
         $model = $this->model->first();
         if(count($this->relationships()) !== 0){
@@ -325,7 +381,7 @@ trait PatchTestTrait
      * @group patch
      * @group rel
      */
-    public function patchRelationships(){
+    public function testPatchRelationships(){
         $model = $this->model->first();
         // PREPARE
         foreach($this->relationships() as $relationship){
@@ -379,7 +435,7 @@ trait PatchTestTrait
      * @group patch
      * @group rel
      */
-    public function patchRelationshipsWithWrongResourceId(){
+    public function testPatchRelationshipsWithWrongResourceId(){
         foreach($this->relationships() as $relationship){
             // get related model
             $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
@@ -403,7 +459,7 @@ trait PatchTestTrait
      * @group patch
      * @group rel
      */
-    public function patchRelationshipsWrongRelationshipData(){
+    public function testPatchRelationshipsWrongRelationshipData(){
         $model = $this->model->first();
         // PREPARE
         foreach($this->relationships() as $relationship){
@@ -446,7 +502,7 @@ trait PatchTestTrait
      * @group patch
      * @group rel
      */
-    public function patchRelationshipsToWrongUrl(){
+    public function testPatchRelationshipsToWrongUrl(){
         $model = $this->model->first();
         foreach($this->relationships() as $relationship){
             // get related model
@@ -465,5 +521,6 @@ trait PatchTestTrait
             $this->assertEquals(self::HTTP_NOT_FOUND, $response->getStatusCode());
         }
     }
+
 // END OF FILE
 }

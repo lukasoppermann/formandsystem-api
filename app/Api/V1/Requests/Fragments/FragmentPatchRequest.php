@@ -30,7 +30,7 @@ class FragmentPatchRequest extends FragmentRequest
             'attributes.name' => 'string',
             'attributes.type' => 'string',
             'attributes.data' => '',
-            'attributes.is_trashed' => 'bool',
+            'attributes.is_trashed' => 'boolean',
         ];
     }
 }
