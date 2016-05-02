@@ -8,7 +8,7 @@ trait DeleteTestTrait
     /*
      * @test delete the main resource by id
      */
-    public function deleteResourceById(){
+    public function testDeleteResourceById(){
         // PREPARE
         $id = $this->model->first()->id;
         // CHECK BEFORE
@@ -23,10 +23,33 @@ trait DeleteTestTrait
         $this->assertEquals(self::HTTP_NO_CONTENT, $response->getStatusCode());
         $this->assertNull($this->model->find($id));
     }
+    /*
+     * @test delete SoftDeleted main resource by id
+     * @group main
+     * @group delete
+     */
+    public function testDeleteSoftDeletedResourceById(){
+        // PREPARE
+        $id = $this->model->first()->id;
+        // CHECK BEFORE
+        $model = $this->model->find($id);
+        $this->assertNotNull($model);
+        // Soft delete
+        $model->delete();
+        // DELETE
+        $response = $this->client->request('DELETE', '/'.$this->resource.'/'.$id, [
+            'headers' => [
+                'Accept' => 'application/json',
+            ]
+        ]);
+        // check status code & response body
+        $this->assertEquals(self::HTTP_NO_CONTENT, $response->getStatusCode());
+        $this->assertNull($this->model->find($id));
+    }
     /**
      * @test delete the main resource by wrong id
      */
-    public function deleteResourceByWrongId()
+    public function testDeleteResourceByWrongId()
     {
         // CHECK BEFORE DELETE
         $response = $this->client->request('GET', '/'.$this->resource.'/1', [
@@ -43,7 +66,7 @@ trait DeleteTestTrait
     /**
      * @test delete the relationships
      */
-    public function deleteRelationships()
+    public function testDeleteRelationships()
     {
         foreach($this->relationships() as $relationship){
             // PREPARE
@@ -68,9 +91,9 @@ trait DeleteTestTrait
         }
     }
     /**
-     * @test delete the relationships with wrong relationship id
+     * delete the relationships with wrong relationship id
      */
-    public function deleteRelationshipsWrongRelationshipData()
+    public function testDeleteRelationshipsWrongRelationshipData()
     {
         foreach($this->relationships() as $relationship){
             // PREPARE
@@ -101,7 +124,7 @@ trait DeleteTestTrait
     /**
      * @test delete Relationships With Wrong Resource Id
      */
-    public function deleteRelationshipsWithWrongResourceId()
+    public function testDeleteRelationshipsWithWrongResourceId()
     {
         foreach($this->relationships() as $relationship){
             // DELETE WITH WRONG ID

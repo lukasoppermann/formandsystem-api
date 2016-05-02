@@ -86,4 +86,33 @@ trait TestTrait
         // ASSERTION
         $this->assertValid($reponse['meta'], $expected);
     }
+    //------------------------------------------
+    //
+    // UTILITY FUNCTIONS
+    //
+    /*
+     * add related items
+     */
+    public function addRelatedItems($relationship){
+        // get model with relationships
+        $model = $this->model->first();
+        // remove relationships
+        $model->{$relationship}()->detach();
+        // get related model
+        $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+        $relatedModel = (new $relatedModel);
+        // get related items
+        $ids = $relatedModel->all()->random(2)->lists('id')->toArray();
+        // remove relationships to not have circular relationships
+        if(method_exists($relatedModel->find($ids[0]), $relationship)){
+            if(method_exists($relatedModel->find($ids[0])->{$relationship}(), 'detach')){
+                $relatedModel->find($ids[0])->{$relationship}()->detach();
+                $relatedModel->find($ids[1])->{$relationship}()->detach();
+            }
+        }
+        // attach models
+        $model->{$relationship}()->attach($ids);
+        // return model
+        return $model;
+    }
 }

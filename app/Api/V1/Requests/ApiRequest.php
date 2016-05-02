@@ -20,6 +20,24 @@ abstract class ApiRequest
      */
     protected $resource;
     /**
+     * determins if trash is included
+     *
+     * @var withTrashed
+     */
+    public $withTrashed = false;
+    /**
+     * determins if only trashed items should be returned
+     *
+     * @var $onlyTrashed
+     */
+    public $onlyTrashed = false;
+    /**
+     * all filter from the request
+     *
+     * @var $requestFilter
+     */
+    protected $requestFilter = [];
+    /**
      * an array of error messages
      *
      * @var array
@@ -163,10 +181,10 @@ abstract class ApiRequest
      * @return void | Exception
      */
     protected function validateParameters(Request $request){
-        // validate filters
-        $this->validateFilters();
         // process fitler
         $this->processFilter($request);
+        // validate filters
+        $this->validateFilters();
         // validate includes
         $this->validateIncludes($request);
     }
@@ -180,17 +198,12 @@ abstract class ApiRequest
      * @return  void | Exception
      */
     protected function validateFilters(){
-        $filters = $this->filter();
-        if(isset($filters)){
-            // check if filter is array
-            if(!is_array($filters) ){
-                return $this->resourceException($this->error('Malformed filter syntax.'));
-            }
-            // check if filters are available
-            foreach($filters as $key => $filter){
-                if(!in_array($key, $this->filters())){
-                    $errors[$key][] = 'The filter "'.$key.'" is not available.';
-                }
+        // get request filter
+        $filter = $this->filter();
+        // check if filters are available
+        foreach($filter as $key => $value){
+            if(!in_array($key, $this->filters())){
+                $errors[$key][] = 'The filter "'.$value.'" is not available.';
             }
         }
         // throw exception in case of errors
@@ -208,10 +221,20 @@ abstract class ApiRequest
      * @return [void]
      */
     protected function processFilter(Request $request){
+        // get all filter
         $filter = $request->input('filter');
+        // check for withTrashed
         if(isset($filter['trashed']) && $filter['trashed'] === 'true'){
             $this->withTrashed = true;
+            unset($filter['trashed']);
         }
+        // check for onlyTrashed
+        if(isset($filter['onlytrashed']) && $filter['onlytrashed'] === 'true'){
+            $this->onlyTrashed = true;
+            unset($filter['onlytrashed']);
+        }
+        // return filter
+        $this->requestFilter = $filter;
     }
     /**
      * get valid filters
@@ -221,17 +244,7 @@ abstract class ApiRequest
      * @return [array]
      */
     public function filter(){
-        // get all filter
-        $filter = $this->request->input('filter');
-        // remove special filters
-        $specialFilter = ['trashed'];
-        foreach($specialFilter as $key){
-            if(isset($filter[$key])){
-                unset($filter[$key]);
-            }
-        }
-        // return filter
-        return $filter;
+        return isset($this->requestFilter) ? $this->requestFilter : [];
     }
     /**
      * validate includes used in request

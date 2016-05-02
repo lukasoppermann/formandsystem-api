@@ -25,6 +25,32 @@ trait GetTestTrait
         $this->assertValid($received, $this->resource()->blueprint());
     }
     /**
+     * @test getting the main resource listing
+     * @group get
+     * @group main
+     *
+     * @method testGetResourceWithDeleted
+     *
+     * @link GET /resource
+     *
+     */
+    public function testGetResourceWithDeleted(){
+        if($this->model->isSoftdeleting()){
+            $model = $this->model;
+            $model->where('deleted_at', NULL)->delete();
+            // CALL
+            $response = $this->getClientResponse('/'.$this->resource.'?filter[trashed]=true');
+            // GET DATA
+            $received = $this->getResponseArray($response)['data'];
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+            $this->assertTrue(count($received) > 0);
+
+            $model->onlyTrashed()->restore();
+            $this->model->fresh();
+        }
+    }
+    /**
      * @test getting the main resource by id
      * @group get
      * @group main
@@ -40,6 +66,27 @@ trait GetTestTrait
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
         $this->assertEquals($this->model->first()->id, $received['id']);
+        $this->assertValid($received, $this->resource()->blueprint());
+    }
+    /**
+     * @test getting the main resource by id
+     * @group get
+     * @group main
+     *
+     * @method getResourceById
+     *
+     */
+    public function testGetSoftDeletedResourceById(){
+        $model = $this->model->first();
+        $model->delete();
+        // CALL
+        $response = $this->getClientResponse('/'.$this->resource.'/'.$model->id);
+        // GET DATA
+        $received = $this->getResponseArray($response)['data'];
+        // ASSERTIONS
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals($model->id, $received['id']);
+        $this->assertTrue($received['attributes']['is_trashed']);
         $this->assertValid($received, $this->resource()->blueprint());
     }
     /**
@@ -199,39 +246,10 @@ trait GetTestTrait
      * @group rel
      */
     public function getRelationshipsWithWrongResourceId(){
-        foreach($this->relationships()as $relationship){
+        foreach($this->relationships() as $relationship){
             $response = $this->getClientResponse($this->resource.'/1/relationships/'.$relationship);
             // ASSERTIONS
             $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
         }
-    }
-    //------------------------------------------
-    //
-    // UTILITY FUNCTIONS
-    //
-    /*
-     * add related items
-     */
-    public function addRelatedItems($relationship){
-        // get model with relationships
-        $model = $this->model->first();
-        // remove relationships
-        $model->{$relationship}()->detach();
-        // get related model
-        $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
-        $relatedModel = (new $relatedModel);
-        // get related items
-        $ids = $relatedModel->all()->random(2)->lists('id')->toArray();
-        // remove relationships to not have circular relationships
-        if(method_exists($relatedModel->find($ids[0]), $relationship)){
-            if(method_exists($relatedModel->find($ids[0])->{$relationship}(), 'detach')){
-                $relatedModel->find($ids[0])->{$relationship}()->detach();
-                $relatedModel->find($ids[1])->{$relationship}()->detach();
-            }
-        }
-        // attach models
-        $model->{$relationship}()->attach($ids);
-        // return model
-        return $model;
     }
 }

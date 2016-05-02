@@ -28,7 +28,8 @@ class MetadetailPatchRequest extends MetadetailRequest
             'id'                => 'required|string',
             'type'              => 'required|in:metadetails',
             'attributes.type'   => 'string|alpha_dash',
-            'attributes.value'  => 'string_or_array'
+            'attributes.value'  => 'string_or_array',
+            'attributes.is_trashed' => 'boolean',
         ];
     }
 }

@@ -13,10 +13,10 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
 {
     use TestTrait;
     use ValidationTrait;
-    // use GetTestTrait;
-    // use PostTestTrait;
+    use GetTestTrait;
+    use PostTestTrait;
     use PatchTestTrait;
-    // use DeleteTestTrait;
+    use DeleteTestTrait;
 
     // resource objects
     protected $resourceObjects = [

@@ -29,12 +29,18 @@ abstract class ApiController extends Controller
     {
         // get model instance
         $model = $this->newModel();
-        \LOG::debug('Softdelete completly missing');
+        // with trashed items
+        if($this->request->withTrashed === true){
+            $model = $model->withTrashed();
+        }
+        // only trashed items
+        if($this->request->onlyTrashed === true){
+            $model = $model->onlyTrashed();
+        }
         // apply filters
         foreach((array) $this->request->filter() as $key => $value){
             $model = $model->where($key, $value);
         }
-
         // return result
         return $this->response->paginator($model->paginate($this->perPage), $this->newTransformer(), ['key' => $this->resource]);
     }
@@ -45,7 +51,7 @@ abstract class ApiController extends Controller
     {
         // validate that the requested resource exists
         $item = $this->validateResourceExists(
-            $this->newModel()->find($id),
+            $this->newModel()->findWithTrashed($id),
             'The resource of type "'.$this->resource.'" with the id of "'.$id.'" does not exist.'
         );
         // return resource items
@@ -106,7 +112,7 @@ abstract class ApiController extends Controller
     public function delete($resource_id){
         // validate resource
         $model = $this->validateResourceExists(
-            $this->newModel()->find($resource_id),
+            $this->newModel()->findWithTrashed($resource_id),
             'The resource of type "'.$this->resource.'" with the id "'.$resource_id.'" does not exist.'
         );
         // force delete to really delete soft deletes
