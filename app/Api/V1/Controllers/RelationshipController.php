@@ -43,7 +43,7 @@ class RelationshipController extends Controller
     public function getRelated(Request $request, $resource_id, $type){
         // validate resource
         $model = $this->validateResourceExists(
-            $this->newModel()->find($resource_id),
+            $this->newModel()->findWithTrashed($resource_id),
             'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
         );
         // validate realtionship
@@ -72,7 +72,7 @@ class RelationshipController extends Controller
      public function getRelationships(Request $request, $resource_id, $type){
          // validate
          $model = $this->validateResourceExists(
-            $this->newModel()->find($resource_id),
+            $this->newModel()->findWithTrashed($resource_id),
             'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
         );
         // validate relationship
@@ -107,7 +107,7 @@ class RelationshipController extends Controller
      public function storeRelationships(Request $request, $resource_id, $relatedType){
          // validate main resource
          $model = $this->validateResourceExists(
-            $this->newModel()->find($resource_id),
+            $this->newModel()->findWithTrashed($resource_id),
             'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
         );
         // validate relationship
@@ -134,7 +134,7 @@ class RelationshipController extends Controller
     public function updateRelationships(Request $request, $resource_id, $relatedType){
         // validate main resource
         $model = $this->validateResourceExists(
-           $this->newModel()->find($resource_id),
+           $this->newModel()->findWithTrashed($resource_id),
            'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
        );
        // validate relationship
