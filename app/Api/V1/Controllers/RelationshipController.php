@@ -79,6 +79,7 @@ class RelationshipController extends Controller
         $this->validateRelationship($type);
         // build relationship array
         $relationships = [];
+        dd('Apply withTrashed and onlyTrashed Filters on related items.');
         foreach($model->{$type}->lists('id')->toArray() as $id){
             $relationships[] = [
                 'id' => $id,
