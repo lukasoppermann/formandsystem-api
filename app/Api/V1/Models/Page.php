@@ -57,7 +57,7 @@ class Page extends BaseModel
      */
     public function collections()
     {
-        return $this->belongsToMany('App\Api\V1\Models\Collection');
+        return $this->morphToMany('App\Api\V1\Models\Collection', 'collectionable');
     }
     /**
      * The metadetails that belongs to the page.
