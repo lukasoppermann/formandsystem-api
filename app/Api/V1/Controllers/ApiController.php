@@ -30,11 +30,11 @@ abstract class ApiController extends Controller
         // get model instance
         $model = $this->newModel();
         // with trashed items
-        if($this->request->withTrashed === true){
+        if($this->request->with_trashed === true){
             $model = $model->withTrashed();
         }
         // only trashed items
-        if($this->request->onlyTrashed === true){
+        if($this->request->only_trashed === true){
             $model = $model->onlyTrashed();
         }
         // apply filters

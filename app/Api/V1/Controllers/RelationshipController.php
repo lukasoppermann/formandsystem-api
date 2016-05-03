@@ -51,12 +51,12 @@ class RelationshipController extends Controller
         // prepare transformer
         $transformer = $this->api_namespace."Transformers\\".ucfirst(substr($type,0,-1))."Transformer";
         // with trashed items
-        if($this->request->withTrashed === true){
-            $model->setRelationshipFilter(['trashed' => true]);
+        if($this->request->with_trashed === true){
+            $model->setRelationshipFilter(['with_trashed' => true]);
         }
         // only trashed items
-        if($this->request->onlyTrashed === true){
-            $model->setRelationshipFilter(['onlytrashed' => true]);
+        if($this->request->only_trashed === true){
+            $model->setRelationshipFilter(['only_trashed' => true]);
         }
         // return paginated result
         return $this->response->paginator(
@@ -88,12 +88,12 @@ class RelationshipController extends Controller
         // build relationship array
         $relationships = [];
         // with trashed items
-        if($this->request->withTrashed === true){
-            $model->setRelationshipFilter(['trashed' => true]);
+        if($this->request->with_trashed === true){
+            $model->setRelationshipFilter(['with_trashed' => true]);
         }
         // only trashed items
-        if($this->request->onlyTrashed === true){
-            $model->setRelationshipFilter(['onlytrashed' => true]);
+        if($this->request->only_trashed === true){
+            $model->setRelationshipFilter(['only_trashed' => true]);
         }
         //
         foreach($model->{$type}->lists('id')->toArray() as $id){

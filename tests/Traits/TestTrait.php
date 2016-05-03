@@ -95,7 +95,7 @@ trait TestTrait
      */
     public function addRelatedItems($relationship){
         // get model with relationships
-        $model = $this->model->first();
+        $model = $this->model->withTrashed()->first();
         // remove relationships
         $model->{$relationship}()->detach();
         // get related model

@@ -32,22 +32,21 @@ trait GetTestTrait
      * @method testGetResourceWithDeleted
      *
      * @link GET /resource
-     *
      */
     public function testGetResourceWithDeleted(){
         if($this->model->isSoftdeleting()){
             $model = $this->model;
             $model->where('deleted_at', NULL)->delete();
             // CALL
-            $response = $this->getClientResponse('/'.$this->resource.'?filter[trashed]=true');
+            $response = $this->getClientResponse('/'.$this->resource.'?filter[with_trashed]=true');
             // GET DATA
             $received = $this->getResponseArray($response)['data'];
+            // RESTORE DB
+            $model->onlyTrashed()->restore();
+            $this->model->fresh();
             // ASSERTIONS
             $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
             $this->assertTrue(count($received) > 0);
-
-            $model->onlyTrashed()->restore();
-            $this->model->fresh();
         }
     }
     /**
@@ -77,7 +76,7 @@ trait GetTestTrait
      *
      */
     public function testGetSoftDeletedResourceById(){
-        $model = $this->model->first();
+        $model = $this->model->withTrashed()->first();
         $model->delete();
         // CALL
         $response = $this->getClientResponse('/'.$this->resource.'/'.$model->id);
@@ -186,7 +185,7 @@ trait GetTestTrait
      */
     public function getRelatedNoRelatedItems(){
         foreach($this->relationships()as $relationship){
-            $this->model->first()->{$relationship}()->detach();
+            $this->model->withTrashed()->first()->{$relationship}()->detach();
             // CALL
             $response = $this->getClientResponse('/'.$this->resource.'/'.$this->model->first()->id.'/'.$relationship);
             // TEST PAGINATION
@@ -233,7 +232,7 @@ trait GetTestTrait
      */
     public function getRelationshipsNoRelatedItems(){
         foreach($this->relationships()as $relationship){
-            $this->model->first()->{$relationship}()->detach();
+            $this->model->withTrashed()->first()->{$relationship}()->detach();
             // CALL
             $response = $this->getClientResponse('/'.$this->resource.'/'.$this->model->first()->id.'/relationships/'.$relationship);
             // ASSERTIONS

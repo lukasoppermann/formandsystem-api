@@ -50,10 +50,13 @@ trait PatchTestTrait
                 'body' => json_encode(["data" => $data])
             ]);
             $data = $this->getResponseArray($response)['data'];
-            // ASSERTIONS
+            // PREPARE ASSERTIONS
+            $deleted_at = $this->model->findWithTrashed($model->id)->deleted_at;
+            $this->model->findWithTrashed($model->id)->restore();
+            // ASSERT
             $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
             $this->assertValid($data, $this->resource()->blueprint());
-            $this->assertNotNull($this->model->findWithTrashed($model->id)->deleted_at);
+            $this->assertNotNull($deleted_at);
         }
     }
     /*

@@ -135,11 +135,11 @@ class BaseModel extends Model
      */
     protected function relWithTrashed($relationship){
         // if trashed is requested
-        if($this->getRelationshipFilter('trashed', true)){
+        if($this->getRelationshipFilter('with_trashed', true)){
             return $relationship->withTrashed();
         }
         // if onlytrashed is requested
-        if($this->getRelationshipFilter('onlytrashed', true)){
+        if($this->getRelationshipFilter('only_trashed', true)){
             return $relationship->onlyTrashed();
         }
         return $relationship;
