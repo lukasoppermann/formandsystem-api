@@ -93,9 +93,7 @@ trait TestTrait
     /*
      * add related items
      */
-    public function addRelatedItems($relationship){
-        // get model with relationships
-        $model = $this->model->withTrashed()->first();
+    public function addRelatedItems($model, $relationship){
         // remove relationships
         $model->{$relationship}()->detach();
         // get related model
@@ -112,7 +110,5 @@ trait TestTrait
         }
         // attach models
         $model->{$relationship}()->attach($ids);
-        // return model
-        return $model;
     }
 }

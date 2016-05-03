@@ -69,8 +69,10 @@ trait DeleteTestTrait
     public function testDeleteRelationships()
     {
         foreach($this->relationships() as $relationship){
-            // PREPARE
-            $model = $this->addRelatedItems($relationship);
+            // get model
+            $model = $this->model->withTrashed()->first();
+            // add relationships
+            $this->addRelatedItems($model, $relationship);
             $relationshipId = $model->{$relationship}()->first()->id;
             // CHECK BEFORE DELETE
             $response = $this->client->request('GET', '/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship, [
@@ -95,9 +97,11 @@ trait DeleteTestTrait
      */
     public function testDeleteRelationshipsWrongRelationshipData()
     {
+        // get model
+        $model = $this->model->withTrashed()->first();
         foreach($this->relationships() as $relationship){
-            // PREPARE
-            $model = $this->addRelatedItems($relationship);
+            // add relationships
+            $this->addRelatedItems($model, $relationship);
             $relationshipId = $model->{$relationship}()->first()->id;
             // DELETE WITH WRONG ID
             $response = $this->client->request('DELETE', '/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship, [

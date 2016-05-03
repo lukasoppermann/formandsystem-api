@@ -109,9 +109,26 @@ class BaseModel extends Model
             }
         }
     }
+    /**
+     * set a relationship filter
+     *
+     * @method setRelationshipFilter
+     *
+     * @param  [array]                $array
+     */
     public function setRelationshipFilter($array = []){
         $this->relationshipFilter = $array;
     }
+    /**
+     * retrieve a filter value or a boolean for a compared filter value
+     *
+     * @method getRelationshipFilter
+     *
+     * @param  [string]                $filter
+     * @param  [mixed]                $value
+     *
+     * @return [NULL|Mixed|Boolean]
+     */
     public function getRelationshipFilter($filter, $value = NULL){
         // return null if $filter is not set
         if(!isset($this->relationshipFilter[$filter])){
@@ -133,7 +150,7 @@ class BaseModel extends Model
      *
      * @return [relatioship]
      */
-    protected function relWithTrashed($relationship){
+    protected function relationshipTrashedFilter($relationship){
         // if trashed is requested
         if($this->getRelationshipFilter('with_trashed', true)){
             return $relationship->withTrashed();

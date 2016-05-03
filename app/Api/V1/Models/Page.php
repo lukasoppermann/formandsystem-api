@@ -50,34 +50,34 @@ class Page extends BaseModel
      */
     public function fragments()
     {
-        return $this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable');
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable'));
     }
     /**
      * The collection that owns the page.
      */
     public function collections()
     {
-        return $this->morphToMany('App\Api\V1\Models\Collection', 'collectionable');
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Collection', 'collectionable'));
     }
     /**
      * The metadetails that belongs to the page.
      */
     public function metadetails()
     {
-        return $this->morphToMany('App\Api\V1\Models\Metadetail', 'metadetailable');
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Metadetail', 'metadetailable'));
     }
     /**
      * The pages that belongs to the page.
      */
     public function pages()
     {
-        return $this->hasMany('App\Api\V1\Models\Page', 'parent_id');
+        return $this->relationshipTrashedFilter($this->hasMany('App\Api\V1\Models\Page', 'parent_id'));
     }
     /**
      * The pages that belongs to the page.
      */
     public function ownedbypages()
     {
-        return $this->belongsTo('App\Api\V1\Models\Page', 'parent_id');
+        return $this->relationshipTrashedFilter($this->belongsTo('App\Api\V1\Models\Page', 'parent_id'));
     }
 }

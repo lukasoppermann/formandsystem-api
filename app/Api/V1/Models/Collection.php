@@ -36,6 +36,6 @@ class Collection extends BaseModel
      */
     public function pages()
     {
-        return $this->relWithTrashed($this->morphedByMany('App\Api\V1\Models\Page', 'collectionable'));
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Page', 'collectionable'));
     }
 }

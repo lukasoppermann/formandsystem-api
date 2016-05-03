@@ -43,20 +43,20 @@ class Fragment extends BaseModel
      */
     public function pages()
     {
-        return $this->morphedByMany('App\Api\V1\Models\Page', 'fragmentable');
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Page', 'fragmentable'));
     }
     /**
      * The fragments that belong to the fragment.
      */
     public function fragments()
     {
-        return $this->morphedByMany('App\Api\V1\Models\Fragment', 'fragmentable');
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Fragment', 'fragmentable'));
     }
     /**
      * The images that belong to the fragment.
      */
     public function images()
     {
-        return $this->morphedByMany('App\Api\V1\Models\Image', 'fragmentable');
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Image', 'fragmentable'));
     }
 }

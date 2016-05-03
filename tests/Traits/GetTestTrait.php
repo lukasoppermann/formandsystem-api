@@ -165,8 +165,12 @@ trait GetTestTrait
      */
     public function getRelated()
     {
+        // get model
+        $model = $this->model->withTrashed()->first();
+        // loop through relationships
         foreach($this->relationships() as $relationship){
-            $model = $this->addRelatedItems($relationship);
+            // add relationships
+            $this->addRelatedItems($model, $relationship);
             // CALL
             $response = $this->getClientResponse('/'.$this->resource.'/'.$model->id.'/'.$relationship);
             // TEST PAGINATION
@@ -213,8 +217,11 @@ trait GetTestTrait
      */
     public function getRelationships()
     {
+        // get model
+        $model = $this->model->withTrashed()->first();
+        // loop through relationships
         foreach($this->relationships()as $relationship){
-            $model = $this->addRelatedItems($relationship);
+            $this->addRelatedItems($model, $relationship);
             // CALL
             $response = $this->getClientResponse('/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship);
             // check specific structure & data
@@ -249,6 +256,39 @@ trait GetTestTrait
             $response = $this->getClientResponse($this->resource.'/1/relationships/'.$relationship);
             // ASSERTIONS
             $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');
+        }
+    }
+    /**
+     * @test getting soft deleted relationships e.g. /relationships/pages
+     * @group get
+     * @group rel
+     */
+    public function testGetSoftDeletedRelationships()
+    {
+        // get main resource model
+        $model = $this->model->withTrashed()->first();
+        // loop through relationship
+        foreach($this->relationships() as $relationship){
+            // add related items
+            $this->addRelatedItems($model, $relationship);
+            // softdelete related items
+            $model->{$relationship}()->get()->each(function($relModel){
+                $relModel->delete();
+            });
+            // CALL
+            $response = $this->getClientResponse('/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship.'/?filter[with_trashed]=true');
+            // check specific structure & data
+            $received = $this->getResponseArray($response)['data'][0];
+            // restore related items
+            $model->{$relationship}()->onlyTrashed()->get()->each(function($relModel){
+                $relModel->restore();
+            });
+            // ASSERTIONS
+            $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+            $this->assertValid($received, [
+                'id' => 'string',
+                'type' => 'in:'.$relationship,
+            ]);
         }
     }
 }

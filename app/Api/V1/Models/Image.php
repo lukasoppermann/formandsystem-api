@@ -42,13 +42,13 @@ class Image extends BaseModel
      */
     public function fragments()
     {
-        return $this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable');
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable'));
     }
     /**
      * The images that belong to the image.
      */
     public function images()
     {
-        return $this->morphedByMany('App\Api\V1\Models\Image', 'imageable');
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Image', 'imageable'));
     }
 }
