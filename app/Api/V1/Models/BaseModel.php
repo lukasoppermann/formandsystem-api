@@ -7,6 +7,7 @@ use Ramsey\Uuid\Uuid;
 
 class BaseModel extends Model
 {
+    protected $relationshipFilter = [];
     /**
      * Save a new model and return the instance.
      *
@@ -107,5 +108,40 @@ class BaseModel extends Model
                 $this->withTrashed();
             }
         }
+    }
+    public function setRelationshipFilter($array = []){
+        $this->relationshipFilter = $array;
+    }
+    public function getRelationshipFilter($filter, $value = NULL){
+        // return null if $filter is not set
+        if(!isset($this->relationshipFilter[$filter])){
+            return NULL;
+        }
+        // return relationshipFilter value of $value is not set
+        if($value === NULL){
+            return $this->relationshipFilter[$filter];
+        }
+        // return true or false if value is set
+        return ($this->relationshipFilter[$filter] === $value);
+    }
+    /**
+     * return a relationship including with trashed or only trashed if filters are applied
+     *
+     * @method relWithTrashed
+     *
+     * @param  [relatioship]         $relationship
+     *
+     * @return [relatioship]
+     */
+    protected function relWithTrashed($relationship){
+        // if trashed is requested
+        if($this->getRelationshipFilter('trashed', true)){
+            return $relationship->withTrashed();
+        }
+        // if onlytrashed is requested
+        if($this->getRelationshipFilter('onlytrashed', true)){
+            return $relationship->onlyTrashed();
+        }
+        return $relationship;
     }
 }

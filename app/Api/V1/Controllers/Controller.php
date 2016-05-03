@@ -14,6 +14,12 @@ abstract class Controller extends LumenController
     use Helpers;
     use TranslateTrait;
     /**
+     * The current resource
+     *
+     * @var $resource
+     */
+    protected $resource;
+    /**
      * All available api endpoints that have a resource
      *
      * @var api_endpoints

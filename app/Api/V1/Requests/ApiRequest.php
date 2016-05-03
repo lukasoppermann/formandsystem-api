@@ -203,7 +203,7 @@ abstract class ApiRequest
         // check if filters are available
         foreach($filter as $key => $value){
             if(!in_array($key, $this->filters())){
-                $errors[$key][] = 'The filter "'.$value.'" is not available.';
+                $errors[$key][] = 'The filter "'.$key.'" is not available.';
             }
         }
         // throw exception in case of errors
@@ -226,13 +226,12 @@ abstract class ApiRequest
         // check for withTrashed
         if(isset($filter['trashed']) && $filter['trashed'] === 'true'){
             $this->withTrashed = true;
-            unset($filter['trashed']);
         }
         // check for onlyTrashed
         if(isset($filter['onlytrashed']) && $filter['onlytrashed'] === 'true'){
             $this->onlyTrashed = true;
-            unset($filter['onlytrashed']);
         }
+        unset($filter['trashed'], $filter['onlytrashed']);
         // return filter
         $this->requestFilter = $filter;
     }
@@ -244,7 +243,7 @@ abstract class ApiRequest
      * @return [array]
      */
     public function filter(){
-        return isset($this->requestFilter) ? $this->requestFilter : [];
+        return is_array($this->requestFilter) ? $this->requestFilter : [];
     }
     /**
      * validate includes used in request
