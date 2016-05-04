@@ -15,11 +15,11 @@ class FragmentsController extends ApiController
      *
      * @var array
      */
-    protected $relationships = [
-        'pages',
-        'images',
-        'fragments',
-    ];
+    // protected $relationships = [
+    //     'pages',
+    //     'images',
+    //     'fragments',
+    // ];
     /**
      * The filters that are allowed in requests
      *

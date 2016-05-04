@@ -13,7 +13,9 @@ class CollectionRequest extends ResourceRequest
      */
      public function relationships(){
          return[
-            'pages'
+            'pages',
+            'collections',
+            'ownedByCollections',
          ];
      }
      /**

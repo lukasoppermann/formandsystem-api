@@ -27,9 +27,10 @@ class CollectionsController extends ApiController
      *
      * @var array
      */
-    protected $relationships = [
-        'pages'
-    ];
+    // protected $relationships = [
+    //     'pages',
+    //     'collections'
+    // ];
     /**
      * The resources name
      *

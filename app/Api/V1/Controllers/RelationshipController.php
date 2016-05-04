@@ -40,15 +40,13 @@ class RelationshipController extends Controller
      *
      * @return [Response]
      */
-    public function getRelated(Request $request, $resource_id, $type){
+    public function getRelated(Request $request, $id, $relationship){
         // validate resource
-        $model = $this->validateResourceExists(
-            $this->newModel()->findWithTrashed($resource_id),
-            'The resource of type "'.$this->resource.'" with the id of "'.$resource_id.'" does not exist.'
-        );
+        $model = $this->validateResourceExists($this->newModel()->findWithTrashed($id));
         // validate realtionship
-        $this->validateRelationship($type);
+        $this->validateRelationship($relationship);
         // prepare transformer
+        $type = strtolower(str_replace('ownedBy','',$relationship));
         $transformer = $this->api_namespace."Transformers\\".ucfirst(substr($type,0,-1))."Transformer";
         // with trashed items
         if($this->request->with_trashed === true){
@@ -60,7 +58,7 @@ class RelationshipController extends Controller
         }
         // return paginated result
         return $this->response->paginator(
-            $model->{$type}()->paginate($this->perPage),
+            $model->{$relationship}()->paginate($this->perPage),
             new $transformer,
             ['key' => $type]
         );
