@@ -11,7 +11,7 @@ abstract class TokenRequest extends ResourceRequest
      *
      * @return array
      */
-     protected function relationships(){
+     public function relationships(){
          return[
          ];
      }

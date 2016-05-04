@@ -68,7 +68,7 @@ class BaseModel extends Model
      */
     public function findWithTrashed($id, $withTrashed = true)
     {
-        if($withTrashed === true){
+        if($this->isSoftdeleting() === true && $withTrashed === true){
             return $this->withTrashed()->where('id',$id)->first();
         }
 
