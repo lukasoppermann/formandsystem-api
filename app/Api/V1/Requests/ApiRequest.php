@@ -84,6 +84,7 @@ abstract class ApiRequest
         if(!isset($this->fileRequest) || $this->fileRequest !== TRUE){
             // validate request data
             $this->validate($request);
+            dd($request->all());
             // process fitler
             $this->processFilter($request);
             // validate includes

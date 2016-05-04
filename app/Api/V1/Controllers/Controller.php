@@ -104,7 +104,7 @@ abstract class Controller extends LumenController
      *
      * @method newModel
      *
-     * @return model
+     * @return Illuminate\Database\Eloquent\Model
      */
     public function newModel($model = NULL){
         // use controller model if none provided

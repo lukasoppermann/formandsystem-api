@@ -11,7 +11,9 @@
         "ramsey/uuid": "^3.3",
         "league/flysystem": "^1.0",
         "league/flysystem-sftp": "^1.0",
-        "lucadegasperi/oauth2-server-laravel": "^5.0"
+        "lucadegasperi/oauth2-server-laravel": "^5.0",
+        "daylerees/sanitizer": "^1.0",
+        "mews/purifier": "^2.0"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "~6.0",

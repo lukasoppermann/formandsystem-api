@@ -80,6 +80,8 @@ $app->middleware([
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
 $app->register(App\Providers\OAuthServiceProvider::class);
+$app->register(App\Providers\SanitizeServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Dingo Configureation
