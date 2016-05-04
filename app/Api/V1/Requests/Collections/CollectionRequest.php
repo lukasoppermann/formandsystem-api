@@ -7,35 +7,42 @@ use App\Api\V1\Requests\ResourceRequest;
 class CollectionRequest extends ResourceRequest
 {
     /**
-     * The relationships a resource can have
+     * rules for various request types
      *
-     * @return array
+     * @var [array]
      */
-     public function relationships(){
-         return[
-            'pages',
-            'collections',
-            'ownedByCollections',
-         ];
-     }
-     /**
-      * Retuns needed scopes to perform a request
-      *
-      * @method scopes
-      *
-      * @return array
-      */
-     protected function scopes(){
-         return [];
-     }
-     /**
-      * Retuns rules
-      *
-      * @method rules
-      *
-      * @return array
-      */
-     protected function rules(){
-         return [];
-     }
+    protected $rules = [
+        // POST
+        'post' => [
+            'type' => 'required|in:collections',
+            'attributes.name' => 'required|string',
+            'attributes.slug' => 'required|string|alpha_dash',
+        ],
+        // PATCH
+        'patch' => [
+            'id' => 'required|string',
+            'type' => 'required|in:collections',
+            'attributes.name' => 'string',
+            'attributes.slug' => 'string|alpha_dash',
+            'attributes.is_trashed' => 'boolean',
+        ]
+    ];
+    /**
+     * relationships of the endpoint
+     *
+     * @var [array]
+     */
+    public $relationships = [
+        'pages',
+        'collections',
+        'ownedByCollections',
+    ];
+    /**
+     * filter available in for the endpoint
+     *
+     * @var [array]
+     */
+    public $filter = [
+        'slug',
+    ];
 }

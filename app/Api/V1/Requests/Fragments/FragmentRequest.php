@@ -7,35 +7,45 @@ use App\Api\V1\Requests\ResourceRequest;
 class FragmentRequest extends ResourceRequest
 {
     /**
-     * The relationships a resource can have
+     * rules for various request types
      *
-     * @return array
+     * @var [array]
      */
-    public function relationships(){
-        return[
-            'pages',
-            'fragments',
-            'images'
-        ];
-    }
+    protected $rules = [
+        // POST
+        'post' => [
+            'type' => 'required|in:fragments',
+            'attributes.name' => 'string',
+            'attributes.type' => 'required|string',
+            'attributes.data' => '',
+        ],
+        // PATCH
+        'patch' => [
+            'id' => 'required|string',
+            'type' => 'required|in:fragments',
+            'attributes.name' => 'string',
+            'attributes.type' => 'string',
+            'attributes.data' => '',
+            'attributes.is_trashed' => 'boolean',
+        ]
+    ];
     /**
-     * Retuns needed scopes to perform a request
+     * relationships of the endpoint
      *
-     * @method scopes
-     *
-     * @return array
+     * @var [array]
      */
-    protected function scopes(){
-        return [];
-    }
+    public $relationships = [
+        'pages',
+        'fragments',
+        'images'
+    ];
     /**
-     * Retuns rules
+     * filter available in for the endpoint
      *
-     * @method rules
-     *
-     * @return array
+     * @var [array]
      */
-    protected function rules(){
-        return [];
-    }
+    public $filter = [
+        'type',
+        'name',
+    ];
 }

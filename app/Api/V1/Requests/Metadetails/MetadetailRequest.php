@@ -7,33 +7,40 @@ use App\Api\V1\Requests\ResourceRequest;
 class MetadetailRequest extends ResourceRequest
 {
     /**
-     * The relationships a resource can have
+     * rules for various request types
      *
-     * @return array
+     * @var [array]
      */
-    public function relationships(){
-         return[
-             'pages'
-         ];
-    }
+    protected $rules = [
+        // POST
+        'post' => [
+            'type'              => 'required|in:metadetails',
+            'attributes.type'   => 'required|string|alpha_dash',
+            'attributes.value'  => 'required|string_or_array'
+        ],
+        // PATCH
+        'patch' => [
+            'id'                    => 'required|string',
+            'type'                  => 'required|in:metadetails',
+            'attributes.type'       => 'string|alpha_dash',
+            'attributes.value'      => 'string_or_array',
+            'attributes.is_trashed' => 'boolean',
+        ]
+    ];
     /**
-     * Retuns needed scopes to perform a request
+     * relationships of the endpoint
      *
-     * @method scopes
-     *
-     * @return array
+     * @var [array]
      */
-    protected function scopes(){
-        return [];
-    }
+    public $relationships = [
+        'pages',
+    ];
     /**
-     * Retuns rules
+     * filter available in for the endpoint
      *
-     * @method rules
-     *
-     * @return array
+     * @var [array]
      */
-    protected function rules(){
-        return [];
-    }
+    public $filter = [
+        'type'
+    ];
 }

@@ -75,21 +75,23 @@ abstract class ApiRequest
      *
      * @param  Request $request
      */
-    public function __construct(Request $request){
-        // store current request
-        $this->request = $request;
-        // store current request
-        $this->isAuthorized();
-        // run validation if not file request
-        if(!isset($this->fileRequest) || $this->fileRequest !== TRUE){
-            // validate request data
-            $this->validate($request);
-            // process fitler
-            $this->processFilter($request);
-            // validate includes
-            $this->validateIncludes($request);
-            // validate query parameters
-            $this->validateQueryParameters($request);
+    public function __construct($request = NULL){
+        if($request !== NULL){
+            // store current request
+            $this->request = $request;
+            // store current request
+            $this->isAuthorized();
+            // run validation if not file request
+            if(!isset($this->fileRequest) || $this->fileRequest !== TRUE){
+                // validate request data
+                $this->validate($request);
+                // process fitler
+                $this->processFilter($request);
+                // validate includes
+                $this->validateIncludes($request);
+                // validate query parameters
+                $this->validateQueryParameters($request);
+            }
         }
     }
     /**
@@ -185,7 +187,7 @@ abstract class ApiRequest
     protected function validateFilters($filter = []){
         // check if filters are available
         foreach((array) $filter as $key => $value){
-            if(!in_array($key, $this->filters())){
+            if(!in_array($key, $this->requestFilter())){
                 $errors[$key][] = 'The filter "'.$key.'" is not available.';
             }
         }
@@ -385,13 +387,20 @@ abstract class ApiRequest
         return false;
     }
     /**
-     * filters available for the request
+     * filter available for the request
      *
-     * @method filters
+     * @method requestFilter
      *
      * @return array
      */
-    abstract protected function filters();
+    protected function requestFilter(){
+        // return method specific rules
+        if(isset($this->filter) && is_array($this->filter)){
+            return $this->filter;
+        }
+        // or empty array if none are set
+        return [];
+    }
     /**
      * validation rules
      *

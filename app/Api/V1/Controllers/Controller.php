@@ -91,8 +91,6 @@ abstract class Controller extends LumenController
             $this->resourceName().'s\\'.
             // build request file name
             $this->resourceName().
-            // add method
-            ucfirst(strtolower($request->getMethod())).
             // add request
             'Request';
         }
