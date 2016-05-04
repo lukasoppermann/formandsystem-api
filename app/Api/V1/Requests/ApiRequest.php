@@ -66,6 +66,7 @@ abstract class ApiRequest
         'sort',
         'fields',
         'include',
+        'exclude',
         'access_token'
     ];
     /**
