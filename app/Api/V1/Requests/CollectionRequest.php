@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api\V1\Requests\Collections;
+namespace App\Api\V1\Requests;
 
-use App\Api\V1\Requests\ResourceRequest;
+use App\Api\V1\Requests\AbstractResourceRequest;
 
-class CollectionRequest extends ResourceRequest
+class CollectionRequest extends AbstractResourceRequest
 {
     /**
      * rules for various request types

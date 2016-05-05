@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api\V1\Requests\Uploads;
+namespace App\Api\V1\Requests;
 
-use App\Api\V1\Requests\ResourceRequest;
+use App\Api\V1\Requests\AbstractResourceRequest;
 
-class UploadRequest extends ResourceRequest
+class UploadRequest extends AbstractResourceRequest
 {
     /**
      * make this a file request

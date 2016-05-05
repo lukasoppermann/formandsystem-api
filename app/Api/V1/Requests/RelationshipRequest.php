@@ -2,9 +2,9 @@
 
 namespace App\Api\V1\Requests;
 
-use App\Api\V1\Requests\ApiRequest;
+use App\Api\V1\Requests\AbstractRequest;
 
-class RelationshipRequest extends ApiRequest
+class RelationshipRequest extends AbstractRequest
 {
     /**
      * Retuns rules for a relationship
@@ -40,18 +40,8 @@ class RelationshipRequest extends ApiRequest
      */
     public function relationships(){
         $resourceName = ucfirst(substr($this->request->segment(1),0,-1));
-        $parentRequest = "App\Api\V1\Requests\\".$resourceName.'s\\'.$resourceName.'Request';
+        $parentRequest = "App\Api\V1\Requests\\".$resourceName.'Request';
         // return relationships
         return get_class_vars($parentRequest)['relationships'];
-    }
-    /**
-     * filters available for the request
-     *
-     * @method filters
-     *
-     * @return array
-     */
-    protected function filters(){
-        return [];
     }
 }

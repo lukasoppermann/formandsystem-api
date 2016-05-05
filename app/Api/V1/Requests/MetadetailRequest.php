@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api\V1\Requests\Metadetails;
+namespace App\Api\V1\Requests;
 
-use App\Api\V1\Requests\ResourceRequest;
+use App\Api\V1\Requests\AbstractResourceRequest;
 
-class MetadetailRequest extends ResourceRequest
+class MetadetailRequest extends AbstractResourceRequest
 {
     /**
      * rules for various request types

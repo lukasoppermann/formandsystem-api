@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api\V1\Requests\Fragments;
+namespace App\Api\V1\Requests;
 
-use App\Api\V1\Requests\ResourceRequest;
+use App\Api\V1\Requests\AbstractResourceRequest;
 
-class FragmentRequest extends ResourceRequest
+class FragmentRequest extends AbstractResourceRequest
 {
     /**
      * rules for various request types

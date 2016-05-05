@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api\V1\Requests\Pages;
+namespace App\Api\V1\Requests;
 
-use App\Api\V1\Requests\ResourceRequest;
+use App\Api\V1\Requests\AbstractResourceRequest;
 
-class PageRequest extends ResourceRequest
+class PageRequest extends AbstractResourceRequest
 {
     /**
      * rules for various request types

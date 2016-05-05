@@ -2,20 +2,10 @@
 
 namespace App\Api\V1\Requests;
 
-use App\Api\V1\Requests\ApiRequest;
+use App\Api\V1\Requests\AbstractRequest;
 
-abstract class ResourceRequest extends ApiRequest
+abstract class AbstractResourceRequest extends AbstractRequest
 {
-    /**
-     * filters available for the request
-     *
-     * @method filters
-     *
-     * @return array
-     */
-    protected function filters(){
-        return [];
-    }
     /**
      * Retuns needed scopes to perform a request
      *
@@ -31,13 +21,6 @@ abstract class ResourceRequest extends ApiRequest
         // or empty array if none are set
         return [];
     }
-    /**
-     * The relationships the main resource can have
-     *
-     * @method relationships
-     *
-     * @return array
-     */
      /**
       * The relationships a resource can have
       *

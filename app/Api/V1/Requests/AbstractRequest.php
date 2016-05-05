@@ -5,7 +5,7 @@ namespace App\Api\V1\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-abstract class ApiRequest
+abstract class AbstractRequest
 {
     /**
      * the original request
@@ -67,7 +67,7 @@ abstract class ApiRequest
         'fields',
         'include',
         'exclude',
-        'access_token'
+        'access_token',
     ];
     /**
      * get original request
