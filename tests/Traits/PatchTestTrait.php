@@ -258,8 +258,9 @@ trait PatchTestTrait
             // get related model
             $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
             // build relationship data
+            $related = (new $relatedModel)->all()->random(1);
             $relationshipData[$relationship]['data'] = [
-                'id' => (new $relatedModel)->all()->random(1)->id,
+                'id' => $related->id,
                 'type' => $relationship
             ];
         }
@@ -275,13 +276,13 @@ trait PatchTestTrait
             ])
         ]);
         // GET DATA
-        $data = $this->getResponseArray($response)['data'];
+        $data = $this->getResponseArray($response);
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-        $this->assertValid($data, $this->resource()->blueprint());
+        $this->assertValid($data['data'], $this->resource()->blueprint(), $data);
         // ASSERT RELATIONSHIPS
-        foreach($this->relationships()as $relationship){
-            $this->assertNotNull($this->model->find($data['id'])->{$relationship}->first());
+        foreach($this->relationships() as $relationship){
+            $this->assertNotNull($this->model->find($data['data']['id'])->{$relationship}->first());
         }
     }
     /**

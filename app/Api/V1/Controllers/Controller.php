@@ -87,12 +87,8 @@ abstract class Controller extends LumenController
         if($request->segment(3) !== 'relationships'){
             // Normal request
             $request_name = $this->api_namespace."Requests\\".
-            // add folder
-            $this->resourceName().'s\\'.
             // build request file name
             $this->resourceName().
-            // add method
-            ucfirst(strtolower($request->getMethod())).
             // add request
             'Request';
         }

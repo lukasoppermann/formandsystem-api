@@ -28,9 +28,9 @@ class MetadetailsController extends ApiController
      *
      * @var array
      */
-    protected $relationships = [
-        'pages'
-    ];
+    // protected $relationships = [
+    //     'pages'
+    // ];
     /**
      * The resources name
      *

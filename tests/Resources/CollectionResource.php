@@ -26,7 +26,8 @@ class CollectionResource extends ApiResource{
      */
     public function relationships(){
         return [
-            'pages'
+            'pages',
+            'collections'
         ];
     }
     /**

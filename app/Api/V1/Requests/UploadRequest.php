@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Api\V1\Requests\Uploads;
+namespace App\Api\V1\Requests;
 
-use Illuminate\Http\Request;
-use App\Api\V1\Requests\Uploads\UploadRequest;
+use App\Api\V1\Requests\AbstractResourceRequest;
 
-class UploadPutRequest extends UploadRequest
+class UploadRequest extends AbstractResourceRequest
 {
     /**
      * make this a file request
@@ -37,7 +36,8 @@ class UploadPutRequest extends UploadRequest
      *
      * @param  Request $request
      */
-    public function __construct(Request $request){
+    public function __construct($request){
+        \LOG::debug('change upload to type FileRequest');
         // store current request
         $this->request = $request;
         // if file should be uploaded
@@ -98,27 +98,5 @@ class UploadPutRequest extends UploadRequest
         if($imageByteSize > $this->byteSize){
             throw new \Dingo\Api\Exception\StoreResourceFailedException('The image you are trying to upload exceeds the limit of '.number_format($this->byteSize / 1048576, 2).' MB.');
         }
-    }
-    /**
-     * The scopes needed to do this request
-     *
-     * @return array
-     */
-    protected function scopes(){
-        return [
-
-        ];
-    }
-    /**
-     * validation rules
-     *
-     * @method rules
-     *
-     * @return array
-     */
-    protected function rules(){
-        return [
-
-        ];
     }
 }

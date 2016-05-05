@@ -5,7 +5,7 @@ namespace App\Api\V1\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-abstract class ApiRequest
+abstract class AbstractRequest
 {
     /**
      * the original request
@@ -38,23 +38,6 @@ abstract class ApiRequest
      */
     protected $requestFilter = [];
     /**
-     * an array of error messages
-     *
-     * @var array
-     */
-    protected $errors = [];
-    /**
-     * the resource exceptions for given methods
-     *
-     * @var array
-     */
-    private $resourceExceptions = [
-        'delete'    => 'Dingo\Api\Exception\DeleteResourceFailedException',
-        'get'       => 'Dingo\Api\Exception\ResourceException',
-        'post'      => 'Dingo\Api\Exception\StoreResourceFailedException',
-        'patch'     => 'Dingo\Api\Exception\UpdateResourceFailedException'
-    ];
-    /**
      * all allowed query parameters
      *
      * @var array
@@ -66,7 +49,8 @@ abstract class ApiRequest
         'sort',
         'fields',
         'include',
-        'access_token'
+        'exclude',
+        'access_token',
     ];
     /**
      * get original request
@@ -75,38 +59,22 @@ abstract class ApiRequest
      *
      * @param  Request $request
      */
-    public function __construct(Request $request){
-        // store current request
-        $this->request = $request;
-        // store current request
-        $this->isAuthorized();
-        // run validation if not file request
-        if(!isset($this->fileRequest) || $this->fileRequest !== TRUE){
-            // validate request data
-            $this->validate($request);
-            // process fitler
-            $this->processFilter($request);
-            // validate includes
-            $this->validateIncludes($request);
-            // validate query parameters
-            $this->validateQueryParameters($request);
-        }
-    }
-    /**
-     * if method does not exist, delegate to request class
-     *
-     * @method __call
-     *
-     * @param  string $method_name
-     * @param  $arguments
-     */
-    public function __call($method_name, $arguments)
-    {
-        // if method does not exist in this class
-        if (!method_exists($this, $method_name)){
-            // check request class
-            if (method_exists($this->request, $method_name)){
-                return $this->request->{$method_name}($arguments);
+    public function __construct($request = NULL){
+        if($request !== NULL){
+            // store current request
+            $this->request = $request;
+            // store current request
+            $this->isAuthorized();
+            // run validation if not file request
+            if(!isset($this->fileRequest) || $this->fileRequest !== TRUE){
+                // validate request data
+                $this->validate($request);
+                // process fitler
+                $this->processFilter($request);
+                // validate includes
+                $this->validateIncludes($request);
+                // validate query parameters
+                $this->validateQueryParameters($request);
             }
         }
     }
@@ -133,7 +101,7 @@ abstract class ApiRequest
      */
     protected function validate(Request $request){
         // get rules
-        $rules = $this->dataRules();
+        $rules = $this->rules();
         // add rules for main resource
         if(!$this->isRelationshipRequest()){
             $rules = array_merge(
@@ -147,31 +115,17 @@ abstract class ApiRequest
                 $this->allowedAttributes()
             );
         }
+        // get data
+        $data = $request->json('data');
         // run validation
         $validator = app('validator')->make(
             // wrap in data for field validation
-            ['data' => $request->json('data')], $rules
+            ['data' => $data], $rules
         );
         // throw error if validation fails
         if($validator->fails()){
             $this->resourceException($this->error('Request data validation failed.'),$validator->errors());
         }
-    }
-    /**
-     * return rules prefixed with data
-     *
-     * @method dataRules
-     *
-     * @return [array]
-     */
-    protected function dataRules(){
-        $rules = [];
-        // add data. to every rule
-        foreach((array) $this->rules() as $key => $value){
-            $rules['data.'.$key] = $value;
-        }
-
-        return $rules;
     }
     /**
      * validate filters used in request
@@ -185,7 +139,7 @@ abstract class ApiRequest
     protected function validateFilters($filter = []){
         // check if filters are available
         foreach((array) $filter as $key => $value){
-            if(!in_array($key, $this->filters())){
+            if(!in_array($key, $this->requestFilter())){
                 $errors[$key][] = 'The filter "'.$key.'" is not available.';
             }
         }
@@ -325,8 +279,8 @@ abstract class ApiRequest
     protected function allowedAttributes(){
         // get attributes
         $attributes = array_filter(array_map(function ($key){
-            if(substr($key,0,10) === 'attributes'){
-                return substr($key,11);
+            if(substr($key,0,15) === 'data.attributes'){
+                return substr($key,16);
             }
         }, array_keys((array) $this->rules())));
         // return
@@ -343,10 +297,8 @@ abstract class ApiRequest
      * @param  [array]            $array
      */
     protected function resourceException($msg, $array = []){
-        // get method
-        $method = strtolower($this->request->method());
         // throw exception
-        throw new $this->resourceExceptions[$method]($msg,$array);
+        throw new \Dingo\Api\Exception\ResourceException($msg,$array);
     }
     /**
      * return a message when the formrequest fails
@@ -385,13 +337,20 @@ abstract class ApiRequest
         return false;
     }
     /**
-     * filters available for the request
+     * filter available for the request
      *
-     * @method filters
+     * @method requestFilter
      *
      * @return array
      */
-    abstract protected function filters();
+    protected function requestFilter(){
+        // return method specific rules
+        if(isset($this->filter) && is_array($this->filter)){
+            return $this->filter;
+        }
+        // or empty array if none are set
+        return [];
+    }
     /**
      * validation rules
      *
@@ -449,5 +408,23 @@ abstract class ApiRequest
 
         // return true to make authorize pass
         return true;
+    }
+    /**
+     * if method does not exist, delegate to request class
+     *
+     * @method __call
+     *
+     * @param  string $method_name
+     * @param  $arguments
+     */
+    public function __call($method_name, $arguments)
+    {
+        // if method does not exist in this class
+        if (!method_exists($this, $method_name)){
+            // check request class
+            if (method_exists($this->request, $method_name)){
+                return $this->request->{$method_name}($arguments);
+            }
+        }
     }
 }

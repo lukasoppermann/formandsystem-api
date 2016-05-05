@@ -2,9 +2,9 @@
 
 namespace App\Api\V1\Requests;
 
-use App\Api\V1\Requests\ResourceRequest;
+use App\Api\V1\Requests\AbstractRequest;
 
-class RelationshipRequest extends ApiRequest
+class RelationshipRequest extends AbstractRequest
 {
     /**
      * Retuns rules for a relationship
@@ -15,10 +15,10 @@ class RelationshipRequest extends ApiRequest
      */
     public function rules(){
         return [
-            'type'  => 'in:'.implode(',',$this->relationships()).'|required_with:id',
-            'id'    => 'string|required_with:type',
-            '*.type' => 'in:'.implode(',',$this->relationships()).'|required_with:data.*.id',
-            '*.id' => 'string|required_with:data.*.type',
+            'data.type'  => 'in:'.implode(',',$this->relationships()).'|required_with:id',
+            'data.id'    => 'string|required_with:type',
+            'data.*.type' => 'in:'.implode(',',$this->relationships()).'|required_with:data.*.id',
+            'data.*.id' => 'string|required_with:data.*.type',
         ];
     }
     /**
@@ -40,18 +40,8 @@ class RelationshipRequest extends ApiRequest
      */
     public function relationships(){
         $resourceName = ucfirst(substr($this->request->segment(1),0,-1));
-        $parentRequest = "App\Api\V1\Requests\\".$resourceName.'s\\'.$resourceName.'Request';
+        $parentRequest = "App\Api\V1\Requests\\".$resourceName.'Request';
         // return relationships
-        return (new $parentRequest($this->request))->relationships();
-    }
-    /**
-     * filters available for the request
-     *
-     * @method filters
-     *
-     * @return array
-     */
-    protected function filters(){
-        return [];
+        return get_class_vars($parentRequest)['relationships'];
     }
 }

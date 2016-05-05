@@ -27,13 +27,13 @@ class PagesController extends ApiController
      *
      * @var array
      */
-    protected $relationships = [
-        'metadetails',
-        'collections',
-        'fragments',
-        'pages',
-        'ownedbypages'
-    ];
+    // protected $relationships = [
+    //     'metadetails',
+    //     'collections',
+    //     'fragments',
+    //     'pages',
+    //     'ownedbypages'
+    // ];
     /**
      * The resources name
      *

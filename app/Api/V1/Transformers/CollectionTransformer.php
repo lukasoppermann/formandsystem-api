@@ -19,7 +19,9 @@ class CollectionTransformer extends ApiTransformer
       * @var array
       */
     protected $availableIncludes = [
-      'pages'
+      'pages',
+      'collections',
+      'ownedByCollections',
     ];
 
     public function transform(Collection $collection)
@@ -39,4 +41,19 @@ class CollectionTransformer extends ApiTransformer
     {
         return $this->collection( $collection->pages, new PageTransformer, 'pages' );
     }
+    /*
+     * include Collections
+     */
+    public function includeCollections( Collection $collection )
+    {
+        return $this->collection( $collection->collections, new CollectionTransformer, 'collections' );
+    }
+    /*
+     * include owning collections
+     */
+    public function includeOwnedByCollections( Collection $collection )
+    {
+        return $this->collection( $collection->ownedByCollections, new CollectionTransformer, 'collections' );
+    }
+
 }
