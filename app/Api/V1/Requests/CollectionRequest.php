@@ -14,17 +14,17 @@ class CollectionRequest extends AbstractResourceRequest
     protected $rules = [
         // POST
         'post' => [
-            'type' => 'required|in:collections',
-            'attributes.name' => 'required|string',
-            'attributes.slug' => 'required|string|alpha_dash',
+            'data.type' => 'required|in:collections',
+            'data.attributes.name' => 'required|string',
+            'data.attributes.slug' => 'required|string|alpha_dash',
         ],
         // PATCH
         'patch' => [
-            'id' => 'required|string',
-            'type' => 'required|in:collections',
-            'attributes.name' => 'string',
-            'attributes.slug' => 'string|alpha_dash',
-            'attributes.is_trashed' => 'boolean',
+            'data.id' => 'required|string',
+            'data.type' => 'required|in:collections',
+            'data.attributes.name' => 'string',
+            'data.attributes.slug' => 'string|alpha_dash',
+            'data.attributes.is_trashed' => 'boolean',
         ]
     ];
     /**

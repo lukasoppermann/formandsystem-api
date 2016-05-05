@@ -15,10 +15,10 @@ class RelationshipRequest extends AbstractRequest
      */
     public function rules(){
         return [
-            'type'  => 'in:'.implode(',',$this->relationships()).'|required_with:id',
-            'id'    => 'string|required_with:type',
-            '*.type' => 'in:'.implode(',',$this->relationships()).'|required_with:data.*.id',
-            '*.id' => 'string|required_with:data.*.type',
+            'data.type'  => 'in:'.implode(',',$this->relationships()).'|required_with:id',
+            'data.id'    => 'string|required_with:type',
+            'data.*.type' => 'in:'.implode(',',$this->relationships()).'|required_with:data.*.id',
+            'data.*.id' => 'string|required_with:data.*.type',
         ];
     }
     /**

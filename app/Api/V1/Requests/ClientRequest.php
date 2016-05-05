@@ -14,8 +14,8 @@ class ClientRequest extends AbstractResourceRequest
     protected $rules = [
         // POST
         'post' => [
-            'type' => 'required|in:authentications',
-            'attributes.name' => 'required|string',
+            'data.type' => 'required|in:authentications',
+            'data.attributes.name' => 'required|string',
         ],
         // PATCH
         'patch' => [

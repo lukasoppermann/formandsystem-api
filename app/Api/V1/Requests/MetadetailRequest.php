@@ -14,17 +14,17 @@ class MetadetailRequest extends AbstractResourceRequest
     protected $rules = [
         // POST
         'post' => [
-            'type'              => 'required|in:metadetails',
-            'attributes.type'   => 'required|string|alpha_dash',
-            'attributes.value'  => 'required|string_or_array'
+            'data.type'              => 'required|in:metadetails',
+            'data.attributes.type'   => 'required|string|alpha_dash',
+            'data.attributes.value'  => 'required|string_or_array'
         ],
         // PATCH
         'patch' => [
-            'id'                    => 'required|string',
-            'type'                  => 'required|in:metadetails',
-            'attributes.type'       => 'string|alpha_dash',
-            'attributes.value'      => 'string_or_array',
-            'attributes.is_trashed' => 'boolean',
+            'data.id'                    => 'required|string',
+            'data.type'                  => 'required|in:metadetails',
+            'data.attributes.type'       => 'string|alpha_dash',
+            'data.attributes.value'      => 'string_or_array',
+            'data.attributes.is_trashed' => 'boolean',
         ]
     ];
     /**

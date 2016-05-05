@@ -14,25 +14,25 @@ class PageRequest extends AbstractResourceRequest
     protected $rules = [
         // POST
         'post' => [
-            'type'                      => 'required|in:pages',
-            'attributes.menu_label'     => 'required|string',
-            'attributes.slug'           => 'required|string|alpha_dash',
-            'attributes.published'      => 'required|boolean',
-            'attributes.language'       => 'required|string|size:2',
-            'attributes.title'          => 'string',
-            'attributes.description'    => 'string'
+            'data.type'                      => 'required|in:pages',
+            'data.attributes.menu_label'     => 'required|string',
+            'data.attributes.slug'           => 'required|string|alpha_dash',
+            'data.attributes.published'      => 'required|boolean',
+            'data.attributes.language'       => 'required|string|size:2',
+            'data.attributes.title'          => 'string',
+            'data.attributes.description'    => 'string'
         ],
         // PATCH
         'patch' => [
-            'type'                      => 'required|in:pages',
-            'id'                        => 'required|string',
-            'attributes.menu_label'     => 'string',
-            'attributes.slug'           => 'string|alpha_dash',
-            'attributes.published'      => 'boolean',
-            'attributes.language'       => 'string|size:2',
-            'attributes.title'          => 'string',
-            'attributes.description'    => 'string',
-            'attributes.is_trashed'     => 'boolean',
+            'data.type'                      => 'required|in:pages',
+            'data.id'                        => 'required|string',
+            'data.attributes.menu_label'     => 'string',
+            'data.attributes.slug'           => 'string|alpha_dash',
+            'data.attributes.published'      => 'boolean',
+            'data.attributes.language'       => 'string|size:2',
+            'data.attributes.title'          => 'string',
+            'data.attributes.description'    => 'string',
+            'data.attributes.is_trashed'     => 'boolean',
         ]
     ];
     /**

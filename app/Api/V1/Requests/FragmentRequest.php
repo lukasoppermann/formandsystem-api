@@ -14,19 +14,19 @@ class FragmentRequest extends AbstractResourceRequest
     protected $rules = [
         // POST
         'post' => [
-            'type' => 'required|in:fragments',
-            'attributes.name' => 'string',
-            'attributes.type' => 'required|string',
-            'attributes.data' => '',
+            'data.type' => 'required|in:fragments',
+            'data.attributes.name' => 'string',
+            'data.attributes.type' => 'required|string',
+            'data.attributes.data' => '',
         ],
         // PATCH
         'patch' => [
-            'id' => 'required|string',
-            'type' => 'required|in:fragments',
-            'attributes.name' => 'string',
-            'attributes.type' => 'string',
-            'attributes.data' => '',
-            'attributes.is_trashed' => 'boolean',
+            'data.id' => 'required|string',
+            'data.type' => 'required|in:fragments',
+            'data.attributes.name' => 'string',
+            'data.attributes.type' => 'string',
+            'data.attributes.data' => '',
+            'data.attributes.is_trashed' => 'boolean',
         ]
     ];
     /**
