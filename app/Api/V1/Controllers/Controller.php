@@ -79,19 +79,19 @@ abstract class Controller extends LumenController
         return new $request_name($request);
     }
     /**
-     * returns current resources model
+     * returns model instance for current resources or resource provided as param
      *
-     * @method newModel
+     * @param string|NULL $resource [name of the resource for which the model should be created]
      *
-     * @return model
+     * @return Illuminate\Database\Eloquent\Model
      */
-    public function newModel($model = NULL){
+    public function newModel($resource = NULL){
         // use controller model if none provided
-        if($model === NULL){
-            $model = $this->resourceName();
+        if($resource === NULL){
+            $resource = $this->resourceName();
         }
         // get model namespace
-        $model = $this->api_namespace."Models\\".$model;
+        $model = $this->api_namespace."Models\\".ucfirst(rtrim(str_replace('ownedBy','',$resource),'s'));
         // return a new mode
         return new $model;
     }
@@ -194,8 +194,7 @@ abstract class Controller extends LumenController
      */
     protected function validateRelationshipsIds($ids=[], $type){
         // relatedModel
-        $relatedModel = $this->api_namespace.'Models\\'.ucfirst(substr($type,0,-1));
-        $relatedModel = new $relatedModel;
+        $relatedModel = $this->newModel($type);
         // check ids
         foreach($ids as $id){
             // return error if wrong type or item does not exist

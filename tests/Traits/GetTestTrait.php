@@ -179,7 +179,7 @@ trait GetTestTrait
             $received = $this->getResponseArray($response)['data'][0];
             // ASSERTIONS
             $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-            $this->assertValid($received, $this->resources[$relationship]->blueprint());
+            $this->assertValid($received, $this->resources[strtolower(str_replace('ownedBy','',$relationship))]->blueprint());
         }
     }
     /**
