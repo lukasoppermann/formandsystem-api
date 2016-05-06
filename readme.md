@@ -3,7 +3,7 @@
 ## Endpoints
 ### Collections
 Relationships | inverse Relationships
--- | --
+--- | ---
 pages | ownedByPages
 collections | ownedByCollections
 fragments | ownedByFragments
@@ -14,8 +14,8 @@ tags | -
 
 ### Fragments
 Relationships | inverse Relationships
- | ownedByPages
- -- | --
+--- | ---
+- | ownedByPages
 collections | ownedByCollections
 fragments | ownedByFragments
 metadetails | -
@@ -25,8 +25,8 @@ files | -
 
 ### Images
 Relationships | inverse Relationships
--- | --
+--- | ---
 images | ownedByImages
- | ownedByCollections
- | ownedByFragments
+- | ownedByCollections
+- | ownedByFragments
 metadetails | ownedByMetadetails
