@@ -26,7 +26,7 @@ class PagesTableSeeder extends Seeder
                 });
             }
             if( $i === 1 ){
-                $page->pages()->save(App\Api\V1\Models\Page::all()->random(1));
+                $page->collections()->save(factory('App\Api\V1\Models\Collection')->create());
                 App\Api\V1\Models\Collection::all()->random()->pages()->save($page);
             }
         });

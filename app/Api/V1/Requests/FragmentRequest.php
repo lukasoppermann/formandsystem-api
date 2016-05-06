@@ -37,7 +37,11 @@ class FragmentRequest extends AbstractResourceRequest
     public $relationships = [
         'ownedByPages',
         'fragments',
-        'images'
+        'ownedByFragments',
+        'collections',
+        'ownedByCollections',
+        'images',
+        'metadetails',
     ];
     /**
      * filter available in for the endpoint

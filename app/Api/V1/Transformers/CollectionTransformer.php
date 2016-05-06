@@ -20,6 +20,7 @@ class CollectionTransformer extends ApiTransformer
       */
     protected $availableIncludes = [
       'pages',
+      'ownedByPages',
       'collections',
       'ownedByCollections',
     ];
@@ -40,6 +41,13 @@ class CollectionTransformer extends ApiTransformer
     public function includePages( Collection $collection )
     {
         return $this->collection( $collection->pages, new PageTransformer, 'pages' );
+    }
+    /*
+     * include owning collections
+     */
+    public function includeOwnedByPages( Collection $collection )
+    {
+        return $this->collection( $collection->ownedByPages, new PageTransformer, 'pages' );
     }
     /*
      * include Collections

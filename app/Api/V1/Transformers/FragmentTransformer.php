@@ -19,8 +19,12 @@ class FragmentTransformer extends ApiTransformer
       */
     protected $availableIncludes = [
       'fragments',
+      'ownedByFragments',
+      'collections',
+      'ownedByCollections',
       'ownedByPages',
       'images',
+      'metadetails',
     ];
 
     public function transform(Fragment $fragment)
@@ -43,6 +47,11 @@ class FragmentTransformer extends ApiTransformer
         return $this->collection( $fragment->fragments, new FragmentTransformer, 'fragments' );
     }
 
+    public function includeOwnedByFragments( Fragment $fragment )
+    {
+        return $this->collection( $fragment->ownedByFragments, new FragmentTransformer, 'fragments' );
+    }
+
     public function includeImages( Fragment $fragment )
     {
         return $this->collection( $fragment->images, new ImageTransformer, 'images' );
@@ -51,5 +60,20 @@ class FragmentTransformer extends ApiTransformer
     public function includeOwnedByPages( Fragment $fragment )
     {
         return $this->collection( $fragment->ownedByPages, new PageTransformer, 'pages' );
+    }
+
+    public function includeOwnedByCollections( Fragment $fragment )
+    {
+        return $this->collection( $fragment->ownedBycollections, new CollectionTransformer, 'collections' );
+    }
+
+    public function includeCollections( Fragment $fragment )
+    {
+        return $this->collection( $fragment->collections, new CollectionTransformer, 'collections' );
+    }
+
+    public function includeMetadetails( Fragment $fragment )
+    {
+        return $this->collection( $fragment->metadetails, new MetadetailTransformer, 'metadetails' );
     }
 }
