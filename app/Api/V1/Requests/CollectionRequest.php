@@ -37,6 +37,8 @@ class CollectionRequest extends AbstractResourceRequest
         'ownedByPages',
         'collections',
         'ownedByCollections',
+        'fragments',
+        'ownedByFragments',
     ];
     /**
      * filter available in for the endpoint

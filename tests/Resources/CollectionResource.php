@@ -27,7 +27,11 @@ class CollectionResource extends ApiResource{
     public function relationships(){
         return [
             'pages',
-            'collections'
+            'ownedByPages',
+            'collections',
+            'ownedByCollections',
+            'fragments',
+            'ownedByFragments',
         ];
     }
     /**

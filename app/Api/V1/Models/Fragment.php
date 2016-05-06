@@ -50,41 +50,41 @@ class Fragment extends BaseModel
      */
     public function fragments()
     {
-        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Fragment', 'fragmentable'));
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable'));
     }
     /**
      * The fragments that belong to the fragment.
      */
     public function ownedByFragments()
     {
-        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable'));
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Fragment', 'fragmentable'));
     }
     /**
      * The images that belong to the fragment.
      */
     public function images()
     {
-        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Image', 'fragmentable'));
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Image', 'imageable'));
     }
     /**
      * The images that belong to the fragment.
      */
     public function collections()
     {
-        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Collection', 'fragmentable'));
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Collection', 'collectionable'));
     }
     /**
      * The fragments that belong to the fragment.
      */
     public function ownedByCollections()
     {
-        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Collection', 'collectionable'));
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Collection', 'fragmentable'));
     }
     /**
      * The fragments that belong to the fragment.
      */
     public function metadetails()
     {
-        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Metadetail', 'fragmentable'));
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Metadetail', 'metadetailable'));
     }
 }
