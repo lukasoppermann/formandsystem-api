@@ -7,3 +7,7 @@ Relationships | inverse Relationships
 pages | ownedByPages
 collections | ownedByCollections
 fragments | ownedByFragments
+images | -
+videos | -
+files | -
+tags | -
