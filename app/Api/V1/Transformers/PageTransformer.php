@@ -21,9 +21,10 @@ class PageTransformer extends ApiTransformer
     protected $availableIncludes = [
       'fragments',
       'collections',
+      'ownedByCollections',
       'metadetails',
       'pages',
-      'ownedbypages'
+      'ownedByPages'
     ];
 
     public function transform(Page $page)
@@ -53,6 +54,11 @@ class PageTransformer extends ApiTransformer
         return $this->collection( $page->collections, new CollectionTransformer, 'collections' );
     }
 
+    public function includeOwnedByCollections( Page $page )
+    {
+        return $this->collection( $page->ownedByCollections, new PageTransformer, 'collections' );
+    }
+
     public function includeMetadetails( Page $page )
     {
         return $this->collection( $page->metadetails, new MetadetailTransformer, 'metadetails' );
@@ -63,8 +69,8 @@ class PageTransformer extends ApiTransformer
         return $this->collection( $page->pages, new PageTransformer, 'pages' );
     }
 
-    public function includeOwnedbypages( Page $page )
+    public function includeOwnedByPages( Page $page )
     {
-        return $this->collection( $page->ownedbypages, new PageTransformer, 'pages' );
+        return $this->collection( $page->ownedByPages, new PageTransformer, 'pages' );
     }
 }

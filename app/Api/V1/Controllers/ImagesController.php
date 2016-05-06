@@ -13,12 +13,5 @@ use League\Flysystem\Sftp\SftpAdapter;
 
 class ImagesController extends ApiController
 {
-    /**
-     * The filters that are allowed in requests
-     *
-     * @var array
-     */
-    protected $availableFilters = [
-        'slug'
-    ];
+
 }

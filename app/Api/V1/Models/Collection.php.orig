@@ -39,6 +39,8 @@ class Collection extends BaseModel
         return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Page', 'collectionable'));
     }
     /**
+<<<<<<< HEAD
+=======
      * The collections that own this collection
      */
     public function ownedByPages()
@@ -46,6 +48,7 @@ class Collection extends BaseModel
         return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Page', 'pageable'));
     }
     /**
+>>>>>>> db-rel
      * The collections owned by the collection
      */
     public function collections()

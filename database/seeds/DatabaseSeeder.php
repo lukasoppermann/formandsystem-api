@@ -13,8 +13,7 @@ class DatabaseSeeder extends Seeder
         'pages',
         'fragments',
         'images',
-        'metadetails'
-        // 'page_fragment',
+        'metadetails',
     ];
 
     /**
@@ -25,11 +24,20 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
+        // empty tables
         foreach ($this->tables as $table) {
-            // empty table
             DB::table($table)->truncate();
-            // seed table
+        }
+        // seed DB
+        factory('App\Api\V1\Models\Collection', 5)->create();
+        factory('App\Api\V1\Models\Page', 20)->create();
+        factory('App\Api\V1\Models\Metadetail', 50)->create();
+        factory('App\Api\V1\Models\Fragment', 50)->create();
+        factory('App\Api\V1\Models\Fragment', 'section', 20)->create();
+        factory('App\Api\V1\Models\Image', 50)->create();
+
+        // run seeders for relationships
+        foreach ($this->tables as $table) {
             $this->call(ucfirst($table).'TableSeeder');
         }
 

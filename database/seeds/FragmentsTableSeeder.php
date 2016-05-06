@@ -13,9 +13,9 @@ class FragmentsTableSeeder extends Seeder
     {
         DB::table('fragmentables')->truncate();
         // create content fragments
-        factory('App\Api\V1\Models\Fragment', 50)->create();
-        // create section fragments
-        factory('App\Api\V1\Models\Fragment', 'section', 20)->create();
+        // factory('App\Api\V1\Models\Fragment', 50)->create();
+        // // create section fragments
+        // factory('App\Api\V1\Models\Fragment', 'section', 20)->create();
 
         // connect sections with content fragments
         App\Api\V1\Models\Fragment::where('type', 'section')->get()->slice(rand(1,5))->each(function($section) {

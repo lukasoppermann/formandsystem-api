@@ -28,10 +28,10 @@ class OauthSeeder extends Seeder
             DB::table($table)->truncate();
         }
 
-        Model::reguard();
-
         // seed table
         $this->call('ScopeTableSeeder');
         $this->call('CmsUser');
+
+        Model::reguard();
     }
 }

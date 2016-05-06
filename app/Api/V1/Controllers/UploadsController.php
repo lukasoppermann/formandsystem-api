@@ -11,12 +11,6 @@ use League\Flysystem\Sftp\SftpAdapter;
 class UploadsController extends ApiController
 {
     /**
-     * The resources name
-     *
-     * @var array
-     */
-    protected $resource = 'uploads';
-    /**
      * allowed image mime types
      *
      * @var [array]

@@ -166,9 +166,9 @@ abstract class ApiController extends Controller
             // return relations
             foreach($value['data'] as $relationship){
                 // get related model namespace
-                $relatedModelName = $this->api_namespace."Models\\".substr(ucfirst($key),0,-1);
+                $relatedModel = $this->newModel($key);
                 // get related Model
-                $relatedModel = (new $relatedModelName)->find($relationship['id']);
+                $relatedModel = $relatedModel->find($relationship['id']);
                 $relationships[$key][] = $relatedModel;
                 // valudate resource
                 $this->validateResourceExists(

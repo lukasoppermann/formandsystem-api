@@ -16,7 +16,7 @@ class CreateCollectionablesTable extends Migration
             $table->increments('id');
 
             $table->uuid('collection_id')->index();
-            $table->foreign('collection_id')->references('id')->on('collection')->onDelete('cascade');
+            $table->foreign('collection_id')->references('id')->on('collection');
 
             $table->uuid('collectionable_id')->index();
             $table->string('collectionable_type');

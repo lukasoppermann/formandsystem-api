@@ -16,7 +16,7 @@ class CreateFragmentablesTable extends Migration
             $table->increments('id');
 
             $table->uuid('fragment_id')->index();
-            $table->foreign('fragment_id')->references('id')->on('fragments')->onDelete('cascade');
+            $table->foreign('fragment_id')->references('id')->on('fragments');
 
             $table->uuid('fragmentable_id')->index();
             $table->string('fragmentable_type');

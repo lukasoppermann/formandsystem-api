@@ -42,9 +42,13 @@ class PageRequest extends AbstractResourceRequest
      */
     public $relationships = [
         'pages',
+<<<<<<< HEAD
+        'collections',
+=======
         'ownedByPages',
         'collections',
         'ownedByCollections',
+>>>>>>> db-rel
         'fragments',
         'metadetails'
     ];
@@ -54,8 +58,12 @@ class PageRequest extends AbstractResourceRequest
      * @var [array]
      */
     public $filter = [
+<<<<<<< HEAD
+        'slug'
+=======
         'slug',
         'published',
         'language',
+>>>>>>> db-rel
     ];
 }

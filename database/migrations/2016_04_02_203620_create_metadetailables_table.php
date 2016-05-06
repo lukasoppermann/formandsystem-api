@@ -16,7 +16,7 @@ class CreateMetadetailablesTable extends Migration
             $table->increments('id');
 
             $table->uuid('metadetail_id')->index();
-            $table->foreign('metadetail_id')->references('id')->on('metadetail')->onDelete('cascade');
+            $table->foreign('metadetail_id')->references('id')->on('metadetail');
 
             $table->uuid('metadetailable_id')->index();
             $table->string('metadetailable_type');

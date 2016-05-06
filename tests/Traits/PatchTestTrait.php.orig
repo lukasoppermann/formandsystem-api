@@ -258,7 +258,11 @@ trait PatchTestTrait
             // get related model
             $relatedModel = $this->newModel($relationship);
             // build relationship data
+<<<<<<< HEAD
+            $related = (new $relatedModel)->all()->random(1);
+=======
             $related = $relatedModel->all()->random(1);
+>>>>>>> db-rel
             $relationshipData[$relationship]['data'] = [
                 'id' => $related->id,
                 'type' => $relationship

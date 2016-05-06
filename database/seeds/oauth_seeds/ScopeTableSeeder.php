@@ -11,26 +11,29 @@ class ScopeTableSeeder extends Seeder {
 	 */
 	public function run()
 	{
-		$cms_scopes = [
+		$scopes = [
 			[
 				'id' => 'client.create',
 				'description' => 'create an api client',
+				'created_at' => '0000-00-00',
+				'updated_at' => '0000-00-00'
 			],
 			[
 				'id' => 'client.delete',
 				'description' => 'delete an api client',
+				'created_at' => '0000-00-00',
+				'updated_at' => '0000-00-00'
 			],
 			[
 				'id' => 'client.get',
 				'description' => 'get an api client',
+				'created_at' => '0000-00-00',
+				'updated_at' => '0000-00-00'
 			]
 		];
 
-		$client_scopes = [
 
-		];
-
-		DB::table('oauth_scopes')->insert(array_merge($cms_scopes, $client_scopes));
+		DB::table('oauth_scopes')->insert($scopes);
 	}
 
 }

@@ -37,15 +37,15 @@ trait PostTestTrait
         $relationshipData = [];
         foreach($this->relationships()as $relationship){
             // get related model
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            $relatedModel = $this->newModel($relationship);
             // build relationship data
             $relationshipData[$relationship]['data'] = [
                 [
-                    'id' => (new $relatedModel)->all()->random(1)->id,
+                    'id' => $relatedModel->all()->random(1)->id,
                     'type' => $relationship
                 ],
                 [
-                    'id' => (new $relatedModel)->all()->random(1)->id,
+                    'id' => $relatedModel->all()->random(1)->id,
                     'type' => $relationship
                 ]
             ];
@@ -82,10 +82,10 @@ trait PostTestTrait
         $relationshipData = [];
         foreach($this->relationships()as $relationship){
             // get related model
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            $relatedModel = $this->newModel($relationship);
             // build relationship data
             $relationshipData[$relationship]['data'] = [
-                'id' => (new $relatedModel)->all()->random(1)->id,
+                'id' => $relatedModel->all()->random(1)->id,
                 'type' => $relationship
             ];
         }
@@ -119,7 +119,7 @@ trait PostTestTrait
     public function postResourceWithWrongRelationships(){
         if(count($this->relationships()) !== 0){
             // PREPARE
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($this->relationships()[0],0,-1));
+            $relatedModel = $this->newModel($this->relationships()[0]);
             // POST
             $response = $this->client->request('POST', '/'.$this->resource, [
                 'headers' => ['Accept' => 'application/json'],
@@ -129,7 +129,7 @@ trait PostTestTrait
                         ['relationships' =>
                             ['wrongRelationship' =>
                                 ['data' => [
-                                    'id' => (new $relatedModel)->all()->random(1)->id,
+                                    'id' => $relatedModel->all()->random(1)->id,
                                     'type' => $this->relationships()[0]
                                 ]]
                             ]
@@ -150,7 +150,7 @@ trait PostTestTrait
     public function postResourceWithWrongRelationshipTypes(){
         if(count($this->relationships()) !== 0){
             // PREPARE
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($this->relationships()[0],0,-1));
+            $relatedModel = $this->newModel($this->relationships()[0]);
             // POST
             $response = $this->client->request('POST', '/'.$this->resource, [
                 'headers' => ['Accept' => 'application/json'],
@@ -160,7 +160,7 @@ trait PostTestTrait
                         ['relationships' =>
                             [$this->relationships()[0] =>
                                 ['data' => [
-                                    'id' => (new $relatedModel)->all()->random(1)->id,
+                                    'id' => $relatedModel->all()->random(1)->id,
                                     'type' => 'wrongRelationship'
                                 ]]
                             ]
@@ -179,7 +179,7 @@ trait PostTestTrait
                         ['relationships' =>
                             [$this->relationships()[0] =>
                                 ['data' => [[
-                                    'id' => (new $relatedModel)->all()->random(1)->id,
+                                    'id' => $relatedModel->all()->random(1)->id,
                                     'type' => 'wrongRelationship'
                                 ]]]
                             ]
@@ -286,7 +286,8 @@ trait PostTestTrait
     public function postResourceIncompleteRelationship(){
         if(count($this->relationships()) !== 0){
             // PREPARE
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($this->relationships()[0],0,-1));
+            // $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($this->relationships()[0],0,-1));
+            $relatedModel = $this->newModel($this->relationships()[0]);
             // POST
             $response = $this->client->request('POST', '/'.$this->resource, [
                 'headers' => ['Accept' => 'application/json'],
@@ -296,7 +297,7 @@ trait PostTestTrait
                         ['relationships' =>
                             [$this->relationships()[0] =>
                                 ['data' => [
-                                    'id' => (new $relatedModel)->all()->random(1)->id
+                                    'id' => $relatedModel->all()->random(1)->id
                                 ]]
                             ]
                         ]
@@ -314,7 +315,7 @@ trait PostTestTrait
                         ['relationships' =>
                             [$this->relationships()[0] =>
                                 ['data' => [
-                                    ['id' => (new $relatedModel)->all()->random(1)->id]
+                                    ['id' => $relatedModel->all()->random(1)->id]
                                 ]]
                             ]
                         ]
@@ -340,7 +341,8 @@ trait PostTestTrait
         // PREPARE
         foreach($this->relationships() as $relationship){
             // get related model
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            // $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            $relatedModel = $this->newModel($relationship);
             // delete all relationships for testing
             $model->{$relationship}()->detach();
             $this->assertEquals(count($model->{$relationship}),0);
@@ -349,7 +351,7 @@ trait PostTestTrait
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
                     "data" => [
-                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'id' => $relatedModel->all()->random(1)->id,
                         'type' => $relationship
                     ]
                 ])
@@ -365,7 +367,7 @@ trait PostTestTrait
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
                     "data" => [[
-                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'id' => $relatedModel->all()->random(1)->id,
                         'type' => $relationship
                     ]]
                 ])
@@ -389,13 +391,13 @@ trait PostTestTrait
             $model->{$relationship}()->detach();
             $this->assertEquals(count($model->{$relationship}),0);
             // get related model
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            $relatedModel = $this->newModel($relationship);
             // POST
             $response = $this->client->request('POST', '/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship, [
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
                     "data" => [
-                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'id' => $relatedModel->all()->random(1)->id,
                         'type' => 'wrongType'
                     ]
                 ])
@@ -427,13 +429,13 @@ trait PostTestTrait
     public function postRelationshipsWithWrongResourceId(){
         foreach($this->relationships() as $relationship){
             // get related model
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            $relatedModel = $this->newModel($relationship);
             // POST
             $response = $this->client->request('POST', '/'.$this->resource.'/1/relationships/'.$relationship, [
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
                     "data" => [
-                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'id' => $relatedModel->all()->random(1)->id,
                         'type' => $relationship
                     ]
                 ])
@@ -452,13 +454,13 @@ trait PostTestTrait
         $model = $this->model->first();
         foreach($this->relationships() as $relationship){
             // get related model
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            $relatedModel = $this->newModel($relationship);
             // POST
             $response = $this->client->request('POST', '/'.$this->resource.'/'.$model->id.'/relationships/wrongRelationship', [
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
                     "data" => [
-                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'id' => $relatedModel->all()->random(1)->id,
                         'type' => $relationship
                     ]
                 ])

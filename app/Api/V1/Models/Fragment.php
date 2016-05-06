@@ -41,9 +41,9 @@ class Fragment extends BaseModel
     /**
      * The pages that belong to the fragment.
      */
-    public function pages()
+    public function ownedByPages()
     {
-        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Page', 'fragmentable'));
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Page', 'pageable'));
     }
     /**
      * The fragments that belong to the fragment.

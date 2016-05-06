@@ -11,7 +11,8 @@ class MetadetailsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory('App\Api\V1\Models\Metadetail', 50)->create();
+        DB::table('metadetailables')->truncate();
+        // factory('App\Api\V1\Models\Metadetail', 50)->create();
 
         App\Api\V1\Models\Page::all()->each(function($page){
             if( rand(0,2) !== 0 ){

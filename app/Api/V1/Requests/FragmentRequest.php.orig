@@ -35,7 +35,11 @@ class FragmentRequest extends AbstractResourceRequest
      * @var [array]
      */
     public $relationships = [
+<<<<<<< HEAD
+        'pages',
+=======
         'ownedByPages',
+>>>>>>> db-rel
         'fragments',
         'images'
     ];
