@@ -27,9 +27,12 @@ files | -
 Relationships | inverse Relationships
 --- | ---
 images | ownedByImages
+metadetails | ownedByMetadetails
 - | ownedByCollections
 - | ownedByFragments
-metadetails | ownedByMetadetails
+- | ownedByVideos
+- | ownedByFiles
+tags | -
 
 ### Metadetails
 Relationships | inverse Relationships
@@ -47,4 +50,28 @@ pages | ownedByPages
 fragments | -
 collections | ownedByCollections
 metadetails | -
+tags | -
+
+### Tags (not implemented)
+Relationships | inverse Relationships
+--- | ---
+- | ownedByCollections
+pages | -
+images | -
+videos | -
+files | -
+
+### Videos (not implemented)
+Relationships | inverse Relationships
+--- | ---
+- | ownedByCollections
+- | ownedByFragments
+images | -
+tags | -
+### Files (not implemented)
+Relationships | inverse Relationships
+--- | ---
+- | ownedByCollections
+- | ownedByFragments
+images | -
 tags | -
