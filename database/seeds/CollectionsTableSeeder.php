@@ -18,10 +18,15 @@ class CollectionsTableSeeder extends Seeder {
 			for($i = rand(1,4); $i > 0; $i--){
             	$collection->collections()->save(factory('App\Api\V1\Models\Collection')->create());
 			}
-		        'name' => 'test test',
-		        'slug' => 'test-test',
-			]));
         });
+		App\Api\V1\Models\Collection::all()->each(function($collection){
+			$i = rand(0,2);
+			if( $i === 2 ){
+				for($i = rand(1,4); $i > 0; $i--){
+					$collection->pages()->save(factory('App\Api\V1\Models\Page')->create());
+				}
+			}
+		});
 	}
 
 }

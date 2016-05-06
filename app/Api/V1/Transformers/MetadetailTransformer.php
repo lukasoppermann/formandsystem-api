@@ -20,7 +20,10 @@ class MetadetailTransformer extends ApiTransformer
       * @var array
       */
     protected $availableIncludes = [
-      'pages'
+      'ownedByPages',
+      'ownedByFragments',
+      'ownedByImages',
+      'images',
     ];
 
     public function transform(Metadetail $metadetails)
@@ -38,9 +41,30 @@ class MetadetailTransformer extends ApiTransformer
     /*
      * include Pages
      */
-    public function includePages( Metadetail $metadetail )
+    public function includeOwnedByPages( Metadetail $metadetail )
     {
-        return $this->collection( $metadetail->pages, new PageTransformer, 'pages' );
+        return $this->collection( $metadetail->ownedByPages, new PageTransformer, 'pages' );
+    }
+    /*
+     * include Pages
+     */
+    public function includeOwnedByFragments( Metadetail $metadetail )
+    {
+        return $this->collection( $metadetail->ownedByFragments, new FragmentTransformer, 'fragments' );
+    }
+    /*
+     * include Pages
+     */
+    public function includeOwnedByImages( Metadetail $metadetail )
+    {
+        return $this->collection( $metadetail->ownedByImages, new ImageTransformer, 'images' );
+    }
+    /*
+     * include Pages
+     */
+    public function images( Metadetail $metadetail )
+    {
+        return $this->collection( $metadetail->images, new ImageTransformer, 'images' );
     }
 
 }

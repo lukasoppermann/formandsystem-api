@@ -38,10 +38,31 @@ class Metadetail extends BaseModel
      */
     public $incrementing = false;
     /**
-     * The pages that iwn the metadetails.
+     * The pages that belong to the fragment.
      */
-    public function pages()
+    public function ownedByPages()
     {
         return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Page', 'metadetailable'));
+    }
+    /**
+     * The pages that belong to the fragment.
+     */
+    public function ownedByFragments()
+    {
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Fragment', 'metadetailable'));
+    }
+    /**
+     * The images that belong to the fragment.
+     */
+    public function images()
+    {
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Image', 'imageable'));
+    }
+    /**
+     * The pages that belong to the fragment.
+     */
+    public function ownedByImages()
+    {
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Image', 'metadetailable'));
     }
 }

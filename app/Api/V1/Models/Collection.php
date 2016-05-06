@@ -36,27 +36,41 @@ class Collection extends BaseModel
      */
     public function pages()
     {
-        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Page', 'collectionable'));
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Page', 'pageable'));
     }
     /**
      * The collections that own this collection
      */
     public function ownedByPages()
     {
-        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Page', 'pageable'));
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Page', 'collectionable'));
     }
     /**
      * The collections owned by the collection
      */
     public function collections()
     {
-        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Collection', 'collectionable'));
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Collection', 'collectionable'));
     }
     /**
      * The collections that own this collection
      */
     public function ownedByCollections()
     {
-        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Collection', 'collectionable'));
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Collection', 'collectionable'));
+    }
+    /**
+     * The pages that belong to the collection.
+     */
+    public function fragments()
+    {
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable'));
+    }
+    /**
+     * The collections that own this collection
+     */
+    public function ownedByFragments()
+    {
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Fragment', 'collectionable'));
     }
 }

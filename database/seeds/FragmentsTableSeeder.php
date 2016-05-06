@@ -29,5 +29,11 @@ class FragmentsTableSeeder extends Seeder
                 $section->fragments()->save($fragment);
             });
         });
+        // add collections to some fragments
+        App\Api\V1\Models\Fragment::where('type', 'collection')->get()->each(function($fragment){
+            App\Api\V1\Models\Collection::all()->random(rand(1,3))->each(function($collection) use ($fragment){
+                $fragment->collections()->save($collection);
+            });
+        });
     }
 }

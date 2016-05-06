@@ -165,10 +165,13 @@ trait GetTestTrait
      */
     public function getRelated()
     {
+        // used for logging
+        $log = [];
         // get model
         $model = $this->model->withTrashed()->first();
         // loop through relationships
         foreach($this->relationships() as $relationship){
+            $log[] = $this->resource.' -> '.$relationship;
             // add relationships
             $this->addRelatedItems($model, $relationship);
             // CALL
@@ -181,6 +184,7 @@ trait GetTestTrait
             $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
             $this->assertValid($received, $this->resources[strtolower(str_replace('ownedBy','',$relationship))]->blueprint());
         }
+        \LOG::debug(json_encode($log));
     }
     /**
      * @test getting the related resource e.g. /pages using a wrong resource id

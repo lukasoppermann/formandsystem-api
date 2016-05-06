@@ -26,10 +26,12 @@ class PageResource extends ApiResource{
      */
     public function relationships(){
         return [
-            'metadetails',
+            'pages',
+            'ownedByPages',
             'collections',
+            'ownedByCollections',
             'fragments',
-            // 'pages'
+            'metadetails',
         ];
     }
     /**

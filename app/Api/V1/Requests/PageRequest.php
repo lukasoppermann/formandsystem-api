@@ -46,7 +46,7 @@ class PageRequest extends AbstractResourceRequest
         'collections',
         'ownedByCollections',
         'fragments',
-        'metadetails'
+        'metadetails',
     ];
     /**
      * filter available in for the endpoint

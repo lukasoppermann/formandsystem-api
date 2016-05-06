@@ -19,12 +19,12 @@ class PageTransformer extends ApiTransformer
       * @var array
       */
     protected $availableIncludes = [
-      'fragments',
-      'collections',
-      'ownedByCollections',
-      'metadetails',
-      'pages',
-      'ownedByPages'
+        'pages',
+        'ownedByPages',
+        'collections',
+        'ownedByCollections',
+        'fragments',
+        'metadetails',
     ];
 
     public function transform(Page $page)

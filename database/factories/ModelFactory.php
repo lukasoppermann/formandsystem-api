@@ -42,7 +42,7 @@ $factory->define(App\Api\V1\Models\Page::class, function ($faker) {
 $factory->define(App\Api\V1\Models\Fragment::class, function ($faker) {
     return [
         'id' => $uuid = $faker->uuid,
-        'type' => $faker->randomElement(['text', 'quote', 'image', 'video']),
+        'type' => $faker->randomElement(['text', 'quote', 'image', 'video','collection']),
         'name' => (rand(0,1) === 1 ? 'Fragment Name '.rand(1,100) : null),
         'data' => $faker->paragraph(4),
     ];

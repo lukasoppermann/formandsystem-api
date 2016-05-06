@@ -26,8 +26,12 @@ class ImageResource extends ApiResource{
      */
     public function relationships(){
         return [
-            'fragments',
-            'images'
+            'images',
+            'ownedByImages',
+            'ownedByCollections',
+            'ownedByFragments',
+            'metadetails',
+            'ownedByMetadetails',
         ];
     }
     /**

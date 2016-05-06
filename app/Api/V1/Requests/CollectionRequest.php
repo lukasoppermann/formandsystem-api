@@ -34,8 +34,11 @@ class CollectionRequest extends AbstractResourceRequest
      */
     public $relationships = [
         'pages',
+        'ownedByPages',
         'collections',
         'ownedByCollections',
+        'fragments',
+        'ownedByFragments',
     ];
     /**
      * filter available in for the endpoint
