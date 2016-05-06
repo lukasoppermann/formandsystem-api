@@ -97,8 +97,7 @@ trait TestTrait
         // remove relationships
         $model->{$relationship}()->detach();
         // get related model
-        $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
-        $relatedModel = (new $relatedModel);
+        $relatedModel = $this->newModel($relationship);
         // get related items
         $ids = $relatedModel->all()->random(2)->lists('id')->toArray();
         // remove relationships to not have circular relationships
@@ -110,5 +109,18 @@ trait TestTrait
         }
         // attach models
         $model->{$relationship}()->attach($ids);
+    }
+    /**
+     * get a new model
+     *
+     * @method newModel
+     *
+     * @param  [string]          $resourceName
+     *
+     * @return [Model]
+     */
+    protected function newModel($resourceName){
+        $relatedModel = "App\Api\V1\Models\\".ucfirst(substr(str_replace('ownedBy','',$resourceName),0,-1));
+        return (new $relatedModel);
     }
 }

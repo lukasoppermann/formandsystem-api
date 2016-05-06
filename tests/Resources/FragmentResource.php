@@ -26,7 +26,7 @@ class FragmentResource extends ApiResource{
      */
     public function relationships(){
         return [
-            'pages',
+            'ownedByPages',
             'images',
             'fragments'
         ];

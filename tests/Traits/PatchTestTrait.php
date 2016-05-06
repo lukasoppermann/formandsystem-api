@@ -210,15 +210,15 @@ trait PatchTestTrait
             // remove related
             $model->{$relationship}()->detach();
             // get related model
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            $relatedModel = $this->newModel($relationship);
             // build relationship data
             $relationshipData[$relationship]['data'] = [
                 [
-                    'id' => (new $relatedModel)->all()->random(1)->id,
+                    'id' => $relatedModel->all()->random(1)->id,
                     'type' => $relationship
                 ],
                 [
-                    'id' => (new $relatedModel)->all()->random(1)->id,
+                    'id' => $relatedModel->all()->random(1)->id,
                     'type' => $relationship
                 ]
             ];
@@ -256,9 +256,9 @@ trait PatchTestTrait
         $relationshipData = [];
         foreach($this->relationships() as $relationship){
             // get related model
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            $relatedModel = $this->newModel($relationship);
             // build relationship data
-            $related = (new $relatedModel)->all()->random(1);
+            $related = $relatedModel->all()->random(1);
             $relationshipData[$relationship]['data'] = [
                 'id' => $related->id,
                 'type' => $relationship
@@ -296,7 +296,7 @@ trait PatchTestTrait
         $model = $this->model->first();
         if(count($this->relationships()) !== 0){
             // PREPARE
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($this->relationships()[0],0,-1));
+            $relatedModel = $this->newModel($this->relationships()[0]);
             // POST
             $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$model->id, [
                 'headers' => ['Accept' => 'application/json'],
@@ -307,7 +307,7 @@ trait PatchTestTrait
                         ['relationships' =>
                             ['wrongRelationship' =>
                                 ['data' => [
-                                    'id' => (new $relatedModel)->all()->random(1)->id,
+                                    'id' => $relatedModel->all()->random(1)->id,
                                     'type' => $this->relationships()[0]
                                 ]]
                             ]
@@ -330,7 +330,7 @@ trait PatchTestTrait
         $model = $this->model->first();
         if(count($this->relationships()) !== 0){
             // PREPARE
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($this->relationships()[0],0,-1));
+            $relatedModel = $this->newModel($this->relationships()[0]);
             // POST
             $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$model->id, [
                 'headers' => ['Accept' => 'application/json'],
@@ -341,7 +341,7 @@ trait PatchTestTrait
                         ['relationships' =>
                             [$this->relationships()[0] =>
                                 ['data' => [
-                                    'id' => (new $relatedModel)->all()->random(1)->id,
+                                    'id' => $relatedModel->all()->random(1)->id,
                                     'type' => 'wrongRelationship'
                                 ]]
                             ]
@@ -361,7 +361,7 @@ trait PatchTestTrait
                         ['relationships' =>
                             [$this->relationships()[0] =>
                                 ['data' => [[
-                                    'id' => (new $relatedModel)->all()->random(1)->id,
+                                    'id' => $relatedModel->all()->random(1)->id,
                                     'type' => 'wrongRelationship'
                                 ]]]
                             ]
@@ -390,7 +390,7 @@ trait PatchTestTrait
         // PREPARE
         foreach($this->relationships() as $relationship){
             // get related model
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            $relatedModel = $this->newModel($relationship);
             // delete all relationships for testing
             $model->{$relationship}()->detach();
             $this->assertEquals(count($model->{$relationship}),0);
@@ -399,7 +399,7 @@ trait PatchTestTrait
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
                     "data" => [
-                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'id' => $relatedModel->all()->random(1)->id,
                         'type' => $relationship
                     ]
                 ])
@@ -412,7 +412,7 @@ trait PatchTestTrait
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
                     "data" => [
-                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'id' => $relatedModel->all()->random(1)->id,
                         'type' => $relationship
                     ]
                 ])
@@ -442,13 +442,13 @@ trait PatchTestTrait
     public function testPatchRelationshipsWithWrongResourceId(){
         foreach($this->relationships() as $relationship){
             // get related model
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            $relatedModel = $this->newModel($relationship);
             // POST
             $response = $this->client->request('PATCH', '/'.$this->resource.'/1/relationships/'.$relationship, [
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
                     "data" => [
-                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'id' => $relatedModel->all()->random(1)->id,
                         'type' => $relationship
                     ]
                 ])
@@ -471,13 +471,13 @@ trait PatchTestTrait
             $model->{$relationship}()->detach();
             $this->assertEquals($model->find($model->id)->{$relationship}->count(),0);
             // get related model
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            $relatedModel = $this->newModel($relationship);
             // POST
             $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship, [
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
                     "data" => [
-                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'id' => $relatedModel->all()->random(1)->id,
                         'type' => 'wrongType'
                     ]
                 ])
@@ -510,13 +510,13 @@ trait PatchTestTrait
         $model = $this->model->first();
         foreach($this->relationships() as $relationship){
             // get related model
-            $relatedModel = "App\Api\V1\Models\\".ucfirst(substr($relationship,0,-1));
+            $relatedModel = $this->newModel($relationship);
             // POST
             $response = $this->client->request('PATCH', '/'.$this->resource.'/'.$model->id.'/relationships/wrongRelationship', [
                 'headers' => ['Accept' => 'application/json'],
                 'body' => json_encode([
                     "data" => [
-                        'id' => (new $relatedModel)->all()->random(1)->id,
+                        'id' => $relatedModel->all()->random(1)->id,
                         'type' => $relationship
                     ]
                 ])
