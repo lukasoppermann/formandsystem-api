@@ -2,7 +2,7 @@
 
 Endpoint | Relationship | Inverse relationship
 --- | --- | ---
-Collection | |
-| pages | ownedByPages
-| collections | ownedByCollections
-| fragments | ownedByFragments
+Collection
+  | pages | ownedByPages
+  | collections | ownedByCollections
+  | fragments | ownedByFragments
