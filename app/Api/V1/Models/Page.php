@@ -60,6 +60,13 @@ class Page extends BaseModel
         return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Collection', 'collectionable'));
     }
     /**
+     * The Collections that belongs to the page.
+     */
+    public function ownedByCollections()
+    {
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Collection', 'pageable'));
+    }
+    /**
      * The metadetails that belongs to the page.
      */
     public function metadetails()
@@ -71,13 +78,13 @@ class Page extends BaseModel
      */
     public function pages()
     {
-        return $this->relationshipTrashedFilter($this->hasMany('App\Api\V1\Models\Page', 'parent_id'));
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Page', 'pageable'));
     }
     /**
      * The pages that belongs to the page.
      */
-    public function ownedbypages()
+    public function ownedByPages()
     {
-        return $this->relationshipTrashedFilter($this->belongsTo('App\Api\V1\Models\Page', 'parent_id'));
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Page', 'pageable'));
     }
 }

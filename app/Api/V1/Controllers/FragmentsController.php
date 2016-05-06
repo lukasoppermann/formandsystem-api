@@ -10,31 +10,5 @@ use Illuminate\Http\Request;
 
 class FragmentsController extends ApiController
 {
-    /**
-     * The relationships a resource can have
-     *
-     * @var array
-     */
-    // protected $relationships = [
-    //     'pages',
-    //     'images',
-    //     'fragments',
-    // ];
-    /**
-     * The filters that are allowed in requests
-     *
-     * @var array
-     */
-    protected $availableFilters = [
-        'type',
-        'name',
-        'withTrashed'
-    ];
-    /**
-     * The resources name
-     *
-     * @var array
-     */
-    protected $resource = 'fragments';
 
 }

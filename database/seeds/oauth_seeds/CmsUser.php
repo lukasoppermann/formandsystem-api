@@ -14,7 +14,9 @@ class CmsUser extends Seeder {
 		DB::table('oauth_clients')->insert([
 			'id' 		=> 'formandsystem',
 			'secret' 	=> bin2hex(random_bytes(30)),
-			'name' 		=> 'Form&System'
+			'name' 		=> 'Form&System',
+			'created_at' => '0000-00-00',
+			'updated_at' => '0000-00-00'
 		]);
 		DB::table('oauth_client_scopes')->where('client_id', 'formandsystem')->delete();
 
@@ -23,14 +25,20 @@ class CmsUser extends Seeder {
 				[
 					'client_id' => 'formandsystem',
 					'scope_id' => 'client.create',
+					'created_at' => '0000-00-00',
+					'updated_at' => '0000-00-00'
 				],
 				[
 					'client_id' => 'formandsystem',
 					'scope_id' => 'client.delete',
+					'created_at' => '0000-00-00',
+					'updated_at' => '0000-00-00'
 				],
 				[
 					'client_id' => 'formandsystem',
 					'scope_id' => 'client.get',
+					'created_at' => '0000-00-00',
+					'updated_at' => '0000-00-00'
 				]
 			]
 		);

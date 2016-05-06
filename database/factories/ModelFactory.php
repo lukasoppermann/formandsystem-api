@@ -14,7 +14,7 @@
 | Collection
 */
 $factory->define(App\Api\V1\Models\Collection::class, function ($faker) {
-    $name = $faker->words(rand(1,2), true);
+    $name = 'Collection Name '.rand(1,100);
     return [
         'id' => $faker->uuid,
         'name' => $name,
@@ -27,7 +27,7 @@ $factory->define(App\Api\V1\Models\Collection::class, function ($faker) {
 $factory->define(App\Api\V1\Models\Page::class, function ($faker) {
     return [
         'id'                => $faker->uuid,
-        'menu_label'        => $pageName = $faker->words(rand(1,2), true),
+        'menu_label'        => $pageName = 'Page Name '.rand(1,100),
         'title'             => $faker->sentence(4),
         'description'       => $faker->paragraph(4),
         'slug'              => str_replace(' ','-',$pageName),
@@ -43,7 +43,7 @@ $factory->define(App\Api\V1\Models\Fragment::class, function ($faker) {
     return [
         'id' => $uuid = $faker->uuid,
         'type' => $faker->randomElement(['text', 'quote', 'image', 'video']),
-        'name' => (rand(0,1) === 1 ? $faker->word : null),
+        'name' => (rand(0,1) === 1 ? 'Fragment Name '.rand(1,100) : null),
         'data' => $faker->paragraph(4),
     ];
 });
@@ -52,7 +52,7 @@ $factory->defineAs(App\Api\V1\Models\Fragment::class, 'section', function ($fake
     return [
         'id' => $faker->uuid,
         'type' => 'section',
-        'name' => (rand(0,1) === 1 ? $faker->word : null),
+        'name' => (rand(0,1) === 1 ? 'Fragment Section Name '.rand(1,100) : null),
         'data' => null,
     ];
 });
@@ -66,7 +66,7 @@ $factory->define(App\Api\V1\Models\Image::class, function ($faker) {
     return [
         'id'                => $faker->uuid,
         'link'              => $faker->imageUrl($width, $height, 'cats'),
-        'slug'              => $faker->slug(),
+        'slug'              => 'image-slug-'.rand(1,100),
         'bytesize'          => rand(2000,60000),
         'width'             => $width,
         'height'            => $height,

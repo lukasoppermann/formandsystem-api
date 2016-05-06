@@ -42,7 +42,9 @@ class PageRequest extends AbstractResourceRequest
      */
     public $relationships = [
         'pages',
+        'ownedByPages',
         'collections',
+        'ownedByCollections',
         'fragments',
         'metadetails'
     ];
@@ -52,6 +54,8 @@ class PageRequest extends AbstractResourceRequest
      * @var [array]
      */
     public $filter = [
-        'slug'
+        'slug',
+        'published',
+        'language',
     ];
 }

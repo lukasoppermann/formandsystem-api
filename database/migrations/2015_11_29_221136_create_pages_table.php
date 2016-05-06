@@ -20,7 +20,6 @@ class CreatePagesTable extends Migration
             $table->string('slug')->index()->nullable();
             $table->boolean('published');
             $table->string('language', 2)->nullable();
-            $table->uuid('parent_id')->nullable();
             $table->timestamps();
 			$table->softDeletes();
         });

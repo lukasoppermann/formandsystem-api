@@ -8,12 +8,6 @@ use Ramsey\Uuid\Uuid;
 
 class TokensController extends ApiController
 {
-    /**
-     * The resources name
-     *
-     * @var array
-     */
-    protected $resource = 'tokens';
     /*
      * create oauth user
      */

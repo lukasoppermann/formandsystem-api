@@ -19,7 +19,8 @@ class FragmentTransformer extends ApiTransformer
       */
     protected $availableIncludes = [
       'fragments',
-      'images'
+      'ownedByPages',
+      'images',
     ];
 
     public function transform(Fragment $fragment)
@@ -45,5 +46,10 @@ class FragmentTransformer extends ApiTransformer
     public function includeImages( Fragment $fragment )
     {
         return $this->collection( $fragment->images, new ImageTransformer, 'images' );
+    }
+
+    public function includeOwnedByPages( Fragment $fragment )
+    {
+        return $this->collection( $fragment->ownedByPages, new PageTransformer, 'pages' );
     }
 }

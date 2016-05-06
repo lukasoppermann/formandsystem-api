@@ -87,7 +87,7 @@ abstract class AbstractRequest
      */
     protected function isAuthorized(){
         if($this->authorize() !== true){
-            throw new Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+            throw new \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException(null, 'Failed to authorize the request due to missing scopes.');
         }
     }
     /**
@@ -368,9 +368,12 @@ abstract class AbstractRequest
      */
     protected function authorize()
     {
-        // $authorizer = app('oauth2-server.authorizer');
-        // $authorizer->validateAccessToken();
-        // \Log::debug($authorizer->getResourceOwnerId());
+        $authorizer = app('oauth2-server.authorizer');
+        $authorizer->validateAccessToken();
+        \Log::debug($authorizer->getResourceOwnerId());
+        if(!app('oauth2-server.authorizer')->hasScope('client.read')){
+            return false;
+        }
         // \Log::debug('none');
         // dd(app('oauth2-server.authorizer'));
         // \LOG::debug(app('oauth2-server.authorizer')->hasScope('foo'));

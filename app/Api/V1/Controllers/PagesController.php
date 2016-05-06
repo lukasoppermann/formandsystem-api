@@ -12,32 +12,5 @@ use Illuminate\Http\Request;
 
 class PagesController extends ApiController
 {
-    /**
-     * The filters that are allowed in requests
-     *
-     * @var array
-     */
-    protected $availableFilters = [
-        'slug',
-        'published',
-        'language',
-    ];
-    /**
-     * The relationships a resource can have
-     *
-     * @var array
-     */
-    // protected $relationships = [
-    //     'metadetails',
-    //     'collections',
-    //     'fragments',
-    //     'pages',
-    //     'ownedbypages'
-    // ];
-    /**
-     * The resources name
-     *
-     * @var array
-     */
-    protected $resource = 'pages';
+
 }

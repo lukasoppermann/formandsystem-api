@@ -20,21 +20,6 @@ abstract class Controller extends LumenController
      */
     protected $resource;
     /**
-     * All available api endpoints that have a resource
-     *
-     * @var api_endpoints
-     */
-    protected $api_endpoints = [
-        'clients',
-        'collections',
-        'fragments',
-        'images',
-        'metadetails',
-        'pages',
-        'tokens',
-        'uploads'
-    ];
-    /**
      * The number of items returned per page
      *
      * @var int
@@ -69,9 +54,7 @@ abstract class Controller extends LumenController
      * @return [type]
      */
     protected function getResourceFromUrl(Request $request){
-        if(in_array($request->segment(1), $this->api_endpoints)){
-            return $request->segment(1);
-        }
+        return $request->segment(1);
     }
     /**
      * returns current request
