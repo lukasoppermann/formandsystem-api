@@ -368,12 +368,13 @@ abstract class AbstractRequest
      */
     protected function authorize()
     {
-        $authorizer = app('oauth2-server.authorizer');
-        $authorizer->validateAccessToken();
-        \Log::debug($authorizer->getResourceOwnerId());
-        if(!app('oauth2-server.authorizer')->hasScope('client.read')){
-            return false;
-        }
+        // $authorizer = app('oauth2-server.authorizer');
+        // $authorizer->validateAccessToken();
+        //
+        // \Log::debug($authorizer->getResourceOwnerId());
+        // if(!app('oauth2-server.authorizer')->hasScope('client.read')){
+        //     return false;
+        // }
         // \Log::debug('none');
         // dd(app('oauth2-server.authorizer'));
         // \LOG::debug(app('oauth2-server.authorizer')->hasScope('foo'));
