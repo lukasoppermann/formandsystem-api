@@ -38,17 +38,45 @@ class Image extends BaseModel
      */
     protected $fillable = ['id','link','slug','bytesize','height','width'];
     /**
-     * The fragments that belong to the image.
-     */
-    public function fragments()
-    {
-        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Fragment', 'fragmentable'));
-    }
-    /**
      * The images that belong to the image.
      */
     public function images()
     {
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Image', 'imageable'));
+    }
+    /**
+     * The images that belong to the image.
+     */
+    public function ownedByImages()
+    {
         return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Image', 'imageable'));
+    }
+    /**
+     * The fragments that belong to the image.
+     */
+    public function ownedByFragments()
+    {
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Fragment', 'imageable'));
+    }
+    /**
+     * The fragments that belong to the fragment.
+     */
+    public function ownedByCollections()
+    {
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Collection', 'imageable'));
+    }
+    /**
+     * The images that belong to the image.
+     */
+    public function metadetails()
+    {
+        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Metadetail', 'metadetailable'));
+    }
+    /**
+     * The fragments that belong to the fragment.
+     */
+    public function ownedByMetadetails()
+    {
+        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Metadetail', 'imageable'));
     }
 }

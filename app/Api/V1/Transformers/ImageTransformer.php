@@ -20,8 +20,12 @@ class ImageTransformer extends ApiTransformer
       * @var array
       */
     protected $availableIncludes = [
-      'fragments',
-      'images'
+      'images',
+      'ownedByImages',
+      'ownedByCollections',
+      'ownedByFragments',
+      'metadetails',
+      'ownedByMetadetails',
     ];
 
     public function transform(Image $image)
@@ -45,18 +49,46 @@ class ImageTransformer extends ApiTransformer
         ];
     }
     /*
-     * include Fragmens
-     */
-    public function includeFragments( Image $image )
-    {
-        return $this->collection( $image->fragments, new FragmentTransformer, 'fragments' );
-    }
-    /*
      * include images
      */
     public function includeImages( Image $image )
     {
         return $this->collection( $image->images, new ImageTransformer, 'images' );
+    }
+    /*
+     * include images
+     */
+    public function includeOwnedByImages( Image $image )
+    {
+        return $this->collection( $image->ownedByImages, new ImageTransformer, 'images' );
+    }
+    /*
+     * include Fragmens
+     */
+    public function includeOwnedByFragments( Image $image )
+    {
+        return $this->collection( $image->ownedByFragments, new FragmentTransformer, 'fragments' );
+    }
+    /*
+     * include ownedByCollections
+     */
+    public function includeOwnedByCollections( Image $image )
+    {
+        return $this->collection( $image->ownedByCollections, new ColectionTransformer, 'collections' );
+    }
+    /*
+     * include metadetails
+     */
+    public function includeMetadetails( Image $image )
+    {
+        return $this->collection( $image->metadetails, new MetadetailTransformer, 'metadetails' );
+    }
+    /*
+     * include images
+     */
+    public function includeOwnedByMetadetails( Image $image )
+    {
+        return $this->collection( $image->ownedByMetadetails, new MetadetailTransformer, 'metadetails' );
     }
 
 }

@@ -30,3 +30,21 @@ images | ownedByImages
 - | ownedByCollections
 - | ownedByFragments
 metadetails | ownedByMetadetails
+
+### Metadetails
+Relationships | inverse Relationships
+--- | ---
+images | ownedByImages
+- | ownedByFragments
+- | ownedByPages
+- | ownedByVideos
+- | ownedByFiles
+
+### Pages
+Relationships | inverse Relationships
+--- | ---
+pages | ownedByPages
+fragments | -
+collections | ownedByCollections
+metadetails | -
+tags | -

@@ -26,7 +26,10 @@ class MetadetailResource extends ApiResource{
      */
     public function relationships(){
         return [
-            'pages'
+            'ownedByPages',
+            'ownedByFragments',
+            'ownedByImages',
+            'images',
         ];
     }
     /**

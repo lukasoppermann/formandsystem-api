@@ -371,7 +371,6 @@ abstract class AbstractRequest
         // $authorizer = app('oauth2-server.authorizer');
         // $authorizer->validateAccessToken();
         //
-        // \Log::debug($authorizer->getResourceOwnerId());
         // if(!app('oauth2-server.authorizer')->hasScope('client.read')){
         //     return false;
         // }

@@ -33,7 +33,10 @@ class MetadetailRequest extends AbstractResourceRequest
      * @var [array]
      */
     public $relationships = [
-        'pages',
+        'ownedByPages',
+        'ownedByFragments',
+        'ownedByImages',
+        'images',
     ];
     /**
      * filter available in for the endpoint

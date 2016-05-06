@@ -36,8 +36,12 @@ class ImageRequest extends AbstractResourceRequest
      * @var [array]
      */
     public $relationships = [
-        'fragments',
         'images',
+        'ownedByImages',
+        'ownedByCollections',
+        'ownedByFragments',
+        'metadetails',
+        'ownedByMetadetails',
     ];
     /**
      * filter available in for the endpoint
