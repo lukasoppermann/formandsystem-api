@@ -27,7 +27,7 @@ class DetailTransformer extends ApiTransformer
         return [
             'id'      => $detail->id,
             'type'    => $detail->type,
-            'data'    => $detail->data,
+            'data'    => $this->decode($detail->data),
         ];
     }
 }

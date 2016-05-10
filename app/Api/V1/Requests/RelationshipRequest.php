@@ -14,10 +14,14 @@ class RelationshipRequest extends AbstractRequest
      * @return array
      */
     public function rules(){
+        $relationships = array_map(function($item){
+            return str_replace('ownedBy','',$item);
+        },$this->relationships());
+        
         return [
-            'data.type'  => 'in:'.implode(',',$this->relationships()).'|required_with:id',
+            'data.type'  => 'in:'.implode(',',$relationships).'|required_with:id',
             'data.id'    => 'string|required_with:type',
-            'data.*.type' => 'in:'.implode(',',$this->relationships()).'|required_with:data.*.id',
+            'data.*.type' => 'in:'.implode(',',$relationships).'|required_with:data.*.id',
             'data.*.id' => 'string|required_with:data.*.type',
         ];
     }

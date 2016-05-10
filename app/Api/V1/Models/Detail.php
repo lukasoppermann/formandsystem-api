@@ -29,5 +29,12 @@ class Detail extends BaseModel
      * @var array
      */
     protected $fillable = ['id','type','data'];
+    /**
+     * The fragments that belong to the fragment.
+     */
+    public function ownedByClients()
+    {
+        return $this->belongsToMany('App\Api\V1\Models\Client');
+    }
 
 }

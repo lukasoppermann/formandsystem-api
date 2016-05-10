@@ -31,4 +31,34 @@ class ClientsController extends ApiController
             ->setStatusCode(201)
             ->withHeader('Location', $_ENV['API_DOMAIN'].'/'.$this->resource.'/'.$model->id);
     }
+    /*
+    * update
+    */
+    public function update(Request $request, $id)
+    {
+        // get Model
+        $model = $this->newModel()->findWithTrashed($id);
+        // validate item
+        $this->validateResourceExists($model,
+            'The resource of type "'.$this->resource.'" with the id "'.$id.'" does not exist.'
+        );
+        // get data from request
+        $receivedData = $this->getRecivedData($request, $model->acceptedFields());
+        // get relationship data from request
+        $relationships = $this->getRecivedRelationships($request);
+        // restore or softDelete item
+        if(array_key_exists('is_trashed',$receivedData)){
+            $model->setTrashed($receivedData['is_trashed']);
+            unset($receivedData['is_trashed']);
+        }
+        // Add new data to model
+        $model->fill($receivedData);
+        // Save Model
+        $model->save();
+        // add relationships
+        $this->removeRelationships($model, $relationships);
+        $this->saveRelationships($model, $relationships);
+        // return result
+        return $this->response->item($this->newModel()->withTrashed()->where('id', $id)->first(), $this->newTransformer(), ['key' => $this->resource])->setStatusCode(200);
+    }
 }

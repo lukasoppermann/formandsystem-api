@@ -85,6 +85,10 @@ $api->version('v1', function($api){
         $api->get('clients/{id}', 'ClientsController@show');
         $api->post('clients', 'ClientsController@store');
         $api->delete('clients/{id}', 'ClientsController@delete');
+        // ---------------------------
+        // Clients
+        $api->post('details', 'DetailsController@store');
+        $api->delete('details/{id}', 'DetailsController@delete');
     });
     // no oauth
     $api->group([

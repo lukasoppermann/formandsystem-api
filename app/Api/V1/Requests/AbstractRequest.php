@@ -234,6 +234,10 @@ abstract class AbstractRequest
      * @return [array]
      */
     protected function relationshipRules(){
+        $relationshipsTypes = array_map(function($item){
+            return strtolower(str_replace('ownedBy','',$item));
+        },$this->relationships());
+        $relationshipsTypes = implode(',',$relationshipsTypes);
         // allow only available relationships
         $rules['data.relationships'] = 'array_has_only:'.implode(',',$this->relationships());
         // add rule to check type & id of relationships
@@ -241,10 +245,10 @@ abstract class AbstractRequest
             // get base relationship validation path
             $relationship_data = 'data.relationships.'.$relationship.'.data';
             // validate relationship type & id of relationship ARRAY
-            $rules[$relationship_data.'.*.type'] = 'in:'.$relationship.'|required_with:'.$relationship_data.'.*.id';
+            $rules[$relationship_data.'.*.type'] = 'in:'.$relationshipsTypes.'|required_with:'.$relationship_data.'.*.id';
             $rules[$relationship_data.'.*.id']   = 'string|alpha_dash|min:3|required_with:'.$relationship_data.'.*.type';
             // validate relationship type & id of SINGLE relationship
-            $rules[$relationship_data.'.type'] = 'in:'.$relationship.'|required_with:'.$relationship_data.'.id';
+            $rules[$relationship_data.'.type'] = 'in:'.$relationshipsTypes.'|required_with:'.$relationship_data.'.id';
             $rules[$relationship_data.'.id']   = 'string|alpha_dash|min:3|required_with:'.$relationship_data.'.type';
         }
         // return fules

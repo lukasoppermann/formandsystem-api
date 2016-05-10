@@ -4,7 +4,7 @@ namespace App\Api\V1\Requests;
 
 use App\Api\V1\Requests\AbstractResourceRequest;
 
-class ClientRequest extends AbstractResourceRequest
+class DetailRequest extends AbstractResourceRequest
 {
     /**
      * rules for various request types
@@ -14,14 +14,9 @@ class ClientRequest extends AbstractResourceRequest
     protected $rules = [
         // POST
         'post' => [
-            'data.type' => 'required|in:clients',
-            'data.attributes.name' => 'required|string',
-        ],
-        // PATCH
-        'patch' => [
-            'data.id' => 'required|string',
-            'data.type' => 'required|in:clients',
-            'data.attributes.name' => 'string'
+            'data.type' => 'required|in:details',
+            'data.attributes.type' => 'required|string|in:database,image_ftp,backup_ftp',
+            'data.attributes.data' => 'required|string_or_array',
         ]
     ];
     /**
@@ -30,6 +25,6 @@ class ClientRequest extends AbstractResourceRequest
      * @var [array]
      */
     public $relationships = [
-        'details',
+        'ownedByClients',
     ];
 }
