@@ -34,7 +34,7 @@ class Detail extends BaseModel
      */
     public function ownedByClients()
     {
-        return $this->belongsToMany('App\Api\V1\Models\Client');
+        return $this->belongsTo('App\Api\V1\Models\Client');
     }
 
 }

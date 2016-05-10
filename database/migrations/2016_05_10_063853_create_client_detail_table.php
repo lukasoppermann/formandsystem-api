@@ -14,7 +14,11 @@ class CreateClientDetailTable extends Migration
     {
         Schema::create('client_detail', function (Blueprint $table) {
             $table->string('client_id', 40)->index();
+            $table->foreign('client_id')->references('id')->on('oauth_clients')->onDelete('cascade');
+
             $table->string('detail_id', 40)->index();
+
+            $table->foreign('detail_id')->references('id')->on('details')->onDelete('cascade');
         });
     }
 

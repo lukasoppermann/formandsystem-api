@@ -34,7 +34,7 @@ class Client extends BaseModel
      */
     public function details()
     {
-        return $this->belongsToMany('App\Api\V1\Models\Detail');
+        return $this->hasMany('App\Api\V1\Models\Detail');
     }
 
 }
