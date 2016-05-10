@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
         'oauth_scopes',
         'oauth_client_scopes',
         'details',
-        'client_detail',
+        // 'client_detail',
     ];
 
     /**

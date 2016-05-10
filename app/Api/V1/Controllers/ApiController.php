@@ -191,8 +191,12 @@ abstract class ApiController extends Controller
      */
     protected function saveRelationships($model, $relationships = []){
         foreach($relationships as $type => $items){
-            foreach($items as $related){
-                $model->{$type}()->save($related);
+            if(method_exists($model->{$type}(),'save')){
+                $model->{$type}()->save($items);
+            }
+            elseif(method_exists($model->{$type}(),'associate')){
+                $model->{$type}()->associate($items[0]);
+                $model->save();
             }
         }
     }

@@ -61,4 +61,20 @@ class ClientsController extends ApiController
         // return result
         return $this->response->item($this->newModel()->withTrashed()->where('id', $id)->first(), $this->newTransformer(), ['key' => $this->resource])->setStatusCode(200);
     }
+    /*
+     * delete
+     */
+    public function delete($resource_id){
+        // validate resource
+        $model = $this->validateResourceExists(
+            $this->newModel()->findWithTrashed($resource_id),
+            'The resource of type "'.$this->resource.'" with the id "'.$resource_id.'" does not exist.'
+        );
+        // delete details on delete
+        $model->details()->delete();
+        // force delete to really delete soft deletes
+        $model->forceDelete();
+
+        return $this->response->noContent();
+    }
 }

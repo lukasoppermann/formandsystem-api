@@ -16,6 +16,7 @@ class CreateDetailsTable extends Migration
             $table->string('id', 40)->index();
             $table->string('type');
             $table->text('data');
+            $table->string('client_id');
             $table->timestamps();
         });
     }
