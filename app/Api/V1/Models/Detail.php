@@ -2,15 +2,15 @@
 
 namespace App\Api\V1\Models;
 
-class Client extends BaseModel
+class Detail extends BaseModel
 {
-    protected $table = "oauth_clients";
+    protected $table = "details";
     /**
      * If uuid is used instead of autoincementing id
      *
      * @var bool
      */
-    protected $uuid = false;
+    protected $uuid = true;
     /**
      * Indicates if the model should be timestamped.
      *
@@ -28,13 +28,6 @@ class Client extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['id','secret','name'];
-    /**
-     * The fragments that belong to the fragment.
-     */
-    public function details()
-    {
-        return $this->belongsToMany('App\Api\V1\Models\Detail');
-    }
+    protected $fillable = ['id','type','data'];
 
 }

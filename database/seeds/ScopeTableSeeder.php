@@ -32,7 +32,6 @@ class ScopeTableSeeder extends Seeder {
 			]
 		];
 
-
 		DB::table('oauth_scopes')->insert($scopes);
 	}
 

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class CmsUser extends Seeder {
+class ClientTableSeeder extends Seeder {
 
 	/**
 	 * Auto generated seed file
@@ -11,6 +11,7 @@ class CmsUser extends Seeder {
 	 */
 	public function run()
 	{
+		DB::table('oauth_clients')->where('id', 'formandsystem')->delete();
 		DB::table('oauth_clients')->insert([
 			'id' 		=> 'formandsystem',
 			'secret' 	=> bin2hex(random_bytes(30)),
@@ -18,6 +19,16 @@ class CmsUser extends Seeder {
 			'created_at' => '0000-00-00',
 			'updated_at' => '0000-00-00'
 		]);
+
+		App\Api\V1\Models\Client::all()->each(function($client){
+			$client->details()->save(App\Api\V1\Models\Detail::create([
+				'type' => 'database',
+				'data' => json_encode([
+					'type' => 'mysql'
+				]),
+			]));
+        });
+
 		DB::table('oauth_client_scopes')->where('client_id', 'formandsystem')->delete();
 
 		DB::table('oauth_client_scopes')->insert(

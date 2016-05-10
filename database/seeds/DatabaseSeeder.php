@@ -9,11 +9,9 @@ class DatabaseSeeder extends Seeder
     // 1. truncated / deleted
     // 2. seeded
     protected $tables = [
-        'collections',
-        'pages',
-        'fragments',
-        'images',
-        'metadetails',
+        'oauth_clients',
+        'oauth_scopes',
+        'oauth_client_scopes',
     ];
 
     /**
@@ -24,23 +22,18 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        // empty tables
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+
         foreach ($this->tables as $table) {
+            // empty table
             DB::table($table)->truncate();
         }
-        // seed DB
-        factory('App\Api\V1\Models\Collection', 5)->create();
-        factory('App\Api\V1\Models\Page', 20)->create();
-        factory('App\Api\V1\Models\Metadetail', 50)->create();
-        factory('App\Api\V1\Models\Fragment', 50)->create();
-        factory('App\Api\V1\Models\Fragment', 'section', 20)->create();
-        factory('App\Api\V1\Models\Image', 50)->create();
 
-        // run seeders for relationships
-        foreach ($this->tables as $table) {
-            $this->call(ucfirst($table).'TableSeeder');
-        }
+        // seed table
+        $this->call('ScopeTableSeeder');
+        $this->call('ClientTableSeeder');
 
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
         Model::reguard();
     }
 }
