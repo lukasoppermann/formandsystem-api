@@ -16,12 +16,7 @@ class ClientRequest extends AbstractResourceRequest
         'post' => [
             'data.type' => 'required|in:clients',
             'data.attributes.name' => 'required|string',
-        ],
-        // PATCH
-        'patch' => [
-            'data.id' => 'required|string',
-            'data.type' => 'required|in:clients',
-            'data.attributes.name' => 'string'
+            'data.attributes.scopes' => 'required|string',
         ]
     ];
     /**

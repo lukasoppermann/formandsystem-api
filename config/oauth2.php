@@ -30,7 +30,7 @@ return [
     'grant_types' => [
         'client_credentials' => [
           'class' => '\League\OAuth2\Server\Grant\ClientCredentialsGrant',
-          'access_token_ttl' => 36000000
+          'access_token_ttl' => 86400
         ]
     ],
 
@@ -102,7 +102,7 @@ return [
     |
     */
 
-    'access_token_ttl' => 36000000,
+    'access_token_ttl' => 86400,
 
     /*
     |--------------------------------------------------------------------------

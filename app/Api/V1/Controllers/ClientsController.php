@@ -4,10 +4,19 @@ namespace App\Api\V1\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Api\V1\Serializer\JsonApiExtendedSerializer;
-use Ramsey\Uuid\Uuid;
+// use Ramsey\Uuid\Uuid;
 
 class ClientsController extends ApiController
 {
+    /**
+     * The scopes a new user can have
+     *
+     * @var array
+     */
+    protected $allowedScopes = [
+        'content.get',
+        'content.create',
+    ];
     /**
      * The resources name
      *
@@ -19,13 +28,28 @@ class ClientsController extends ApiController
      */
     public function store(Request $request)
     {
+        // get model
+        $model = $this->newModel();
+        // get data from request
+        $receivedData = $this->getRecivedData($request, $model->acceptedFields(['scopes']));
+        // validate scopes
+        $scopes = $this->parseScopes($receivedData['scopes']);
+        // create Client
         $newClient = [
             'id' => bin2hex(random_bytes(30)),
             'secret' => bin2hex(random_bytes(30)),
             'name' => $request->json('data.attributes.name'),
         ];
         // create item
-        $model = $this->newModel()->create($newClient);
+        $model = $model->create($newClient);
+        // add scopes
+        foreach($scopes as $scope){
+            $client_scopes = [
+                'scope_id'  => $scope,
+                'client_id' => $model->id
+            ];
+        }
+        app('db')->table('oauth_client_scopes')->insert($client_scopes);
         // return result
         return $this->response->item($model, $this->newTransformer(), ['key' => $this->resource])
             ->setStatusCode(201)
@@ -76,5 +100,22 @@ class ClientsController extends ApiController
         $model->forceDelete();
 
         return $this->response->noContent();
+    }
+    /**
+     * get scopes array from request
+     *
+     * @method getScopes
+     *
+     * @return [array]
+     */
+    protected function parseScopes($scopes){
+        $scopes = array_map('trim', explode(',',$scopes));
+        foreach($scopes as $scope){
+            if(!in_array($scope, $this->allowedScopes)){
+                throw new \Dingo\Api\Exception\ResourceException('Invalid scope requested.',['invalid scope' => $scope]);
+            }
+        }
+        // return scopes if all are valid
+        return $scopes;
     }
 }

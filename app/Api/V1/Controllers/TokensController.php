@@ -4,7 +4,7 @@ namespace App\Api\V1\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Api\V1\Serializer\JsonApiExtendedSerializer;
-use Ramsey\Uuid\Uuid;
+// use Ramsey\Uuid\Uuid;
 
 class TokensController extends ApiController
 {

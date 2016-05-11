@@ -44,9 +44,9 @@ class BaseModel extends Model
      *
      * @return [array]
      */
-    public function acceptedFields(){
+    public function acceptedFields($additonal_fields = []){
         // get mode fields
-        $fields = $this->getFillable();
+        $fields = array_merge($this->getFillable(), $additonal_fields);
         // remove id
         array_splice($fields, array_search('id', $fields), 1);
         // add soft delete is_trashed

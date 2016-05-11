@@ -7,7 +7,7 @@
 $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function($api){
     $api->group([
-        // 'middleware' => ['api.auth'],
+        'middleware' => ['api.auth'],
         'namespace' => 'App\Api\V1\Controllers',
         // 'scopes' => ['client.get']
     ], function($api){
@@ -86,7 +86,7 @@ $api->version('v1', function($api){
         $api->post('clients', 'ClientsController@store');
         $api->delete('clients/{id}', 'ClientsController@delete');
         // ---------------------------
-        // Clients
+        // Details
         $api->post('details', 'DetailsController@store');
         $api->delete('details/{id}', 'DetailsController@delete');
     });
