@@ -15,7 +15,7 @@ class TokensController extends ApiController
     {
         // create token
         $token = app('oauth2-server.authorizer')->issueAccessToken();
-        \LOG::debug('destroy old tokens');
+        
         // get model
         $model = $this->newModel()->find($token['access_token']);
         // return result

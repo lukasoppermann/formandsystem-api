@@ -6,6 +6,7 @@ use App\Api\V1\Requests\AbstractResourceRequest;
 
 class UploadRequest extends AbstractResourceRequest
 {
+    use RequestAuthorization;
     /**
      * make this a file request
      *

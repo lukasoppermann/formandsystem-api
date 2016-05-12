@@ -47,14 +47,9 @@ return [
     'connections' => [
 
         'testing' => [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-        ],
-
-        'testingSql' => [
             'driver'   => 'sqlite',
-            'database' => env('DB_DATABASE', base_path('database/testDatabase.sqlite')),
-            'prefix'   => env('DB_PREFIX', ''),
+            'database' => base_path('database/testDatabase.sqlite'),
+            'prefix'   => '',
         ],
 
         'sqlite' => [

@@ -8,6 +8,12 @@ class Fragment extends BaseModel
 {
     use SoftDeletes;
     /**
+     * set connection for this model
+     *
+     * @var string
+     */
+    protected $connection = 'user';
+    /**
      * If uuid is used instead of autoincementing id
      *
      * @var bool

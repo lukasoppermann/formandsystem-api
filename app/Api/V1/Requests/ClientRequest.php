@@ -6,6 +6,23 @@ use App\Api\V1\Requests\AbstractResourceRequest;
 
 class ClientRequest extends AbstractResourceRequest
 {
+    use RequestAuthorization;
+    /**
+     * defines if client data should be set in authorization method
+     *
+     * @var boolean
+     */
+    protected $setClientData = false;
+    /**
+     * scopes available for the endpoint
+     *
+     * @var [array]
+     */
+    public $scopes = [
+        'get'       => 'client.get',
+        'delete'    => 'client.delete',
+        'post'      => 'client.post',
+    ];
     /**
      * rules for various request types
      *

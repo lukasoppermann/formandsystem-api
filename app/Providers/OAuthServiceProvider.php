@@ -19,8 +19,6 @@ class OAuthServiceProvider extends ServiceProvider
 
             $provider->setClientResolver(function ($id) {
                 $client = new \App\Api\V1\Models\Client;
-                \LOG::debug('$id');
-                \LOG::debug(json_encode($client->find($id)));
                 return $client->find($id);
             });
 

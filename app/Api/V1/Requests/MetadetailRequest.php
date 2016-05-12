@@ -6,6 +6,7 @@ use App\Api\V1\Requests\AbstractResourceRequest;
 
 class MetadetailRequest extends AbstractResourceRequest
 {
+    use RequestAuthorization;
     /**
      * rules for various request types
      *

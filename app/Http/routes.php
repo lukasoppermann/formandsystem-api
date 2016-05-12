@@ -11,7 +11,8 @@ $api->version('v1', function($api){
         'namespace' => 'App\Api\V1\Controllers',
         // 'scopes' => ['client.get']
     ], function($api){
-
+        // app('config')->set('database.connections.test','test');
+        // dd(app('config')->get('database.connections.test'));
         // ---------------------------
         // collections
         $api->get('collections', 'CollectionsController@index');

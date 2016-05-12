@@ -13,7 +13,7 @@ class ScopeTableSeeder extends Seeder {
 	{
 		$scopes = [
 			[
-				'id' => 'client.create',
+				'id' => 'client.post',
 				'description' => 'create an api client',
 				'created_at' => '0000-00-00',
 				'updated_at' => '0000-00-00'
@@ -27,6 +27,24 @@ class ScopeTableSeeder extends Seeder {
 			[
 				'id' => 'client.get',
 				'description' => 'get an api client',
+				'created_at' => '0000-00-00',
+				'updated_at' => '0000-00-00'
+			],
+			[
+				'id' => 'content.post',
+				'description' => 'create content via api',
+				'created_at' => '0000-00-00',
+				'updated_at' => '0000-00-00'
+			],
+			[
+				'id' => 'content.delete',
+				'description' => 'delete content via api',
+				'created_at' => '0000-00-00',
+				'updated_at' => '0000-00-00'
+			],
+			[
+				'id' => 'content.get',
+				'description' => 'get content via api',
 				'created_at' => '0000-00-00',
 				'updated_at' => '0000-00-00'
 			]

@@ -86,8 +86,8 @@ abstract class AbstractRequest
      * @return void|exception
      */
     protected function isAuthorized(){
-        if($this->authorize() !== true){
-            throw new \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException(null, 'Failed to authorize the request due to missing scopes.');
+        if(method_exists($this, 'authorize') === true && $this->authorize() !== true){
+            throw new \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException(null, 'Failed to authorize the request possibley due to missing scopes.');
         }
     }
     /**
@@ -355,6 +355,7 @@ abstract class AbstractRequest
         // or empty array if none are set
         return [];
     }
+
     /**
      * validation rules
      *
@@ -363,59 +364,6 @@ abstract class AbstractRequest
      * @return array
      */
     abstract protected function rules();
-    /**
-     * check if request is authorize
-     *
-     * @method authorize
-     *
-     * @return bool
-     */
-    protected function authorize()
-    {
-        // $authorizer = app('oauth2-server.authorizer');
-        // $authorizer->validateAccessToken();
-        //
-        // if(!app('oauth2-server.authorizer')->hasScope('client.read')){
-        //     return false;
-        // }
-        // \Log::debug('none');
-        // dd(app('oauth2-server.authorizer'));
-        // \LOG::debug(app('oauth2-server.authorizer')->hasScope('foo'));
-        // dd(app('oauth2-server.authorizer')->getClientId());
-        // varify correct scopes
-        // if ( !is_object($authorizer) OR ( !empty($this->request->scopes) and !$this->checkScopes($this->scopes) ) )
-        // {
-        //     return false;
-        // }
-
-        // app('oauth2-server.authorizer')->hasScope('foo');
-
-        // varify owner exists
-        // if( !$owner = $userRepository->getByOwnerId( $authorizer->getResourceOwnerId() ) )
-        // {
-        //     return false;
-        // }
-
-        // set db connection
-        // $db = array(
-        //     'driver'    => 'mysql',
-        //     'host'      => $owner->service_host,
-        //     'database'  => $owner->service_name,
-        //     'username'  => $owner->service_user,
-        //     'password'  => $owner->service_key,
-        //     'charset'   => 'utf8',
-        //     'collation' => 'utf8_unicode_ci',
-        //     'prefix'    => '',
-        // );
-        //
-        // Config::set("database.connections.user", $db);
-        //
-        // // save owner data for Accept cross origin url header
-        // Config::set("owner", $owner);
-
-        // return true to make authorize pass
-        return true;
-    }
     /**
      * if method does not exist, delegate to request class
      *

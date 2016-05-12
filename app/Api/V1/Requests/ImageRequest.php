@@ -6,6 +6,18 @@ use App\Api\V1\Requests\AbstractResourceRequest;
 
 class ImageRequest extends AbstractResourceRequest
 {
+    use RequestAuthorization;
+    /**
+     * scopes available for the endpoint
+     *
+     * @var [array]
+     */
+    public $scopes = [
+        'get'       => 'content.get',
+        'post'      => 'content.post',
+        'delete'    => 'content.delete',
+        'patch'     => 'content.patch',
+    ];
     /**
      * rules for various request types
      *

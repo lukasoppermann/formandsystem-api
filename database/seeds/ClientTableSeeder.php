@@ -13,7 +13,7 @@ class ClientTableSeeder extends Seeder {
 	{
 		DB::table('oauth_clients')->insert([
 			'id' 		=> 'formandsystem',
-			'secret' 	=> bin2hex(random_bytes(30)),
+			'secret' 	=> '5fcaaf78514a024688b35f4f4ad946394cb79e50',
 			'name' 		=> 'Form&System',
 			'created_at' => '0000-00-00',
 			'updated_at' => '0000-00-00'
@@ -76,7 +76,7 @@ class ClientTableSeeder extends Seeder {
 			[
 				[
 					'client_id' => 'formandsystem',
-					'scope_id' => 'client.create',
+					'scope_id' => 'client.post',
 					'created_at' => '0000-00-00',
 					'updated_at' => '0000-00-00'
 				],
@@ -89,6 +89,24 @@ class ClientTableSeeder extends Seeder {
 				[
 					'client_id' => 'formandsystem',
 					'scope_id' => 'client.get',
+					'created_at' => '0000-00-00',
+					'updated_at' => '0000-00-00'
+				],
+				[
+					'client_id' => 'client_one',
+					'scope_id' => 'content.post',
+					'created_at' => '0000-00-00',
+					'updated_at' => '0000-00-00'
+				],
+				[
+					'client_id' => 'client_one',
+					'scope_id' => 'content.delete',
+					'created_at' => '0000-00-00',
+					'updated_at' => '0000-00-00'
+				],
+				[
+					'client_id' => 'client_one',
+					'scope_id' => 'content.get',
 					'created_at' => '0000-00-00',
 					'updated_at' => '0000-00-00'
 				]

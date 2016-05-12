@@ -6,21 +6,6 @@ use App\Api\V1\Requests\AbstractRequest;
 
 abstract class AbstractResourceRequest extends AbstractRequest
 {
-    /**
-     * Retuns needed scopes to perform a request
-     *
-     * @method scopes
-     *
-     * @return array
-     */
-    public function scopes(){
-        // return method specific rules
-        if(isset($this->scopes) && is_array($this->scopes)){
-            return $this->scopes;
-        }
-        // or empty array if none are set
-        return [];
-    }
      /**
       * The relationships a resource can have
       *

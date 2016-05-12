@@ -7,6 +7,12 @@ use App\Api\V1\Requests\AbstractResourceRequest;
 class TokenRequest extends AbstractResourceRequest
 {
     /**
+     * disable authorization
+     *
+     * @var [bool]
+     */
+    protected $authorize = false;
+    /**
      * rules for various request types
      *
      * @var [array]

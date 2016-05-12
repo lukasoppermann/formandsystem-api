@@ -15,7 +15,9 @@ class ClientsController extends ApiController
      */
     protected $allowedScopes = [
         'content.get',
-        'content.create',
+        'content.post',
+        'content.delte',
+        'content.patch'
     ];
     /**
      * The resources name
