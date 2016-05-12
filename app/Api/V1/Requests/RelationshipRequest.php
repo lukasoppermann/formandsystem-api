@@ -16,7 +16,7 @@ class RelationshipRequest extends AbstractRequest
      */
     public function rules(){
         $relationships = array_map(function($item){
-            return str_replace('ownedBy','',$item);
+            return strtolower(str_replace('ownedBy','',$item));
         },$this->relationships());
 
         return [

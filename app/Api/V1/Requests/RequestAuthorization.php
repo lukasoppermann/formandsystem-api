@@ -16,7 +16,12 @@ trait RequestAuthorization
     protected function authorize()
     {
         $authorizer = app('oauth2-server.authorizer');
-        $authorizer->validateAccessToken();
+        try {
+            $authorizer->validateAccessToken();
+        } catch( \League\OAuth2\Server\Exception\AccessDeniedException $e){
+            \LOG::Debug($e);
+            throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException('Check your client id and client secret.');
+        }
         // get needed scope
         $needed_scope = $this->getScope(strtolower($this->request->getMethod()));
         // validate scope
