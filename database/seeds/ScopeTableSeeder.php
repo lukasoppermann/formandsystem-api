@@ -47,7 +47,13 @@ class ScopeTableSeeder extends Seeder {
 				'description' => 'get content via api',
 				'created_at' => '0000-00-00',
 				'updated_at' => '0000-00-00'
-			]
+			],
+			[
+				'id' => 'content.patch',
+				'description' => 'patch content via api',
+				'created_at' => '0000-00-00',
+				'updated_at' => '0000-00-00'
+			],
 		];
 
 		DB::table('oauth_scopes')->insert($scopes);
