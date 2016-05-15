@@ -12,14 +12,6 @@ use Illuminate\Http\Request;
 class CollectionsController extends ApiController
 {
     /**
-     * The filters that are allowed in requests
-     *
-     * @var array
-     */
-    protected $availableFilters = [
-        'slug'
-    ];
-    /**
      * The resources name
      *
      * @var array

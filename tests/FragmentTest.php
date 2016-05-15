@@ -1,6 +1,6 @@
 <?php
 
-class FragmentTest extends TestCase
+class FragmentTest extends ResourceTestCase
 {
     protected $resource = 'fragments';
 }

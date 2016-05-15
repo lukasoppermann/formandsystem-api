@@ -21,7 +21,7 @@ class ClientTableSeeder extends Seeder {
 
 		DB::table('oauth_clients')->insert([
 			'id' 		=> 'client_one',
-			'secret' 	=> bin2hex(random_bytes(30)),
+			'secret' 	=> '5fcaaf78514a024688b35f4f4ad946394cb79e50',
 			'name' 		=> 'A normal client',
 			'created_at' => '0000-00-00',
 			'updated_at' => '0000-00-00'
@@ -63,13 +63,14 @@ class ClientTableSeeder extends Seeder {
 			]
 		];
 
-
 		App\Api\V1\Models\Client::where('id','client_one')->each(function($client) use($details){
-			foreach($details['client_one'] as $type => $data)
-			$client->details()->save(App\Api\V1\Models\Detail::create([
-				'type' => $type,
-				'data' => json_encode($data),
-			]));
+			foreach($details['client_one'] as $type => $data){
+				App\Api\V1\Models\Detail::create([
+					'type' => $type,
+					'data' => json_encode($data),
+					'client_id' => $client->id,
+				]);
+			}
         });
 
 		DB::table('oauth_client_scopes')->insert(
@@ -109,7 +110,13 @@ class ClientTableSeeder extends Seeder {
 					'scope_id' => 'content.get',
 					'created_at' => '0000-00-00',
 					'updated_at' => '0000-00-00'
-				]
+				],
+				[
+					'client_id' => 'client_one',
+					'scope_id' => 'content.patch',
+					'created_at' => '0000-00-00',
+					'updated_at' => '0000-00-00'
+				],
 			]
 		);
 	}

@@ -23,8 +23,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $connection = app('config')->get('database.default');
+        $db = app('config')->get('database.connections.'.$connection);
+
         Model::unguard();
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        if($db['driver'] === 'mysql'){
+            DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        }
 
         foreach ($this->tables as $table) {
             // empty table
@@ -35,7 +40,9 @@ class DatabaseSeeder extends Seeder
         $this->call('ScopeTableSeeder');
         $this->call('ClientTableSeeder');
 
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+        if($db['driver'] === 'mysql'){
+            DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+        }
         Model::reguard();
     }
 }

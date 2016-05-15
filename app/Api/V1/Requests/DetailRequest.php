@@ -8,6 +8,21 @@ class DetailRequest extends AbstractResourceRequest
 {
     use RequestAuthorization;
     /**
+     * defines if client data should be set in authorization method
+     *
+     * @var boolean
+     */
+    protected $setClientData = false;
+    /**
+     * scopes available for the endpoint
+     *
+     * @var [array]
+     */
+    public $scopes = [
+        'post'      => 'client.post',
+        'delete'    => 'client.delete',
+    ];
+    /**
      * rules for various request types
      *
      * @var [array]

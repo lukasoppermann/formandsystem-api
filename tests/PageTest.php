@@ -1,6 +1,6 @@
 <?php
 
-class PageTest extends TestCase
+class PageTest extends ResourceTestCase
 {
     protected $resource = 'pages';
 

@@ -1,6 +1,6 @@
 <?php
 
-class CollectionTest extends TestCase
+class CollectionTest extends ResourceTestCase
 {
     protected $resource = 'collections';
 }

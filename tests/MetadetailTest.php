@@ -1,6 +1,6 @@
 <?php
 
-class MetadetailsTest extends TestCase
+class MetadetailsTest extends ResourceTestCase
 {
     protected $resource = 'metadetails';
 }

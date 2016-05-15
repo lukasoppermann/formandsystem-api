@@ -38,6 +38,12 @@ class Collection extends BaseModel
      */
     protected $fillable = ['id','name','slug'];
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+    /**
      * The pages that belong to the collection.
      */
     public function pages()

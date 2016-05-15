@@ -224,7 +224,8 @@ trait GetTestTrait
         // get model
         $model = $this->model->withTrashed()->first();
         // loop through relationships
-        foreach($this->relationships()as $relationship){
+        foreach($this->relationships() as $relationship){
+            
             $this->addRelatedItems($model, $relationship);
             // CALL
             $response = $this->getClientResponse('/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship);

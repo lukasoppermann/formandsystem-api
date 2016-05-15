@@ -3,9 +3,11 @@
 namespace App\Api\V1\Requests;
 
 use App\Api\V1\Models\Client;
+use App\Api\V1\Traits\TranslateTrait;
 
 trait RequestAuthorization
 {
+    use TranslateTrait;
     /**
      * check if request is authorize
      *
@@ -20,7 +22,7 @@ trait RequestAuthorization
             $authorizer->validateAccessToken();
         } catch( \League\OAuth2\Server\Exception\AccessDeniedException $e){
             \LOG::Debug($e);
-            throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException('Check your client id and client secret.');
+            throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException('Check your client id and client secret or you access token.');
         }
         // get needed scope
         $needed_scope = $this->getScope(strtolower($this->request->getMethod()));
@@ -38,8 +40,16 @@ trait RequestAuthorization
         // get all details
         if(!isset($this->setClientData) || $this->setClientData === true){
             $details = $client->details->toArray();
+            // check
+            if(!is_array($details) || count($details) === 0){
+                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($this->trans('errors.missing_client_details'));
+            }
 
             $detail_types = array_column($details,'type');
+
+            if(!in_array('database',$detail_types) || !in_array('image_ftp',$detail_types) || !in_array('backup_ftp',$detail_types)){
+                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($this->trans('errors.missing_client_details'));
+            }
             // set database
             $this->setDb(json_decode($details[array_search('database', $detail_types)]['data'], true));
         }
@@ -86,6 +96,6 @@ trait RequestAuthorization
         }
         // log error
         \LOG::error('No scope defined for "'.class_basename($this).'".');
-        throw new \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException(null, 'Failed to authorize the request due to an internal error. Please notify support@formandsystem.com.');
+        throw new \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException(null, $this->trans('errors.internal'));
     }
 }

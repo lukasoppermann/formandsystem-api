@@ -38,9 +38,10 @@ trait TestTrait
      */
     public function getClientResponse($url, $headers = [])
     {
-        return $this->client->get($url, [
+        return $this->client()->get($url, [
             'headers' => array_merge([
                 'Accept' => 'application/json',
+                'Authorization' => 'Bearer '.$this->tokens['client']
             ], $headers),
         ]);
     }
@@ -119,8 +120,27 @@ trait TestTrait
      *
      * @return [Model]
      */
-    protected function newModel($resourceName){
+    protected function newModel($resourceName = NULL){
+        // set resourceName
+        if($resourceName === NULL){
+            $resourceName = $this->resource;
+        }
+        // build model name
         $relatedModel = "App\Api\V1\Models\\".ucfirst(substr(str_replace('ownedBy','',$resourceName),0,-1));
-        return (new $relatedModel);
+        // return model
+        return new $relatedModel;
+    }
+    /**
+     * return headers for api requests
+     *
+     * @method headers
+     *
+     * @return array
+     */
+    protected function headers(){
+        return [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer '.$this->tokens['client'],
+        ];
     }
 }

@@ -3,7 +3,7 @@
 use League\Flysystem\Filesystem;
 use League\Flysystem\Sftp\SftpAdapter;
 
-class ImageTest extends TestCase
+class ImageTest extends ResourceTestCase
 {
 
     /**
@@ -57,8 +57,8 @@ class ImageTest extends TestCase
         // Loop through all valida files
         foreach($this->testFiles as $contentType => $file){
             // POST
-            $response = $this->client->request('POST', '/'.$this->resource, [
-                'headers' => ['Accept' => 'application/json'],
+            $response = $this->client()->request('POST', '/'.$this->resource, [
+                'headers' => $this->headers(),
                 'body' => json_encode([
                     "data" => $this->resource()->data(substr($file,-3))
                 ])
@@ -70,7 +70,7 @@ class ImageTest extends TestCase
             $this->assertNotNull($this->model->find($data['id']));
             $this->assertValid($data, $this->resource()->blueprint());
             // Upload image
-            $response = $this->client->request('PUT', $data['links']['upload'], [
+            $response = $this->client()->request('PUT', $data['links']['upload'], [
                 'headers' => ['Content-Type' => $contentType],
                 'body' => fopen(base_path().$file,'r')
             ]);
@@ -89,8 +89,8 @@ class ImageTest extends TestCase
         // Loop through all valida files
         foreach($this->invalidTestFiles as $contentType => $file){
             // POST
-            $response = $this->client->request('POST', '/'.$this->resource, [
-                'headers' => ['Accept' => 'application/json'],
+            $response = $this->client()->request('POST', '/'.$this->resource, [
+                'headers' => $this->headers(),
                 'body' => json_encode([
                     "data" => $this->resource()->data(substr($file,-3))
                 ])
@@ -102,7 +102,7 @@ class ImageTest extends TestCase
             $this->assertNotNull($this->model->find($data['id']));
             $this->assertValid($data, $this->resource()->blueprint());
             // POST
-            $response = $this->client->request('PUT', $data['links']['upload'], [
+            $response = $this->client()->request('PUT', $data['links']['upload'], [
                     'headers' => ['Content-Type' => $contentType],
                     'body' => fopen(base_path().$file,'r')
             ]);
