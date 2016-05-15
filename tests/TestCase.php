@@ -2,7 +2,6 @@
 
 use Lukasoppermann\Httpstatus\Httpstatuscodes;
 use Lukasoppermann\Testing\Traits\TestTrait;
-use Illuminate\Support\Facades\Artisan as Artisan;
 use GuzzleHttp\Client as Guzzle;
 
 class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
@@ -14,8 +13,10 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
     protected $model;
     // determin if tokens should be created
     protected $createTokens = true;
+    // static init
+    protected static $init = false;
     // store tokens globally
-    protected $tokens;
+    protected $tokens = [];
     /*
      * SETUP
      */
@@ -27,9 +28,6 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
         if (app()->environment() === 'production') {
             exit("\33[1;31mNever run tests on Production!\n\n\n");
         }
-        // migrate database
-        Artisan::call('migrate:refresh');
-        Artisan::call('db:seed');
     }
     /*
      * before every test
@@ -37,8 +35,15 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
     public function setUp()
     {
         parent::setUp();
-        // set default database
+        // get app instance
         $this->app = $this->createApplication();
+        // migrate database
+        if( static::$init === false ){
+            static::$init = true;
+            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('migrate:refresh');
+            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('db:seed');
+        }
+        // set default database
         $this->app->make('config')->set('database.default', 'testing');
         // set user db for test
         $this->app->make('config')->set('database.connections.user', [
@@ -63,7 +68,8 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
      */
     public function createApplication()
     {
-        return require __DIR__ . '/../bootstrap/app.php';
+        $app = require __DIR__ . '/../bootstrap/app.php';
+        return $app;
     }
     /**
      * create model fpr current resource
