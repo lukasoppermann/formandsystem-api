@@ -30,17 +30,17 @@
         <env name="API_VERSION" value="v1"/>
     </php>
     <listeners>
-        <!-- <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener">
+        <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener">
             <arguments>
                 <array>
                     <element key="slowThreshold">
-                        <integer>1000</integer>
+                        <integer>1600</integer>
                     </element>
                     <element key="reportLength">
                         <integer>10</integer>
                     </element>
                 </array>
             </arguments>
-        </listener> -->
+        </listener>
     </listeners>
 </phpunit>

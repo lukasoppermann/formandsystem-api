@@ -17,6 +17,8 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
     protected static $init = false;
     // store tokens globally
     protected $tokens = [];
+    // store tokens globally
+    protected static $token = false;
     /*
      * SETUP
      */
@@ -43,8 +45,6 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
             $this->app->make('Illuminate\Contracts\Console\Kernel')->call('migrate:refresh');
             $this->app->make('Illuminate\Contracts\Console\Kernel')->call('db:seed');
         }
-        // set default database
-        $this->app->make('config')->set('database.default', 'testing');
         // set user db for test
         $this->app->make('config')->set('database.connections.user', [
             'driver'    => 'mysql',
@@ -91,7 +91,7 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
      * @return void
      */
     public function createTokens(){
-        if($this->createTokens === true){
+        if($this->createTokens === true && static::$token === false){
             // create config
             ////// CMS
             $cms['config'] = [
@@ -107,8 +107,11 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
             $client['scopes'] = ['content.patch','content.get','content.post','content.delete'];
             ///////////////
             // get tokens
-            $this->tokens['cms'] = $this->getToken($cms['config'], $cms['scopes']);
-            $this->tokens['client'] = $this->getToken($client['config'], $client['scopes']);
+            static::$token['cms'] = $this->tokens['cms'] = $this->getToken($cms['config'], $cms['scopes']);
+            static::$token['client'] = $this->tokens['client'] = $this->getToken($client['config'], $client['scopes']);
+        }else {
+            $this->tokens['cms'] = static::$token['cms'];
+            $this->tokens['client'] = static::$token['client'];
         }
     }
     /**

@@ -26,9 +26,52 @@ class ClientTableSeeder extends Seeder {
 			'created_at' => '0000-00-00',
 			'updated_at' => '0000-00-00'
 		]);
+
+		DB::table('oauth_clients')->insert([
+			'id' 		=> 'client_to_delete',
+			'secret' 	=> '5fcaaf78514a024688b35f4f4ad946394cb79e50',
+			'name' 		=> 'A normal client',
+			'created_at' => '0000-00-00',
+			'updated_at' => '0000-00-00'
+		]);
 		//////////////////////////////////////////
 		/// Details
 		$details['client_one'] = [
+			'database' => [
+				'driver' 	=> 'mysql',
+				'host'      => '192.168.10.10',
+				'database'  => 'formandsystem_client',
+				'username'  => 'homestead',
+				'password'  => 'secret',
+				'charset'   => 'utf8',
+				'collation' => 'utf8_unicode_ci',
+				'prefix'    => '',
+			],
+			'image_ftp' => [
+				'type' => 'ftp',
+				'host' => 'ftp.example.com',
+				'username' => '373917-test',
+				'password' => 'test1234',
+				/** optional config settings */
+				'port' => 21,
+				// 'root' => '/path/to/root',
+				'passive' => true,
+				'ssl' => false,
+				'timeout' => 30,
+			],
+			'backup_ftp' =>[
+				'type' => 'sftp',
+				'host' => 'ftp.example.com',
+				'port' => 21,
+				'username' => '373917-test',
+				'password' => 'test1234',
+				// 'privateKey' => 'path/to/or/contents/of/privatekey',
+				// 'root' => '/path/to/root',
+				'timeout' => 10,
+			]
+		];
+
+		$details['client_to_delete'] = [
 			'database' => [
 				'driver' 	=> 'mysql',
 				'host'      => '192.168.10.10',
@@ -72,6 +115,16 @@ class ClientTableSeeder extends Seeder {
 				]);
 			}
         });
+
+		App\Api\V1\Models\Client::where('id','client_to_delete')->each(function($client) use($details){
+			foreach($details['client_to_delete'] as $type => $data){
+				App\Api\V1\Models\Detail::create([
+					'type' => $type,
+					'data' => json_encode($data),
+					'client_id' => $client->id,
+				]);
+			}
+		});
 
 		DB::table('oauth_client_scopes')->insert(
 			[

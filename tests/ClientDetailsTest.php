@@ -11,10 +11,6 @@ class ClientDetailsTest extends TestCase{
      * @method testPostClient
      */
     public function testPostClientDetails(){
-        // Get client
-        $client = $this->getResponse($this->getClientResponse('/clients/client_one', [
-            'Authorization' => 'Bearer '.$this->tokens['cms']
-        ]), 200)['data'];
         // CALL
         $response = $this->client()->request('POST', '/'.$this->resource, [
             'headers' => [
@@ -35,7 +31,7 @@ class ClientDetailsTest extends TestCase{
                         "ownedByClients" => [
                             "data" => [
                                 "type"  => "clients",
-                                "id"    => "client_one",
+                                "id"    => "client_to_delete",
                             ]
                         ]
                     ]
@@ -52,9 +48,10 @@ class ClientDetailsTest extends TestCase{
      */
     public function testDeleteClientDetails(){
         // Get client
-        $client = $this->getResponse($this->getClientResponse('/clients/client_one', [
+        $client = $this->getResponse($this->getClientResponse('/clients/client_to_delete', [
             'Authorization' => 'Bearer '.$this->tokens['cms']
         ]), 200)['data'];
+
         $detail_id = $client['relationships']['details']['data'][key($client['relationships']['details']['data'])]['id'];
         // CALL
         $response = $this->client()->request('DELETE', '/'.$this->resource.'/'.$detail_id, [

@@ -12,13 +12,13 @@ class ClientTest extends TestCase{
      */
     public function testGetClient(){
         // CALL
-        $response = $this->getClientResponse('/'.$this->resource.'/client_one', [
+        $response = $this->getClientResponse('/'.$this->resource.'/client_to_delete', [
             'Authorization' => 'Bearer '.$this->tokens['cms']
         ]);
         // GET DATA
         $received = $this->getResponse($response, 200)['data'];
         // ASSERTIONS
-        $this->assertEquals('client_one', $received['id']);
+        $this->assertEquals('client_to_delete', $received['id']);
     }
     /**
      * @method testPostClient
@@ -50,7 +50,7 @@ class ClientTest extends TestCase{
      */
     public function testDeleteClient(){
         // CALL
-        $response = $this->client()->request('DELETE', '/'.$this->resource.'/client_one', [
+        $response = $this->client()->request('DELETE', '/'.$this->resource.'/client_to_delete', [
             'headers' => [
                 'Accept' => 'application/json',
                 'Authorization' => 'Bearer '.$this->tokens['cms'],
