@@ -38,8 +38,8 @@ class ClientsController extends ApiController
         $scopes = $this->parseScopes($receivedData['scopes']);
         // create Client
         $newClient = [
-            'id' => bin2hex(random_bytes(30)),
-            'secret' => bin2hex(random_bytes(30)),
+            'id' => bin2hex(random_bytes(20)),
+            'secret' => bin2hex(random_bytes(20)),
             'name' => $request->json('data.attributes.name'),
         ];
         // create item
