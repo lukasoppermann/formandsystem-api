@@ -16,7 +16,7 @@ class ClientsController extends ApiController
     protected $allowedScopes = [
         'content.get',
         'content.post',
-        'content.delte',
+        'content.delete',
         'content.patch'
     ];
     /**
