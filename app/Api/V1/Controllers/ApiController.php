@@ -5,7 +5,6 @@ namespace App\Api\V1\Controllers;
 use App\Api\V1\Requests\ApiRequest;
 
 use Illuminate\Http\Request;
-
 use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class ApiController extends Controller
@@ -66,6 +65,7 @@ abstract class ApiController extends Controller
         $receivedData = $this->getRecivedData($request);
         // get relationship data from request
         $relationships = $this->getRecivedRelationships($request);
+        // dd($relationships);
         // create item
         $model = $this->newModel()->create($receivedData);
         // add relationships

@@ -14,6 +14,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if(env('APP_ENV') == 'testing') {
+            ini_set('memory_limit', '2G');
+        }
         // extend the validator
         $this->extendValidator();
     }

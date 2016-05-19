@@ -198,46 +198,4 @@ class RelationshipController extends Controller
         // return data
         return isset($relationships) ? $relationships : [];
     }
-
-    /**
-     * save an array of relationship to a model
-     *
-     * @method saveRelationships
-     *
-     * @param  [model]            $model
-     * @param  [array]            $relationships
-     */
-    protected function saveRelationships($model, $relationships = []){
-        foreach($relationships as $type => $items){
-            foreach($items as $related){
-                if(method_exists($model->{$type}(),'save')){
-                    $model->{$type}()->save($related);
-                }
-                elseif(method_exists($model->{$type}(),'associate')){
-                    $model->{$type}()->associate($related->id);
-                }
-            }
-        }
-    }
-    /**
-     * remove relationships from a model
-     *
-     * @method removeRelationships
-     *
-     * @param  [model]            $model
-     * @param  [array]            $relationships
-     */
-    protected function removeRelationships($model, $relationships = []){
-        // loop through all provided relationship changes
-        foreach($relationships as $type => $items){
-            // reset ids
-            $ids = [];
-            // get ids for current relationship of $type
-            foreach($items as $related){
-                $ids[] = $related['id'];
-            }
-            // remive items
-            $model->{$type}()->detach($ids);
-        }
-    }
 }

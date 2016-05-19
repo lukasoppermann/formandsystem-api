@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDetailsTable extends Migration
+class CreateCollectionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,11 @@ class CreateDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('details', function (Blueprint $table) {
-            $table->string('id', 40)->index();
-            $table->string('type');
-            $table->text('data');
-            $table->timestamps();
+        Schema::create('collections', function (Blueprint $table) {
+            $table->uuid('id')->index();
+            $table->string('name', 100);
+            $table->string('slug', 100);
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +27,6 @@ class CreateDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('details');
+        Schema::drop('collections');
     }
 }

@@ -19,7 +19,7 @@ trait GetTestTrait
         // CALL
         $response = $this->getClientResponse('/'.$this->resource);
         // GET DATA
-        $received = $this->getResponseArray($response)['data'][0];
+        $received = $this->getResponse($response)['data'][0];
         // ASSERTIONS
         $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
         $this->assertValid($received, $this->resource()->blueprint());
@@ -165,13 +165,10 @@ trait GetTestTrait
      */
     public function getRelated()
     {
-        // used for logging
-        $log = [];
         // get model
         $model = $this->model->withTrashed()->first();
         // loop through relationships
         foreach($this->relationships() as $relationship){
-            $log[] = $this->resource.' -> '.$relationship;
             // add relationships
             $this->addRelatedItems($model, $relationship);
             // CALL
@@ -184,7 +181,6 @@ trait GetTestTrait
             $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
             $this->assertValid($received, $this->resources[strtolower(str_replace('ownedBy','',$relationship))]->blueprint());
         }
-        \LOG::debug(json_encode($log));
     }
     /**
      * @test getting the related resource e.g. /pages using a wrong resource id
@@ -225,7 +221,7 @@ trait GetTestTrait
         $model = $this->model->withTrashed()->first();
         // loop through relationships
         foreach($this->relationships() as $relationship){
-            
+
             $this->addRelatedItems($model, $relationship);
             // CALL
             $response = $this->getClientResponse('/'.$this->resource.'/'.$model->id.'/relationships/'.$relationship);

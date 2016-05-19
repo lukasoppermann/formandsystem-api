@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDetailsTable extends Migration
+class CreateClientDetailTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,9 @@ class CreateDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('details', function (Blueprint $table) {
-            $table->string('id', 40)->index();
-            $table->string('type');
-            $table->text('data');
-            $table->timestamps();
+        Schema::create('client_detail', function (Blueprint $table) {
+            $table->uuid('detail_id')->index();
+            $table->uuid('client_id')->index();
         });
     }
 
@@ -27,6 +25,6 @@ class CreateDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('details');
+        Schema::drop('client_detail');
     }
 }

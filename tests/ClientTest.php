@@ -16,8 +16,9 @@ class ClientTest extends TestCase{
             'Authorization' => 'Bearer '.$this->tokens['cms']
         ]);
         // GET DATA
-        $received = $this->getResponse($response, 200)['data'];
+        $received = $this->getResponse($response)['data'];
         // ASSERTIONS
+        $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
         $this->assertEquals('client_to_delete', $received['id']);
     }
     /**
@@ -41,8 +42,9 @@ class ClientTest extends TestCase{
             ])
         ]);
         // GET DATA
-        $received = $this->getResponse($response, 201)['data'];
+        $received = $this->getResponse($response)['data'];
         // ASSERTIONS
+        $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
         $this->assertEquals($received['attributes']['name'], "client_name");
     }
     /**

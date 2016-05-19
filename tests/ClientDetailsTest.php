@@ -39,8 +39,9 @@ class ClientDetailsTest extends TestCase{
             ])
         ]);
         // GET DATA
-        $received = $this->getResponse($response, 201)['data'];
+        $received = $this->getResponse($response)['data'];
         // ASSERTIONS
+        $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
         $this->assertEquals($received['attributes']['type'], "database");
     }
     /**

@@ -39,12 +39,6 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
         parent::setUp();
         // get app instance
         $this->app = $this->createApplication();
-        // migrate database
-        if( static::$init === false ){
-            static::$init = true;
-            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('migrate:refresh');
-            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('db:seed');
-        }
         // set user db for test
         $this->app->make('config')->set('database.connections.user', [
             'driver'    => 'mysql',
@@ -56,10 +50,39 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
         ]);
+        // migrate database
+        if( static::$init === false ){
+            static::$init = true;
+            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('migrate:refresh');
+            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('db:seed');
+            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('migrate:refresh',[
+                '--path'        => 'database/client_migrations',
+                '--database'    => 'user',
+            ]);
+            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('db:seed',[
+                '--class'        => 'ClientSeeder',
+                '--database'    => 'user',
+            ]);
+        }
         // get tokens
         $this->createTokens();
         // init model for current resource
         $this->initModel();
+    }
+    public function tearDown()
+    {
+        \DB::disconnect();
+        \DB::disconnect('user');
+
+        $refl = new ReflectionObject($this);
+        foreach ($refl->getProperties() as $prop) {
+            if (!$prop->isStatic() && 0 !== strpos($prop->getDeclaringClass()->getName(), 'PHPUnit_')) {
+                $prop->setAccessible(true);
+                $prop->setValue($this, null);
+            }
+        }
+
+        parent::tearDown();
     }
     /**
      * Creates the application.
@@ -132,7 +155,8 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
             ]
         ]);
         // get response
-        $tokenResponse = $this->getResponse($response, 201);
+        $tokenResponse = $this->getResponse($response);
+        $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());
         // return token
         return $tokenResponse['data']['id'];
     }
@@ -145,15 +169,11 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
      *
      * @return [type]
      */
-    public function getResponse($response, $status = false){
+    public function getResponse($response){
         // get response
         $r = json_decode((string) $response->getBody(), true);
         // check valid response
         if( isset($r['data']) ){
-            // check status code
-            if($status !== false){
-                $this->assertEquals($status, $response->getStatusCode());
-            }
             // return response
             return $r;
         }
@@ -167,4 +187,15 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
             'exceptions' => false,
         ]);
     }
+
+    // public function testGetResource(){
+    //     // CALL
+    //     for($i = 0; $i < 1500; $i++){
+    //         $response = $this->getClientResponse('/pages');
+    //     }
+    //     // GET DATA
+    //     $received = $this->getResponseArray($response)['data'][0];
+    //     // ASSERTIONS
+    //     $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
+    // }
 }

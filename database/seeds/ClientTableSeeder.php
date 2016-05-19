@@ -108,21 +108,22 @@ class ClientTableSeeder extends Seeder {
 
 		App\Api\V1\Models\Client::where('id','client_one')->each(function($client) use($details){
 			foreach($details['client_one'] as $type => $data){
-				App\Api\V1\Models\Detail::create([
+				$detail = App\Api\V1\Models\Detail::create([
 					'type' => $type,
 					'data' => json_encode($data),
-					'client_id' => $client->id,
 				]);
+
+				$detail->ownedByClients()->attach($client->id);
 			}
         });
 
 		App\Api\V1\Models\Client::where('id','client_to_delete')->each(function($client) use($details){
 			foreach($details['client_to_delete'] as $type => $data){
-				App\Api\V1\Models\Detail::create([
+				$detail = App\Api\V1\Models\Detail::create([
 					'type' => $type,
 					'data' => json_encode($data),
-					'client_id' => $client->id,
 				]);
+				$detail->ownedByClients()->attach($client->id);
 			}
 		});
 
