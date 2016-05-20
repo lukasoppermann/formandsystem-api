@@ -65,7 +65,6 @@ abstract class ApiController extends Controller
         $receivedData = $this->getRecivedData($request);
         // get relationship data from request
         $relationships = $this->getRecivedRelationships($request);
-        // dd($relationships);
         // create item
         $model = $this->newModel()->create($receivedData);
         // add relationships
@@ -168,8 +167,7 @@ abstract class ApiController extends Controller
                 // get related model namespace
                 $relatedModel = $this->newModel($key);
                 // get related Model
-                $relatedModel = $relatedModel->find($relationship['id']);
-                $relationships[$key][] = $relatedModel;
+                $relationships[$key][] = $relatedModel->find($relationship['id']);
                 // valudate resource
                 $this->validateResourceExists(
                     $relatedModel,
@@ -191,14 +189,8 @@ abstract class ApiController extends Controller
      */
     protected function saveRelationships($model, $relationships = []){
         foreach($relationships as $type => $items){
-            if(!is_array($items)){
-                if(method_exists($model->{$type}(),'save')){
-                    $model->{$type}()->save($items);
-                }
-                elseif(method_exists($model->{$type}(),'associate')){
-                    $model->{$type}()->associate($items[0]);
-                    $model->save();
-                }
+            foreach($items as $item) {
+                $model->{$type}()->save($item);
             }
         }
     }

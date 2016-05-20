@@ -165,37 +165,4 @@ class RelationshipController extends Controller
         // return no content
         return $this->response->noContent();
     }
-    /**
-     * gets relationships from received data, for
-     *
-     * @method getRecivedRelationships
-     *
-     * @param  Request $request
-     *
-     * @return array
-     */
-    protected function getRecivedRelationships(Request $request){
-        // grab data for accepted fields
-        foreach((array) $request->json('data.relationships') as $key => $value){
-            // wrap relationship in array if single relationship
-            if(isset($value['data']['id'])){
-                $value['data'] = [$value['data']];
-            }
-            // return relations
-            foreach($value['data'] as $relationship){
-                // get related model namespace
-                $relatedModelName = $this->api_namespace."Models\\".substr(ucfirst($key),0,-1);
-                // get related Model
-                $relatedModel = (new $relatedModelName)->find($relationship['id']);
-                $relationships[$key][] = $relatedModel;
-                // valudate resource
-                $this->validateResourceExists(
-                    $relatedModel,
-                    'The resource of type "'.$relationship['type'].'" with the id of "'.$relationship['id'].'" does not exist.'
-                );
-            }
-        }
-        // return data
-        return isset($relationships) ? $relationships : [];
-    }
 }
