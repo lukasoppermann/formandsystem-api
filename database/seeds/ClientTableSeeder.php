@@ -47,27 +47,27 @@ class ClientTableSeeder extends Seeder {
 				'collation' => 'utf8_unicode_ci',
 				'prefix'    => '',
 			],
-			'image_ftp' => [
+			'ftp_image' => [
 				'type' => 'ftp',
 				'host' => 'ftp.example.com',
 				'username' => '373917-test',
 				'password' => 'test1234',
 				/** optional config settings */
-				'port' => 21,
+				// 'port' => 21,
 				// 'root' => '/path/to/root',
 				'passive' => true,
 				'ssl' => false,
-				'timeout' => 30,
+				// 'timeout' => 30,
 			],
-			'backup_ftp' =>[
+			'ftp_backup' =>[
 				'type' => 'sftp',
 				'host' => 'ftp.example.com',
-				'port' => 21,
+				// 'port' => 21,
 				'username' => '373917-test',
 				'password' => 'test1234',
 				// 'privateKey' => 'path/to/or/contents/of/privatekey',
 				// 'root' => '/path/to/root',
-				'timeout' => 10,
+				// 'timeout' => 10,
 			]
 		];
 

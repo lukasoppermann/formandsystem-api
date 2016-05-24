@@ -46,7 +46,7 @@ class ClientsController extends ApiController
         $model = $model->create($newClient);
         // add scopes
         foreach($scopes as $scope){
-            $client_scopes = [
+            $client_scopes[] = [
                 'scope_id'  => $scope,
                 'client_id' => $model->id
             ];

@@ -31,7 +31,7 @@ class DetailRequest extends AbstractResourceRequest
         // POST
         'post' => [
             'data.type' => 'required|in:details',
-            'data.attributes.type' => 'required|string|in:database,image_ftp,backup_ftp',
+            'data.attributes.type' => 'required|string|in:database,ftp_image,ftp_backup',
             'data.attributes.data' => 'required|string_or_array',
         ]
     ];
