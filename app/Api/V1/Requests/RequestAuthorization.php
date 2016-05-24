@@ -46,10 +46,19 @@ trait RequestAuthorization
             }
 
             $detail_types = array_column($details,'type');
-
-            if(!in_array('database',$detail_types) || !in_array('image_ftp',$detail_types) || !in_array('backup_ftp',$detail_types)){
-                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($this->trans('errors.missing_client_details'));
+            // missing database info
+            if(!in_array('database',$detail_types)){
+                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($this->trans('errors.missing_client_database'));
             }
+            // missing image ftp info
+            if(isset($this->needs_ftp_image) && $this->needs_ftp_image === TRUE && !in_array('ftp_image',$detail_types)){
+                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($this->trans('errors.missing_client_ftp_image'));
+            }
+            // missing backup ftp info
+            if(isset($this->needs_ftp_backup) && $this->needs_ftp_backup === TRUE && !in_array('ftp_backup',$detail_types)){
+                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($this->trans('errors.missing_client_ftp_backup'));
+            }
+
             // set database
             $this->setDb(json_decode($details[array_search('database', $detail_types)]['data'], true));
         }
@@ -71,9 +80,9 @@ trait RequestAuthorization
             'database'  => $db['database'],
             'username'  => $db['username'],
             'password'  => $db['password'],
-            'charset'   => $db['charset'],
-            'collation' => $db['collation'],
-            'prefix'    => $db['prefix'],
+            'charset'   => isset($db['charset']) ? $db['charset'] : 'utf8',
+            'collation' => isset($db['collation']) ? $db['collation'] : 'utf8_unicode_ci',
+            'prefix'    => isset($db['prefix']) ? $db['prefix'] : '',
         );
         // store connection as config
         app('config')->set('database.connections.user',$db);

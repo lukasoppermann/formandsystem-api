@@ -37,8 +37,8 @@ abstract class ApiController extends Controller
             $model = $model->onlyTrashed();
         }
         // apply filters
-        foreach((array) $this->request->filter() as $key => $value){
-            $model = $model->where($key, $value);
+        foreach((array) $this->request->filter() as $key => $values){
+            $model = $model->whereIn($key, $values);
         }
         // return result
         return $this->response->paginator($model->paginate($this->perPage), $this->newTransformer(), ['key' => $this->resource]);

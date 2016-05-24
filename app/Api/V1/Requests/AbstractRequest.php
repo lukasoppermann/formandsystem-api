@@ -175,7 +175,11 @@ abstract class AbstractRequest
         // validate filters
         $this->validateFilters($filter);
         // set filter
-        $this->requestFilter = $filter;
+        if(is_array($filter)){
+            $this->requestFilter = array_map(function($item){
+                return array_map('trim',explode(',',$item));
+            },$filter);
+        }
     }
     /**
      * get valid filters

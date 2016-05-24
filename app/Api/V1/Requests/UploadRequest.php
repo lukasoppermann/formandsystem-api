@@ -14,6 +14,12 @@ class UploadRequest extends AbstractResourceRequest
      */
     protected $fileRequest = TRUE;
     /**
+     * determins if the user needs to have an image ftp access
+     *
+     * @var bool
+     */
+    protected $needs_ftp_image = TRUE;
+    /**
      * allowed image mime types
      *
      * @var [array]
