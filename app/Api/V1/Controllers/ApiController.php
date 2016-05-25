@@ -41,6 +41,9 @@ abstract class ApiController extends Controller
             $model = $model->whereIn($key, $values);
         }
         // return result
+        //TODO: Fix so that filters are in next link
+        // $page_and_query = trim(preg_replace('/page=\d+/','',preg_replace('/\/([^?])*\?/','',$this->request->getRequestUri())),'&').'&page';
+        // return $this->response->paginator($model->paginate($this->perPage, ['*'],$page_and_query), $this->newTransformer(), ['key' => $this->resource]);
         return $this->response->paginator($model->paginate($this->perPage), $this->newTransformer(), ['key' => $this->resource]);
     }
     /*
