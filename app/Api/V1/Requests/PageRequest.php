@@ -69,5 +69,6 @@ class PageRequest extends AbstractResourceRequest
         'slug',
         'published',
         'language',
+        'id',
     ];
 }

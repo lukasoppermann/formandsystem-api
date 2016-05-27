@@ -82,11 +82,14 @@ $app->register(App\Providers\OAuthServiceProvider::class);
 */
 $app['Dingo\Api\Transformer\Factory']->setAdapter(function ($app) {
     $fractal = new League\Fractal\Manager;
-    $fractal->parseExcludes('author');
     $serializer = new \App\Api\V1\Serializer\JsonApiExtendedSerializer($_ENV['API_DOMAIN']);
     $fractal->setSerializer($serializer);
+    // exclude specified includes
+    foreach(explode(',',app('request')->input('exclude')) as $exclude){
+        $excludes[] = $exclude;
+    }
+    $fractal->parseExcludes($excludes);
 
-    dd(app('request')->input('exclude'));
     // return a new Fractal instance
     return new Dingo\Api\Transformer\Adapter\Fractal($fractal, 'include', ',', true);
 });

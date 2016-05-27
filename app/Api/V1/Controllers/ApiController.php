@@ -20,11 +20,11 @@ abstract class ApiController extends Controller
      *
      * @var int
      */
-    protected $perPage = 20;
+    protected $perPage = 1;
     /*
      * index
      */
-    public function index()
+    public function index(Request $request)
     {
         // get model instance
         $model = $this->newModel();
@@ -41,10 +41,11 @@ abstract class ApiController extends Controller
             $model = $model->whereIn($key, $values);
         }
         // return result
-        //TODO: Fix so that filters are in next link
-        // $page_and_query = trim(preg_replace('/page=\d+/','',preg_replace('/\/([^?])*\?/','',$this->request->getRequestUri())),'&').'&page';
-        // return $this->response->paginator($model->paginate($this->perPage, ['*'],$page_and_query), $this->newTransformer(), ['key' => $this->resource]);
-        return $this->response->paginator($model->paginate($this->perPage), $this->newTransformer(), ['key' => $this->resource]);
+        $parameters = $request->all();
+        unset($parameters['page']);
+        // needs return rawurldecode($this->paginator->url($page));
+        // in League\Fractal\Pagination\IlluminatePaginatorAdapter on line 102
+        return $this->response->paginator($model->paginate($this->perPage)->appends($parameters), $this->newTransformer(), ['key' => $this->resource]);
     }
     /*
      * show
