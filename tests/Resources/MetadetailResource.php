@@ -45,7 +45,7 @@ class MetadetailResource extends ApiResource{
             'type' => 'in:metadetails',
             'attributes' => [
                 'type' => 'string',
-                'value' => 'stringOrArray',
+                'data' => 'stringOrArray',
             ]
         ];
     }
@@ -61,7 +61,7 @@ class MetadetailResource extends ApiResource{
             "type" => "metadetails",
             "attributes" => [
                 "type" => "language",
-                "value" => [
+                "data" => [
                     'lang' => 'de',
                     'name' => 'deutsch'
                 ]
@@ -79,7 +79,7 @@ class MetadetailResource extends ApiResource{
         return [
             "type" => "metadetails",
             "attributes" => [
-                "value" => "patched value"
+                "data" => "patched value"
             ]
         ];
     }
