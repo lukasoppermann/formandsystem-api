@@ -15,7 +15,7 @@ class CreateMetadetailsTable extends Migration
         Schema::create('metadetails', function (Blueprint $table) {
             $table->uuid('id')->index();
             $table->string('type');
-            $table->text('value');
+            $table->text('data');
             $table->timestamps();
 			$table->softDeletes();
         });

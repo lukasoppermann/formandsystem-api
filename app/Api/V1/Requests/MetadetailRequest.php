@@ -28,14 +28,14 @@ class MetadetailRequest extends AbstractResourceRequest
         'post' => [
             'data.type'              => 'required|in:metadetails',
             'data.attributes.type'   => 'required|string|alpha_dash',
-            'data.attributes.value'  => 'required|string_or_array'
+            'data.attributes.data'   => 'required|string_or_array'
         ],
         // PATCH
         'patch' => [
             'data.id'                    => 'required|string',
             'data.type'                  => 'required|in:metadetails',
             'data.attributes.type'       => 'string|alpha_dash',
-            'data.attributes.value'      => 'string_or_array',
+            'data.attributes.data'       => 'string_or_array',
             'data.attributes.is_trashed' => 'boolean',
         ]
     ];

@@ -34,7 +34,6 @@ class FragmentTransformer extends ApiTransformer
             'name' => $fragment->name,
             'type' => $fragment->type,
             'data' => $fragment->data,
-            'fragments' => $this->collection( $fragment->fragments, new FragmentTransformer ),
             'created_at' => (string)$fragment->created_at,
             'updated_at' => (string)$fragment->updated_at,
             'is_trashed'    => $this->isTrashed($fragment),

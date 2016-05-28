@@ -78,18 +78,18 @@ $factory->define(App\Api\V1\Models\Image::class, function ($faker) {
 */
 $factory->define(App\Api\V1\Models\Metadetail::class, function ($faker) {
     $types = $faker->words(5);
-    $value = $faker->sentence(4);
+    $data = $faker->sentence(4);
     if(rand(1,3) === 1 ){
-        $value = [];
+        $data = [];
         for($i = rand(1,5); $i > 0; $i-- ){
-            $value[$faker->word()] = $faker->word();
+            $data[$faker->word()] = $faker->word();
         }
-         $value = json_encode($value);
+         $data = json_encode($data);
     }
 
     return [
         'id'                => $faker->uuid,
         'type'              => $faker->randomElement($types),
-        'value'             => $value,
+        'data'              => $data,
     ];
 });

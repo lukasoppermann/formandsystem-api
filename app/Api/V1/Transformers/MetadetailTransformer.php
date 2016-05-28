@@ -31,7 +31,7 @@ class MetadetailTransformer extends ApiTransformer
         return [
             'id'            => $metadetails->id,
             'type'          => $metadetails->type,
-            'value'          => $this->decode($metadetails->value),
+            'data'          => $this->decode($metadetails->data),
             'created_at'    => (string)$metadetails->created_at,
             'updated_at'    => (string)$metadetails->updated_at,
             'is_trashed'    => $this->isTrashed($metadetails),

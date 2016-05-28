@@ -24,7 +24,7 @@ class Metadetail extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['id','type','value'];
+    protected $fillable = ['id','type','data'];
     /**
      * The attributes that should be mutated to dates.
      *
