@@ -20,7 +20,7 @@ abstract class ApiController extends Controller
      *
      * @var int
      */
-    protected $perPage = 1;
+    protected $perPage = 20;
     /*
      * index
      */
