@@ -63,5 +63,6 @@ class FragmentRequest extends AbstractResourceRequest
     public $filter = [
         'type',
         'name',
+        'id',
     ];
 }

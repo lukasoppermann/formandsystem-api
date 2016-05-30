@@ -61,6 +61,7 @@ class ImageRequest extends AbstractResourceRequest
      * @var [array]
      */
     public $filter = [
-        'slug'
+        'slug',
+        'id',
     ];
 }

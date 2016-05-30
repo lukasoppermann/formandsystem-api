@@ -13,7 +13,7 @@ class CreatePageablesTable extends Migration
     public function up()
     {
         Schema::create('pageables', function (Blueprint $table) {
-            
+
             $table->increments('id');
 
             $table->uuid('page_id')->index();

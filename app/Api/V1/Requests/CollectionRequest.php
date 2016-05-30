@@ -59,5 +59,6 @@ class CollectionRequest extends AbstractResourceRequest
      */
     public $filter = [
         'slug',
+        'id',
     ];
 }

@@ -56,6 +56,7 @@ class MetadetailRequest extends AbstractResourceRequest
      * @var [array]
      */
     public $filter = [
-        'type'
+        'type',
+        'id',
     ];
 }
