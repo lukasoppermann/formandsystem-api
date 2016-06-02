@@ -11,6 +11,12 @@ use League\Flysystem\Sftp\SftpAdapter;
 class UploadsController extends ApiController
 {
     /**
+     * determines if the ftp to upload images is needed
+     *
+     * @var boolean
+     */
+    protected $needs_ftp_image = true;
+    /**
      * allowed image mime types
      *
      * @var [array]
@@ -39,8 +45,7 @@ class UploadsController extends ApiController
         // validate image can be uploaded
         $this->validateUploadable($model);
         // write file to remote disk
-        \LOG::debug('missing credentials');
-        $file = $this->newFilesystem([])->put('/'.$resourceType.'/'.$model->link, $request->getContent());
+        $file = $this->newFilesystem(app('config')->get('user.ftp.image'))->put('/'.$resourceType.'/'.$model->link, $request->getContent());
         // respond
         if($file === true){
             // return true
@@ -77,13 +82,9 @@ class UploadsController extends ApiController
      */
     protected function newFilesystem($credentials){
         // Setup the adapter
-        $adapter = new SftpAdapter([
-            'host' => 'ftp.formandsystem.com',
-            'username' => '373917-test',
-            'password' => 'test1234',
-            'ssl' => false,
+        $adapter = new SftpAdapter(array_merge([
             'timeout' => 30,
-        ]);
+        ],$credentials));
         // return the system
         return new Filesystem($adapter);
     }

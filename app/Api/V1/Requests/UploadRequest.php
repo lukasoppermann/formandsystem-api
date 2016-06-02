@@ -8,6 +8,14 @@ class UploadRequest extends AbstractResourceRequest
 {
     use RequestAuthorization;
     /**
+     * scopes available for the endpoint
+     *
+     * @var [array]
+     */
+    public $scopes = [
+        'put'     => 'content.patch',
+    ];
+    /**
      * make this a file request
      *
      * @var [bool]
@@ -47,6 +55,8 @@ class UploadRequest extends AbstractResourceRequest
         \LOG::debug('change upload to type FileRequest');
         // store current request
         $this->request = $request;
+        // store current request
+        $this->isAuthorized();
         // if file should be uploaded
         if($request->segment(2) !== NULL){
             $this->validateImage();
@@ -80,12 +90,14 @@ class UploadRequest extends AbstractResourceRequest
      */
     protected function validateMimeType(){
         // get content mime type
-        $fileMime = (new \finfo(FILEINFO_MIME_TYPE))->buffer($this->request->getContent());
+        // $fileMime = (new \finfo(FILEINFO_MIME_TYPE))->buffer($this->request->getContent());
         $headerMime = $this->request->header('Content-Type');
-        // test mime types
-        if($fileMime !== $headerMime){
-            throw new \Dingo\Api\Exception\StoreResourceFailedException('The content type specified in the header does not match the files content type.');
-        }
+        // \Log::debug($fileMime);
+        // \Log::debug($headerMime);
+        // // test mime types
+        // if($fileMime !== $headerMime){
+        //     throw new \Dingo\Api\Exception\StoreResourceFailedException('The content type specified in the header does not match the files content type.');
+        // }
         // test mime types
         if(!array_key_exists($headerMime, $this->mimeTypes)){
             throw new \Dingo\Api\Exception\StoreResourceFailedException('The image type you are trying to upload is not supported.');

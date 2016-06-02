@@ -51,8 +51,11 @@ trait RequestAuthorization
                 throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($this->trans('errors.missing_client_database'));
             }
             // missing image ftp info
-            if(isset($this->needs_ftp_image) && $this->needs_ftp_image === TRUE && !in_array('ftp_image',$detail_types)){
-                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($this->trans('errors.missing_client_ftp_image'));
+            if(isset($this->needs_ftp_image) && $this->needs_ftp_image === TRUE){
+                if(!in_array('ftp_image',$detail_types)){
+                    throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($this->trans('errors.missing_client_ftp_image'));
+                }
+                $this->setFtp('image', json_decode($details[array_search('ftp_image', $detail_types)]['data'], true));
             }
             // missing backup ftp info
             if(isset($this->needs_ftp_backup) && $this->needs_ftp_backup === TRUE && !in_array('ftp_backup',$detail_types)){
@@ -86,6 +89,35 @@ trait RequestAuthorization
         );
         // store connection as config
         app('config')->set('database.connections.user',$db);
+    }
+    /**
+     * set user ftp connection config
+     *
+     * @method setFtp
+     *
+     * @param  String $type can be image|backup
+     * @param  Array $db
+     */
+    protected function setFtp($type, Array $ftp){
+        $allowd_types = ['image','backup'];
+        if(!in_array($type, $allowd_types)){
+            throw new \Exception($this->trans('errors.internal'));
+        }
+        try{
+            // prepare db connection
+            $ftp = array(
+                'type'      => $ftp['type'],
+                'host'      => $ftp['host'],
+                'path'      => $ftp['path'],
+                'username'  => $ftp['username'],
+                'password'  => $ftp['password'],
+                'ssl'       => isset($ftp['ssl']) ? $ftp['ssl'] : false,
+            );
+        } catch(\Exception $e) {
+            throw new \Exception($this->trans('errors.internal'));
+        }
+        // store connection as config
+        app('config')->set('user.ftp.'.$type,$ftp);
     }
     /**
      * get scope for current request type and current request

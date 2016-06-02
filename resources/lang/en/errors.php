@@ -15,7 +15,7 @@ return [
     'missing_client_ftp_image' => 'Please setup an image ftp access for your account.',
     'missing_client_ftp_backup' => 'Please setup a backup ftp access for your account.',
     // INTERNAL 500
-    'interal' => 'Failed to authorize the request due to an internal error. Please notify support@formandsystem.com.',
+    'internal' => 'Failed to authorize the request due to an internal error. Please notify support@formandsystem.com.',
 
 
 ];
