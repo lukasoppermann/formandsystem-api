@@ -14,11 +14,11 @@
 | Collection
 */
 $factory->define(App\Api\V1\Models\Collection::class, function ($faker) {
-    $name = 'Collection Name '.rand(1,100);
+    $id = $faker->uuid;
     return [
-        'id' => $faker->uuid,
-        'name' => $name,
-        'slug' => str_replace(' ','-',$name),
+        'id' => $id,
+        'name' => 'Collection Name '.$id,
+        'slug' => 'collection-name-'.$id,
     ];
 });
 /*

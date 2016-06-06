@@ -48,8 +48,10 @@ class ImageTest extends ResourceTestCase
     ];
     /**
      * upload image
+     *
+     * @group upload
      */
-    public function postResource(){
+    public function testPostResource(){
         // Setup the FTP
         // $adapter = new SftpAdapter($this->testSftp);
         // return the system
@@ -71,10 +73,14 @@ class ImageTest extends ResourceTestCase
             $this->assertValid($data, $this->resource()->blueprint());
             // Upload image
             $response = $this->client()->request('PUT', $data['links']['upload'], [
-                'headers' => ['Content-Type' => $contentType],
+                'headers' => array_merge(
+                    $this->headers(),
+                    ['Content-Type' => $contentType]
+                ),
                 'body' => fopen(base_path().$file,'r')
             ]);
             // // GET DATA
+            dd($this->getResponseArray($response));
             $data = $this->getResponseArray($response)['data'];
             // // ASSERTIONS
             $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());

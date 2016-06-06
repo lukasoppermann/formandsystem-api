@@ -170,6 +170,7 @@ trait GetTestTrait
         // loop through relationships
         foreach($this->relationships() as $relationship){
             // add relationships
+            $model->restore();
             $this->addRelatedItems($model, $relationship);
             // CALL
             $response = $this->getClientResponse('/'.$this->resource.'/'.$model->id.'/'.$relationship);
@@ -204,7 +205,7 @@ trait GetTestTrait
      * @group rel
      */
     public function getRelatedWithWrongResourceId(){
-        foreach($this->relationships()as $relationship){
+        foreach($this->relationships() as $relationship){
             $response = $this->getClientResponse($this->resource.'/1/'.$relationship);
             // ASSERTIONS
             $this->checkErrorResponse($response, 'HTTP_NOT_FOUND');

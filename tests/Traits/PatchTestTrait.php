@@ -211,16 +211,14 @@ trait PatchTestTrait
             // get related model
             $relatedModel = $this->newModel(strtolower(str_replace('ownedBy','',$relationship)));
             // build relationship data
-            $relationshipData[$relationship]['data'] = [
-                [
-                    'id' => $relatedModel->all()->random(1)->id,
+            // TODO: does this below actually work?
+            $relatedModel->all()->random(2)->each(fuction($item){
+                $item->{$relationship}()->detach();
+                $relationshipData[$relationship]['data'][] = [
+                    'id' => $item->id,
                     'type' => strtolower(str_replace('ownedBy','',$relationship))
-                ],
-                [
-                    'id' => $relatedModel->all()->random(1)->id,
-                    'type' => strtolower(str_replace('ownedBy','',$relationship))
-                ]
-            ];
+                ];
+            });
         }
         // POST
         $response = $this->client()->request('PATCH', '/'.$this->resource.'/'.$model->id, [

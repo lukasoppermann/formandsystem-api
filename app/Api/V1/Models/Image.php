@@ -42,7 +42,7 @@ class Image extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['id','link','slug','bytesize','height','width'];
+    protected $fillable = ['id','link','slug','filename','bytesize','height','width'];
     /**
      * The images that belong to the image.
      */
