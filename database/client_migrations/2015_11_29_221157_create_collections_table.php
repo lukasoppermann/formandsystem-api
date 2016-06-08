@@ -14,8 +14,9 @@ class CreateCollectionsTable extends Migration
     {
         Schema::create('collections', function (Blueprint $table) {
             $table->uuid('id')->index();
-            $table->string('name', 100);
+            $table->string('name', 100)->index();
             $table->string('slug', 100)->unique();
+            $table->string('type', 100)->index();
             $table->softDeletes();
         });
     }

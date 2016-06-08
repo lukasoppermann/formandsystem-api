@@ -56,15 +56,19 @@ class UploadRequest extends AbstractResourceRequest
         // store current request
         $this->request = $request;
         // store current request
-        $this->isAuthorized();
+        try{
+            $this->isAuthorized();
+        }catch(\Exception $e){
+            \LOG::debug($e);
+        }
         // if file should be uploaded
-        if($request->segment(2) !== NULL){
-            $this->validateImage();
-        }
-        // not uploading image
-        else {
-            parent::__construct($request);
-        }
+        // if($request->segment(2) !== NULL){
+        $this->validateImage();
+        // }
+        // // not uploading image
+        // else {
+        //     parent::__construct($request);
+        // }
     }
     /**
      * check if content type is allowd

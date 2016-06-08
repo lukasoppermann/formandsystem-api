@@ -58,7 +58,7 @@ class PageTransformer extends ApiTransformer
 
     public function includeOwnedByCollections( Page $page )
     {
-        return $this->collection( $page->ownedByCollections, new PageTransformer, 'collections' );
+        return $this->collection( $page->ownedByCollections, new CollectionTransformer, 'collections' );
     }
 
     public function includeMetadetails( Page $page )

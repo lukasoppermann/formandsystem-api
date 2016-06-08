@@ -89,6 +89,7 @@ abstract class AbstractRequest
         if(method_exists($this, 'authorize') === true && $this->authorize() !== true){
             throw new \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException(null, 'Failed to authorize the request possibley due to missing scopes.');
         }
+        return true;
     }
     /**
      * validate current request

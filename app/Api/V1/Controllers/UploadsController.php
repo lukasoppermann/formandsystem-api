@@ -44,9 +44,8 @@ class UploadsController extends ApiController
         );
         // validate image can be uploaded
         $this->validateUploadable($model);
-        \Log::debug($request);
         // write file to remote disk
-        $file = $this->newFilesystem(app('config')->get('user.ftp.image'))->put('/'.$resourceType.'/'.$model->filename, $request->getContent());
+        $file = $this->newFilesystem(app('config')->get('user.ftp.image'))->put('/'.$resourceType.'/'.$model->filename, file_get_contents('php://input'));
         // respond
         if($file === true){
             // return true

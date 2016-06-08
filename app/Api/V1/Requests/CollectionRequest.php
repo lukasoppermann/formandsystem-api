@@ -28,7 +28,8 @@ class CollectionRequest extends AbstractResourceRequest
         'post' => [
             'data.type' => 'required|in:collections',
             'data.attributes.name' => 'required|string',
-            'data.attributes.slug' => 'required|string|alpha_dash',
+            'data.attributes.slug' => 'required|alpha_dash',
+            'data.attributes.type' => 'required|alpha_dash',
         ],
         // PATCH
         'patch' => [
@@ -36,6 +37,7 @@ class CollectionRequest extends AbstractResourceRequest
             'data.type' => 'required|in:collections',
             'data.attributes.name' => 'string',
             'data.attributes.slug' => 'string|alpha_dash',
+            'data.attributes.type' => 'required|alpha_dash',
             'data.attributes.is_trashed' => 'boolean',
         ]
     ];
@@ -60,5 +62,7 @@ class CollectionRequest extends AbstractResourceRequest
     public $filter = [
         'slug',
         'id',
+        'type',
+        'name',
     ];
 }
