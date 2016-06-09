@@ -205,6 +205,11 @@ abstract class AbstractRequest
         $includes = array_filter(explode(',',$this->request->input('include')));
         // check if filters are available
         foreach($includes as $relationship){
+            // only get first part if dot is found e.g. pages.fragments
+            if($pos = strpos($relationship,'.')){
+                $relationship = substr($relationship,0,$pos);
+            }
+            // check relationship
             if(!in_array($relationship, $this->relationships())){
                 $errors[$relationship][] = 'The resources has not available relationship to "'.$relationship.'".';
             }
