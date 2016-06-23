@@ -10,8 +10,8 @@ use App\Api\V1\Models\Collection;
 class CollectionTransformer extends ApiTransformer
 {
     protected $defaultIncludes = [
-        // 'fragments',
-        // 'pages'
+        'fragments',
+        'pages'
     ];
     /**
       * List of resources possible to include
@@ -31,6 +31,7 @@ class CollectionTransformer extends ApiTransformer
     {
         return [
             'id'            => $collection->id,
+            'type'          => $collection->type,
             'name'          => $collection->name,
             'slug'          => $collection->slug,
             'is_trashed'    => $this->isTrashed($collection),

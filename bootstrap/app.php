@@ -85,10 +85,10 @@ $app['Dingo\Api\Transformer\Factory']->setAdapter(function ($app) {
     $serializer = new \App\Api\V1\Serializer\JsonApiExtendedSerializer($_ENV['API_DOMAIN']);
     $fractal->setSerializer($serializer);
     // exclude specified includes
-    foreach(explode(',',app('request')->input('exclude')) as $exclude){
-        $excludes[] = $exclude;
+    $excludes = app('request')->input('exclude');
+    if(isset($excludes)){
+        $fractal->parseExcludes($excludes);
     }
-    $fractal->parseExcludes($excludes);
 
     // return a new Fractal instance
     return new Dingo\Api\Transformer\Adapter\Fractal($fractal, 'include', ',', true);

@@ -63,7 +63,7 @@ abstract class AbstractRequest
         if($request !== NULL){
             // store current request
             $this->request = $request;
-            // store current request
+            // authorize request
             $this->isAuthorized();
             // run validation if not file request
             if(!isset($this->fileRequest) || $this->fileRequest !== TRUE){

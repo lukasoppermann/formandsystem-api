@@ -10,10 +10,10 @@ class PageTransformer extends ApiTransformer
 {
 
     protected $defaultIncludes = [
-        // 'pages',
+        'pages',
         // 'collections',
-        // 'fragments',
-        // 'metadetails',
+        'fragments',
+        'metadetails',
     ];
     /**
       * List of resources possible to include

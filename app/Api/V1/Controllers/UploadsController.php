@@ -51,6 +51,7 @@ class UploadsController extends ApiController
             // return true
             return $this->response->item($model, $this->newTransformer(ucfirst(substr($resourceType,0,-1))), ['key' => $resourceType])->setStatusCode(201);
         }
+
         // File could not be saved
         throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException('Failed storing image.');
     }
@@ -98,8 +99,8 @@ class UploadsController extends ApiController
      * @return [void|exception]
      */
     protected function validateUploadable($model){
-        if($model->bytesize === NULL){
-            throw new \Dingo\Api\Exception\StoreResourceFailedException('You cannot upload a file for an external resource.');
-        }
+        // if($model->bytesize === NULL){
+        //     throw new \Dingo\Api\Exception\StoreResourceFailedException('You cannot upload a file for an external resource.');
+        // }
     }
 }

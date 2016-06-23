@@ -95,9 +95,8 @@ class UploadRequest extends AbstractResourceRequest
     protected function validateMimeType(){
         // get content mime type
         // $fileMime = (new \finfo(FILEINFO_MIME_TYPE))->buffer($this->request->getContent());
-        $headerMime = $this->request->header('Content-Type');
-        // \Log::debug($fileMime);
-        // \Log::debug($headerMime);
+        $headerMime = trim($this->request->header('Content-Type'));
+
         // // test mime types
         // if($fileMime !== $headerMime){
         //     throw new \Dingo\Api\Exception\StoreResourceFailedException('The content type specified in the header does not match the files content type.');
