@@ -15,24 +15,24 @@ class ClientTableSeeder extends Seeder {
 			'id' 		=> 'formandsystem',
 			'secret' 	=> '5fcaaf78514a024688b35f4f4ad946394cb79e50',
 			'name' 		=> 'Form&System',
-			'created_at' => '0000-00-00',
-			'updated_at' => '0000-00-00'
+			'created_at' => NULL,
+			'updated_at' => NULL
 		]);
 
 		DB::table('oauth_clients')->insert([
 			'id' 		=> 'client_one',
 			'secret' 	=> '5fcaaf78514a024688b35f4f4ad946394cb79e50',
 			'name' 		=> 'A normal client',
-			'created_at' => '0000-00-00',
-			'updated_at' => '0000-00-00'
+			'created_at' => NULL,
+			'updated_at' => NULL
 		]);
 
 		DB::table('oauth_clients')->insert([
 			'id' 		=> 'client_to_delete',
 			'secret' 	=> '5fcaaf78514a024688b35f4f4ad946394cb79e50',
 			'name' 		=> 'A normal client',
-			'created_at' => '0000-00-00',
-			'updated_at' => '0000-00-00'
+			'created_at' => NULL,
+			'updated_at' => NULL
 		]);
 		//////////////////////////////////////////
 		/// Details
@@ -131,44 +131,44 @@ class ClientTableSeeder extends Seeder {
 				[
 					'client_id' => 'formandsystem',
 					'scope_id' => 'client.post',
-					'created_at' => '0000-00-00',
-					'updated_at' => '0000-00-00'
+					'created_at' => NULL,
+					'updated_at' => NULL
 				],
 				[
 					'client_id' => 'formandsystem',
 					'scope_id' => 'client.delete',
-					'created_at' => '0000-00-00',
-					'updated_at' => '0000-00-00'
+					'created_at' => NULL,
+					'updated_at' => NULL
 				],
 				[
 					'client_id' => 'formandsystem',
 					'scope_id' => 'client.get',
-					'created_at' => '0000-00-00',
-					'updated_at' => '0000-00-00'
+					'created_at' => NULL,
+					'updated_at' => NULL
 				],
 				[
 					'client_id' => 'client_one',
 					'scope_id' => 'content.post',
-					'created_at' => '0000-00-00',
-					'updated_at' => '0000-00-00'
+					'created_at' => NULL,
+					'updated_at' => NULL
 				],
 				[
 					'client_id' => 'client_one',
 					'scope_id' => 'content.delete',
-					'created_at' => '0000-00-00',
-					'updated_at' => '0000-00-00'
+					'created_at' => NULL,
+					'updated_at' => NULL
 				],
 				[
 					'client_id' => 'client_one',
 					'scope_id' => 'content.get',
-					'created_at' => '0000-00-00',
-					'updated_at' => '0000-00-00'
+					'created_at' => NULL,
+					'updated_at' => NULL
 				],
 				[
 					'client_id' => 'client_one',
 					'scope_id' => 'content.patch',
-					'created_at' => '0000-00-00',
-					'updated_at' => '0000-00-00'
+					'created_at' => NULL,
+					'updated_at' => NULL
 				],
 			]
 		);

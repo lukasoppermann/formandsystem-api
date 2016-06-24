@@ -18,7 +18,7 @@ $factory->define(App\Api\V1\Models\Collection::class, function ($faker) {
     return [
         'id' => $id,
         'name' => 'Collection Name '.$id,
-        'type' => $faker->randomElement(['posts','images','navigation'])
+        'type' => $faker->randomElement(['posts','images','navigation']),
         'slug' => 'collection-name-'.$id,
     ];
 });

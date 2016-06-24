@@ -50,18 +50,37 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
         ]);
+        // test api
+        $this->app->make('config')->set('database.connections.testapi', [
+            'driver'    => 'mysql',
+            'host'      => '192.168.10.10',
+            'database'  => 'formandsystem_api_test',
+            'username'  => 'homestead',
+            'password'  => 'secret',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+        ]);
+        $this->app->make('config')->set('database.default', 'testapi');
+
         // migrate database
         if( static::$init === false ){
             static::$init = true;
-            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('migrate:refresh');
-            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('db:seed');
+            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('migrate:refresh',[
+                '--path'        => 'database/migrations',
+                '--database'    => 'testapi',
+            ]);
+            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('db:seed', [
+                '--class'        => 'DatabaseSeeder',
+                '--database'     => 'testapi',
+            ]);
             $this->app->make('Illuminate\Contracts\Console\Kernel')->call('migrate:refresh',[
                 '--path'        => 'database/client_migrations',
                 '--database'    => 'user',
             ]);
             $this->app->make('Illuminate\Contracts\Console\Kernel')->call('db:seed',[
                 '--class'        => 'ClientSeeder',
-                '--database'    => 'user',
+                '--database'     => 'user',
             ]);
         }
         // get tokens
@@ -130,8 +149,9 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
             $client['scopes'] = ['content.patch','content.get','content.post','content.delete'];
             ///////////////
             // get tokens
-            static::$token['cms'] = $this->tokens['cms'] = $this->getToken($cms['config'], $cms['scopes']);
             static::$token['client'] = $this->tokens['client'] = $this->getToken($client['config'], $client['scopes']);
+            static::$token['cms'] = $this->tokens['cms'] = $this->getToken($cms['config'], $cms['scopes']);
+
         }else {
             $this->tokens['cms'] = static::$token['cms'];
             $this->tokens['client'] = static::$token['client'];
@@ -146,7 +166,10 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
      */
     public function getToken($config, $scopes){
         $response = $this->client()->post('/tokens', [
-            'headers' => ['Accept' => 'application/json'],
+            'headers' => [
+                'Accept'    => 'application/json',
+                'Testing'   => 'true',
+            ],
             'form_params' => [
                 'grant_type'    => 'client_credentials',
                 'client_id'     => $config['client_id'],
@@ -187,15 +210,4 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
             'exceptions' => false,
         ]);
     }
-
-    // public function testGetResource(){
-    //     // CALL
-    //     for($i = 0; $i < 1500; $i++){
-    //         $response = $this->getClientResponse('/pages');
-    //     }
-    //     // GET DATA
-    //     $received = $this->getResponseArray($response)['data'][0];
-    //     // ASSERTIONS
-    //     $this->assertEquals(self::HTTP_OK, $response->getStatusCode());
-    // }
 }

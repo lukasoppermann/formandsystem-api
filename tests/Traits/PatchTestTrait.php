@@ -212,7 +212,7 @@ trait PatchTestTrait
             $relatedModel = $this->newModel(strtolower(str_replace('ownedBy','',$relationship)));
             // build relationship data
             // TODO: does this below actually work?
-            $relatedModel->all()->random(2)->each(fuction($item){
+            $relatedModel->all()->random(2)->each(function($item){
                 $item->{$relationship}()->detach();
                 $relationshipData[$relationship]['data'][] = [
                     'id' => $item->id,

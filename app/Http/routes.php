@@ -7,7 +7,10 @@
 $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function($api){
     $api->group([
-        'middleware' => ['api.auth'],
+        'middleware' => [
+            'api.auth',
+            App\Http\Middleware\TestingMiddleware::class
+        ],
         'namespace' => 'App\Api\V1\Controllers',
         // 'scopes' => ['client.get']
     ], function($api){
@@ -93,7 +96,10 @@ $api->version('v1', function($api){
     });
     // no oauth
     $api->group([
-        'namespace' => 'App\Api\V1\Controllers'
+        'namespace' => 'App\Api\V1\Controllers',
+        'middleware' => [
+            App\Http\Middleware\TestingMiddleware::class
+        ],
     ], function($api){
         // ---------------------------
         // authentications

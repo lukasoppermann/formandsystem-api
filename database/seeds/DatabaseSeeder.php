@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
     {
         $connection = app('config')->get('database.default');
         $db = app('config')->get('database.connections.'.$connection);
-
+        
         Model::unguard();
         if($db['driver'] === 'mysql'){
             DB::statement('SET FOREIGN_KEY_CHECKS = 0');

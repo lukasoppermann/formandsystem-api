@@ -80,7 +80,6 @@ class ImageTest extends ResourceTestCase
                 'body' => fopen(base_path().$file,'r')
             ]);
             // // GET DATA
-            dd($this->getResponseArray($response));
             $data = $this->getResponseArray($response)['data'];
             // // ASSERTIONS
             $this->assertEquals(self::HTTP_CREATED, $response->getStatusCode());

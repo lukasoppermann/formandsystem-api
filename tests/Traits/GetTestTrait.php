@@ -9,6 +9,7 @@ trait GetTestTrait
      * @test getting the main resource listing
      * @group get
      * @group main
+     * @group testresource
      *
      * @method getResource
      *

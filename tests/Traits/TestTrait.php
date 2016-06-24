@@ -39,10 +39,7 @@ trait TestTrait
     public function getClientResponse($url, $headers = [])
     {
         return $this->client()->get($url, [
-            'headers' => array_merge([
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer '.$this->tokens['client']
-            ], $headers),
+            'headers' => array_merge($this->headers(), $headers),
         ]);
     }
 
@@ -141,6 +138,7 @@ trait TestTrait
         return [
             'Accept' => 'application/json',
             'Authorization' => 'Bearer '.$this->tokens['client'],
+            'Testing' => 'true',
         ];
     }
 }
