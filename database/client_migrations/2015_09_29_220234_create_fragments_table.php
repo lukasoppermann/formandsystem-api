@@ -17,6 +17,7 @@ class CreateFragmentsTable extends Migration
             $table->string('name', 100)->nullable();
             $table->string('type')->nullable();
             $table->text('data')->nullable();
+            $table->boolean('reusable')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
