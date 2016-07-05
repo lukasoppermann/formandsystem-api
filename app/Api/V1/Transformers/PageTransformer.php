@@ -33,6 +33,7 @@ class PageTransformer extends ApiTransformer
     {
         return [
             'id'            => $page->id,
+            'position'      => $page->position,
             'menu_label'    => $page->menu_label,
             'slug'          => $page->slug,
             'published'     => (bool)$page->published,

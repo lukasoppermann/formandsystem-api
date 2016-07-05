@@ -12,5 +12,5 @@ use Illuminate\Http\Request;
 
 class PagesController extends ApiController
 {
-
+    
 }

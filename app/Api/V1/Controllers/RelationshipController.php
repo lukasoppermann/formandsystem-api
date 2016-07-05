@@ -132,7 +132,12 @@ class RelationshipController extends Controller
         // validate ids
         $this->validateRelationshipsIds($relationshipIds, $relatedType);
         // attach new relationships
-        $model->{$relatedType}()->attach($relationshipIds);
+        $relatedModel = $this->newModel($relatedType);
+        
+        foreach($relationshipIds as $id){
+            $model->{$relatedType}()->save($relatedModel->find($id));
+        }
+
         // return HTTP_NO_CONTENT
         return $this->response->noContent();
      }

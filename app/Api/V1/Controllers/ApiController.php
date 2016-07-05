@@ -215,7 +215,8 @@ abstract class ApiController extends Controller
             foreach($items as $related){
                 $ids[] = $related['id'];
             }
-            // remive items
+            // remove items
+            // TODO: swap so it works with manytoOne
             $model->{$type}()->detach($ids);
         }
     }

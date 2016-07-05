@@ -48,7 +48,8 @@ class Collection extends BaseModel
      */
     public function pages()
     {
-        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Page', 'pageable'));
+        // return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Page', 'pageable')->withPivot('position'));
+        return $this->relationshipTrashedFilter($this->hasMany('App\Api\V1\Models\Page', 'collection_id'));
     }
     /**
      * The collections that own this collection

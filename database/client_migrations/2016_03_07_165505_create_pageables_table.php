@@ -22,6 +22,8 @@ class CreatePageablesTable extends Migration
             $table->uuid('pageable_id')->index();
             $table->string('pageable_type');
 
+            $table->integer('position')->nullable();
+
         });
     }
 
