@@ -28,6 +28,7 @@ class PageRequest extends AbstractResourceRequest
         'post' => [
             'data.type'                      => 'required|in:pages',
             'data.attributes.menu_label'     => 'required|string',
+            'data.attributes.position'       => 'integer',
             'data.attributes.slug'           => 'required|string|alpha_dash',
             'data.attributes.published'      => 'required|boolean',
             'data.attributes.language'       => 'required|string|size:2',
@@ -39,6 +40,7 @@ class PageRequest extends AbstractResourceRequest
             'data.type'                      => 'required|in:pages',
             'data.id'                        => 'required|string',
             'data.attributes.menu_label'     => 'string',
+            'data.attributes.position'       => 'integer',
             'data.attributes.slug'           => 'string|alpha_dash',
             'data.attributes.published'      => 'boolean',
             'data.attributes.language'       => 'string|size:2',

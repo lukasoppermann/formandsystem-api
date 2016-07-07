@@ -32,6 +32,7 @@ class Page extends BaseModel
      */
     protected $fillable = [
         'id',
+        'position',
         'menu_label',
         'title',
         'description',
