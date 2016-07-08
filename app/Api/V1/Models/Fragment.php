@@ -43,7 +43,7 @@ class Fragment extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['id','type','name','data'];
+    protected $fillable = ['id','position','type','name','data'];
     /**
      * The pages that belong to the fragment.
      */

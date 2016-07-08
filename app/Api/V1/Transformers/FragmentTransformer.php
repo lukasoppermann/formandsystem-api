@@ -33,12 +33,13 @@ class FragmentTransformer extends ApiTransformer
     public function transform(Fragment $fragment)
     {
         return [
-            'id'    => $fragment->id,
-            'name' => $fragment->name,
-            'type' => $fragment->type,
-            'data' => $fragment->data,
-            'created_at' => (string)$fragment->created_at,
-            'updated_at' => (string)$fragment->updated_at,
+            'id'            => $fragment->id,
+            'name'          => $fragment->name,
+            'type'          => $fragment->type,
+            'data'          => $fragment->data,
+            'position'      => $fragment->position,
+            'created_at'    => (string)$fragment->created_at,
+            'updated_at'    => (string)$fragment->updated_at,
             'is_trashed'    => $this->isTrashed($fragment),
             'relationships' => $this->relationshipsLinks('fragments/'.$fragment->id),
         ];

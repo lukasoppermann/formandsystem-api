@@ -14,6 +14,7 @@ class CreateFragmentsTable extends Migration
     {
         Schema::create('fragments', function (Blueprint $table) {
             $table->uuid('id')->index();
+            $table->integer('position')->nullable();
             $table->string('name', 100)->nullable();
             $table->string('type')->nullable();
             $table->text('data')->nullable();
