@@ -39,6 +39,15 @@ class Page extends BaseModel
         'published',
         'slug',
         'language',
+        'meta'
+    ];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'meta' => 'array',
     ];
     /**
      * Indicates if the model should be timestamped.

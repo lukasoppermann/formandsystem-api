@@ -4,8 +4,8 @@ namespace App\Api\V1\Controllers;
 
 use Laravel\Lumen\Routing\Controller as LumenController;
 use Illuminate\Http\Request;
-use \Dingo\Api\Routing\Helpers;
-use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Dingo\Api\Routing\Helpers;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Api\V1\Traits\TranslateTrait;
 
 abstract class Controller extends LumenController

@@ -23,6 +23,7 @@ class CreatePagesTable extends Migration
             $table->string('slug')->index()->nullable();
             $table->boolean('published');
             $table->string('language', 2)->nullable();
+            $table->json('meta')->nullable();
             $table->timestamps();
 			$table->softDeletes();
         });

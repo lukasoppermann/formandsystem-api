@@ -43,7 +43,15 @@ class Fragment extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['id','position','type','name','data'];
+    protected $fillable = ['id','position','type','name','data','meta'];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'meta' => 'array',
+    ];
     /**
      * The pages that belong to the fragment.
      */

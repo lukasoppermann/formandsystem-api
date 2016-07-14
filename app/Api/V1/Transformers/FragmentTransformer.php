@@ -37,6 +37,7 @@ class FragmentTransformer extends ApiTransformer
             'name'          => $fragment->name,
             'type'          => $fragment->type,
             'data'          => $fragment->data,
+            'meta'          => $fragment->meta,
             'position'      => $fragment->position,
             'created_at'    => (string)$fragment->created_at,
             'updated_at'    => (string)$fragment->updated_at,

@@ -40,6 +40,7 @@ class PageTransformer extends ApiTransformer
             'language'      => $page->language,
             'title'         => $page->title,
             'description'   => $page->description,
+            'meta'          => $page->meta,
             'created_at'    => (string)$page->created_at,
             'updated_at'    => (string)$page->updated_at,
             'is_trashed'    => $this->isTrashed($page),
