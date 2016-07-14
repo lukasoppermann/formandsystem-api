@@ -1,0 +1,25 @@
+{
+  "name": "formandsystem-api",
+  "version": "1.0.0",
+  "description": "## Endpoints ### Collections",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukasoppermann/formandsystem-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lukasoppermann/formandsystem-api/issues"
+  },
+  "homepage": "https://github.com/lukasoppermann/formandsystem-api#readme",
+  "dependencies": {
+    "aglio": "^2.2.1"
+  }
+}

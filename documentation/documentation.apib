@@ -1,0 +1,30 @@
+FORMAT: 1A
+HOST: https://formandsystem.com/api
+
+# Form&System API
+This is the official API for the Form&System CMS.
+
+# Group Pages
+## Pages Collection [/pages]
+
+### Get All Pages [GET /pages]
+Listing of all pages
++ Response 200 (application/json)
+    + Attributes
+        - pages (array[Page])
+
+# Data Structures
+## Page (object)
+- id: `d90245e4-90d7-4cca-87b7-ee71b0a0adb3` (string) - The UUID of the page
+- page_id: `d90245e4-90d7-4cca-87b7-ee71b0a0adb3` (string) - The UUID of the parent page or NULL
+- collection_id: `d90245e4-90d7-4cca-87b7-ee71b0a0adb3` (string) - The UUID of the parent collection or NULL
+- position: `1` (number) - The position of the page within its parent page or collection
+- menu_label: `Home` (string)
+- title: `An awesome page` (string)
+- description: `Page description` (string)
+- slug: `home-page` (string)
+- published: `0` (number)
+- language: `de` (string)
+- meta: `{}` (string)
+- created_at: `2016-06-10 11:40:13`
+- updated_at: `2016-06-10 11:40:13`

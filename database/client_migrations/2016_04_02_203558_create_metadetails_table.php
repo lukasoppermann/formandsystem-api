@@ -16,6 +16,10 @@ class CreateMetadetailsTable extends Migration
             $table->uuid('id')->index();
             $table->string('type');
             $table->text('data');
+
+            $table->uuid('metadetailable_id')->index();
+            $table->string('metadetailable_type');
+
             $table->timestamps();
 			$table->softDeletes();
         });
