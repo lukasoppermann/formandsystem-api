@@ -13,7 +13,6 @@ class PageTransformer extends ApiTransformer
         'pages',
         // 'collections',
         'fragments',
-        'metadetails',
     ];
     /**
       * List of resources possible to include
@@ -26,7 +25,6 @@ class PageTransformer extends ApiTransformer
         'collections',
         'ownedByCollections',
         'fragments',
-        // 'metadetails',
     ];
 
     public function transform(Page $page)

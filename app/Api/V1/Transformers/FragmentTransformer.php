@@ -27,7 +27,6 @@ class FragmentTransformer extends ApiTransformer
       'ownedByCollections',
       'ownedByPages',
       'images',
-      'metadetails',
     ];
 
     public function transform(Fragment $fragment)

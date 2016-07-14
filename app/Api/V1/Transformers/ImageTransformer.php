@@ -24,8 +24,6 @@ class ImageTransformer extends ApiTransformer
       'ownedByImages',
       'ownedByCollections',
       'ownedByFragments',
-      'metadetails',
-      'ownedByMetadetails',
     ];
 
     public function transform(Image $image)
