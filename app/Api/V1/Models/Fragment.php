@@ -50,7 +50,7 @@ class Fragment extends BaseModel
      * @var array
      */
     protected $casts = [
-        'meta' => 'array',
+        'meta' => 'collection',
     ];
     /**
      * The pages that belong to the fragment.

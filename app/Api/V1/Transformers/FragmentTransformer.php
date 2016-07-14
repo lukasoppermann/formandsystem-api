@@ -12,7 +12,7 @@ class FragmentTransformer extends ApiTransformer
     protected $defaultIncludes = [
         'fragments',
         'images',
-        'metadetails',
+        // 'metadetails',
         'collections',
     ];
     /**

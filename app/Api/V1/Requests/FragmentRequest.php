@@ -31,6 +31,7 @@ class FragmentRequest extends AbstractResourceRequest
             'data.attributes.type'          => 'required|string',
             'data.attributes.position'      => 'integer',
             'data.attributes.data'          => '',
+            'data.attributes.meta'          => '',
         ],
         // PATCH
         'patch' => [
@@ -41,6 +42,7 @@ class FragmentRequest extends AbstractResourceRequest
             'data.attributes.type'          => 'string',
             'data.attributes.data'          => '',
             'data.attributes.is_trashed'    => 'boolean',
+            'data.attributes.meta'          => '',
         ]
     ];
     /**

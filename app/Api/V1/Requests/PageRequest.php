@@ -32,6 +32,7 @@ class PageRequest extends AbstractResourceRequest
             'data.attributes.slug'           => 'required|string|alpha_dash',
             'data.attributes.published'      => 'required|boolean',
             'data.attributes.language'       => 'required|string|size:2',
+            'data.attributes.meta'           => '',
             'data.attributes.title'          => 'string',
             'data.attributes.description'    => 'string'
         ],
@@ -44,6 +45,7 @@ class PageRequest extends AbstractResourceRequest
             'data.attributes.slug'           => 'string|alpha_dash',
             'data.attributes.published'      => 'boolean',
             'data.attributes.language'       => 'string|size:2',
+            'data.attributes.meta'           => '',
             'data.attributes.title'          => 'string',
             'data.attributes.description'    => 'string',
             'data.attributes.is_trashed'     => 'boolean',

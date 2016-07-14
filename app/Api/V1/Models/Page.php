@@ -47,7 +47,7 @@ class Page extends BaseModel
      * @var array
      */
     protected $casts = [
-        'meta' => 'array',
+        'meta' => 'collection',
     ];
     /**
      * Indicates if the model should be timestamped.

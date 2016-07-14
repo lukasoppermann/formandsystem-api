@@ -11,9 +11,6 @@ class PagesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('pageables')->truncate();
-        // factory('App\Api\V1\Models\Page', 20)->create();
-
         // Connect to pages
 
         App\Api\V1\Models\Page::all()->each(function($page){

@@ -26,7 +26,7 @@ class PageTransformer extends ApiTransformer
         'collections',
         'ownedByCollections',
         'fragments',
-        'metadetails',
+        // 'metadetails',
     ];
 
     public function transform(Page $page)

@@ -139,16 +139,8 @@ abstract class ApiController extends Controller
         if(!is_array($attributes)){
             return [];
         }
-        // grab data for accepted fields
-        $output = [];
-        foreach($attributes as $key => $value){
-            if(is_array($value)){
-                $value = json_encode($value);
-            }
-            $output[$key] = $value;
-        }
         // return data
-        return $output;
+        return $attributes;
     }
     /**
      * gets relationships from received data, for

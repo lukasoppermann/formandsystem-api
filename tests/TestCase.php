@@ -42,10 +42,10 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
         // set user db for test
         $this->app->make('config')->set('database.connections.user', [
             'driver'    => 'mysql',
-            'host'      => '192.168.10.10',
+            'host'      => '127.0.0.1',
             'database'  => 'formandsystem_client',
-            'username'  => 'homestead',
-            'password'  => 'secret',
+            'username'  => 'root',
+            'password'  => 'root',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -53,10 +53,10 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
         // test api
         $this->app->make('config')->set('database.connections.testapi', [
             'driver'    => 'mysql',
-            'host'      => '192.168.10.10',
+            'host'      => '127.0.0.1',
             'database'  => 'formandsystem_api_test',
-            'username'  => 'homestead',
-            'password'  => 'secret',
+            'username'  => 'root',
+            'password'  => 'root',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
