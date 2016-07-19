@@ -36,11 +36,9 @@ trait RequestAuthorization
         {
             return false;
         }
-
         // get all details
         if(!isset($this->setClientData) || $this->setClientData === true){
             $details = $client->details->toArray();
-
             // check
             if(!is_array($details) || count($details) === 0){
                 throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($this->trans('errors.missing_client_details'));
@@ -56,7 +54,6 @@ trait RequestAuthorization
                 if(!in_array('ftp_image',$detail_types)){
                     throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($this->trans('errors.missing_client_ftp_image'));
                 }
-
                 $this->setFtp('image', json_decode($details[array_search('ftp_image', $detail_types)]['data'], true));
             }
             // missing backup ftp info

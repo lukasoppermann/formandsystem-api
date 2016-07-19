@@ -169,16 +169,18 @@ abstract class Controller extends LumenController
         }
         // grab ids and return
         foreach((array) $relationships as $relationship){
-            // return error if wrong type or item does not exist
-            if($relationship['type'] !== strtolower(str_replace('ownedBy','',$type)) ){
-                $error = $this->trans('errors.invalid_relationship', [
-                    'id' => $relationship['id'],
-                    'type' => $relationship['type']
-                ]);
-                throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($error);
+            if(isset($relationship['type'])){
+                // return error if wrong type or item does not exist
+                if($relationship['type'] !== strtolower(str_replace('ownedBy','',$type)) ){
+                    $error = $this->trans('errors.invalid_relationship', [
+                        'id' => $relationship['id'],
+                        'type' => $relationship['type']
+                    ]);
+                    throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException($error);
+                }
+                // grab id
+                $ids[] = $relationship['id'];
             }
-            // grab id
-            $ids[] = $relationship['id'];
         }
         // return
         return isset($ids) ? $ids : [];

@@ -68,13 +68,13 @@ abstract class AbstractRequest
             // run validation if not file request
             if(!isset($this->fileRequest) || $this->fileRequest !== TRUE){
                 // validate request data
-                $this->validate($request);
+                $this->validate($this->request);
                 // process fitler
-                $this->processFilter($request);
+                $this->processFilter($this->request);
                 // validate includes
-                $this->validateIncludes($request);
+                $this->validateIncludes($this->request);
                 // validate query parameters
-                $this->validateQueryParameters($request);
+                $this->validateQueryParameters($this->request);
             }
         }
     }

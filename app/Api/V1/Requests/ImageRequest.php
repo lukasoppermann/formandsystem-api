@@ -1,12 +1,18 @@
 <?php
 
 namespace App\Api\V1\Requests;
-
+use Illuminate\Http\Request;
 use App\Api\V1\Requests\AbstractResourceRequest;
 
 class ImageRequest extends AbstractResourceRequest
 {
     use RequestAuthorization;
+    /**
+     * determins if the user needs to have an image ftp access
+     *
+     * @var bool
+     */
+    protected $needs_ftp_image = TRUE;
     /**
      * scopes available for the endpoint
      *

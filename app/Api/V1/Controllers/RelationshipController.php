@@ -133,7 +133,7 @@ class RelationshipController extends Controller
         $this->validateRelationshipsIds($relationshipIds, $relatedType);
         // attach new relationships
         $relatedModel = $this->newModel($relatedType);
-        
+
         foreach($relationshipIds as $id){
             $model->{$relatedType}()->save($relatedModel->find($id));
         }
