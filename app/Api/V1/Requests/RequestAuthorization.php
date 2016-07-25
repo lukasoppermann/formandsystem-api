@@ -17,6 +17,7 @@ trait RequestAuthorization
      */
     protected function authorize()
     {
+
         $authorizer = app('oauth2-server.authorizer');
         try {
             $authorizer->validateAccessToken();
@@ -82,6 +83,7 @@ trait RequestAuthorization
             'database'  => $db['database'],
             'username'  => $db['username'],
             'password'  => $db['password'],
+            'port'      => isset($db['port']) ? $db['port'] : '3306',
             'charset'   => isset($db['charset']) ? $db['charset'] : 'utf8',
             'collation' => isset($db['collation']) ? $db['collation'] : 'utf8_unicode_ci',
             'prefix'    => isset($db['prefix']) ? $db['prefix'] : '',

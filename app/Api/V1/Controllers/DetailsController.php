@@ -15,5 +15,4 @@ class DetailsController extends ApiController
      * @var array
      */
     protected $resource = 'details';
-
 }
