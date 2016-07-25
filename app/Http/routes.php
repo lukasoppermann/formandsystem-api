@@ -13,7 +13,6 @@ $api->version('v1', function($api){
             App\Http\Middleware\CorsMiddleware::class,
         ],
         'namespace' => 'App\Api\V1\Controllers',
-        // 'scopes' => ['client.get']
     ], function($api){
         // app('config')->set('database.connections.test','test');
         // dd(app('config')->get('database.connections.test'));

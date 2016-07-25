@@ -30,9 +30,9 @@ class DetailRequest extends AbstractResourceRequest
     protected $rules = [
         // POST
         'post' => [
-            'data.type' => 'required|in:details',
-            'data.attributes.type' => 'required|string|in:database,ftp_image,ftp_backup',
-            'data.attributes.data' => 'required|string_or_array',
+            'data.type'             => 'required|in:details',
+            'data.attributes.type'  => 'required|string|in:database,ftp_image,ftp_backup',
+            'data.attributes.data'  => 'required|string_or_array',
         ]
     ];
     /**
