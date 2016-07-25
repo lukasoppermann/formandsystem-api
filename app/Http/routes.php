@@ -9,7 +9,8 @@ $api->version('v1', function($api){
     $api->group([
         'middleware' => [
             'api.auth',
-            App\Http\Middleware\TestingMiddleware::class
+            App\Http\Middleware\TestingMiddleware::class,
+            App\Http\Middleware\CorsMiddleware::class,
         ],
         'namespace' => 'App\Api\V1\Controllers',
         // 'scopes' => ['client.get']
@@ -98,7 +99,8 @@ $api->version('v1', function($api){
     $api->group([
         'namespace' => 'App\Api\V1\Controllers',
         'middleware' => [
-            App\Http\Middleware\TestingMiddleware::class
+            App\Http\Middleware\TestingMiddleware::class,
+            App\Http\Middleware\CorsMiddleware::class,
         ],
     ], function($api){
         // ---------------------------

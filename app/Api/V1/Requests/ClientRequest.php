@@ -31,9 +31,9 @@ class ClientRequest extends AbstractResourceRequest
     protected $rules = [
         // POST
         'post' => [
-            'data.type' => 'required|in:clients',
-            'data.attributes.name' => 'required|string',
-            'data.attributes.scopes' => 'required|string',
+            'data.type'                 => 'required|in:clients',
+            'data.attributes.name'      => 'required|string',
+            'data.attributes.scopes'    => 'required|string',
         ]
     ];
     /**
