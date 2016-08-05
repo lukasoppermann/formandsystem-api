@@ -88,6 +88,7 @@ trait RequestAuthorization
             'collation' => isset($db['collation']) ? $db['collation'] : 'utf8_unicode_ci',
             'prefix'    => isset($db['prefix']) ? $db['prefix'] : '',
         );
+
         // store connection as config
         app('config')->set('database.connections.user',$db);
     }

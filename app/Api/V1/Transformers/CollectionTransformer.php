@@ -32,6 +32,7 @@ class CollectionTransformer extends ApiTransformer
         return [
             'id'            => $collection->id,
             'type'          => $collection->type,
+            'position'      => $collection->position,
             'name'          => $collection->name,
             'slug'          => $collection->slug,
             'is_trashed'    => $this->isTrashed($collection),

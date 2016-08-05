@@ -27,6 +27,7 @@ class CollectionRequest extends AbstractResourceRequest
         // POST
         'post' => [
             'data.type' => 'required|in:collections',
+            'data.attributes.position' => 'integer',
             'data.attributes.name' => 'required|string',
             'data.attributes.slug' => 'required|alpha_dash',
             'data.attributes.type' => 'required|alpha_dash',
@@ -35,6 +36,7 @@ class CollectionRequest extends AbstractResourceRequest
         'patch' => [
             'data.id' => 'required|string',
             'data.type' => 'required|in:collections',
+            'data.attributes.position' => 'integer',
             'data.attributes.name' => 'string',
             'data.attributes.slug' => 'string|alpha_dash',
             'data.attributes.type' => 'required|alpha_dash',

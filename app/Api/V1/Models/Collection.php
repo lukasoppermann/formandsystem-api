@@ -36,7 +36,7 @@ class Collection extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['id','name','slug','type'];
+    protected $fillable = ['id','position','name','slug','type'];
     /**
      * The attributes that should be mutated to dates.
      *
