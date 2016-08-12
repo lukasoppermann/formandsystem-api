@@ -38,8 +38,8 @@ class CollectionRequest extends AbstractResourceRequest
             'data.type' => 'required|in:collections',
             'data.attributes.position' => 'integer',
             'data.attributes.name' => 'string',
-            'data.attributes.slug' => 'string|alpha_dash',
-            'data.attributes.type' => 'required|alpha_dash',
+            'data.attributes.slug' => 'alpha_dash',
+            'data.attributes.type' => 'alpha_dash',
             'data.attributes.is_trashed' => 'boolean',
         ]
     ];
