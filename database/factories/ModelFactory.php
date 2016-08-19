@@ -94,3 +94,23 @@ $factory->define(App\Api\V1\Models\Metadetail::class, function ($faker) {
         'data'              => $data,
     ];
 });
+/*
+| Token
+*/
+$factory->define(App\Api\V1\Models\Token::class, function ($faker) {
+    return [
+        'id' => $faker->uuid,
+        'session_id'  => $faker->numberBetween(1,999),
+        'expire_time' => time() + 3600,
+    ];
+});
+/*
+| Client
+*/
+$factory->define(App\Api\V1\Models\Client::class, function ($faker) {
+    return [
+        'id'        => bin2hex(random_bytes(20)),
+        'secret'    => bin2hex(random_bytes(20)),
+        'name'      => $faker->name(),
+    ];
+});

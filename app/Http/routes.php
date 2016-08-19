@@ -86,7 +86,10 @@ $api->version('v1', function($api){
         $api->put('uploads/{id}', 'UploadsController@update');
         // ---------------------------
         // Clients
-        $api->get('clients/{id}', 'ClientsController@show');
+        $api->get('clients/{id}', function(){
+            return 'YESS';
+        });
+        // $api->get('clients/{id}', 'ClientsController@show');
         $api->post('clients', 'ClientsController@store');
         $api->delete('clients/{id}', 'ClientsController@delete');
         // ---------------------------

@@ -12,14 +12,17 @@
         "ramsey/uuid": "^3.3",
         "league/flysystem": "^1.0",
         "league/flysystem-sftp": "^1.0",
-        "lucadegasperi/oauth2-server-laravel": "^5.1"
+        "lucadegasperi/oauth2-server-laravel": "^5.1",
+        "bugsnag/bugsnag-laravel": "^2.0"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "~6.0",
         "phpunit/phpunit": "~4.0",
-        "phpspec/phpspec": "~2.0",
         "fzaninotto/faker": "~1.0",
-        "johnkary/phpunit-speedtrap": "^1.0"
+        "johnkary/phpunit-speedtrap": "^1.0",
+        "mockery/mockery": "^0.9.5",
+        "humbug/humbug": "~1.0@dev",
+        "friendsofphp/php-cs-fixer": "^1.12"
     },
     "autoload": {
         "psr-4": {
@@ -36,5 +39,11 @@
     },
     "config": {
         "preferred-install": "dist"
+    },
+    "scripts": {
+        "test": "phpunit; vendor/bin/php-cs-fixer fix -v --diff --dry-run; composer run humbug;",
+        "php-fix": "vendor/bin/php-cs-fixer fix -v --diff;",
+        "travis": "phpunit --coverage-clover build/logs/clover.xml",
+        "humbug": "vendor/bin/humbug -vvv --ansi && vendor/bin/humbug stats --skip-killed=yes -vvv --ansi"
     }
 }

@@ -59,7 +59,7 @@ $app->middleware([
 ]);
 
 $app->routeMiddleware([
-    
+
 ]);
 
 /*
@@ -75,6 +75,9 @@ $app->routeMiddleware([
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
 $app->register(App\Providers\OAuthServiceProvider::class);
+# Add `BugsnagServiceProvider` to the `providers` array
+$app->register(Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Dingo Configureation

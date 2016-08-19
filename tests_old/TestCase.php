@@ -1,14 +1,14 @@
 <?php
 
 use Lukasoppermann\Httpstatus\Httpstatuscodes;
-use Lukasoppermann\Testing\Traits\CallTrait;
+use Lukasoppermann\Testing\Traits\TestTrait;
 use GuzzleHttp\Client as Guzzle;
 
 class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
 {
-    use CallTrait;
-
-    protected $url = 'http://formandsystem-api.dev';
+    use TestTrait;
+    // guzzle client
+    protected $client;
     // the tests main model
     protected $model;
     // determin if tokens should be created
@@ -64,29 +64,29 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
         $this->app->make('config')->set('database.default', 'testapi');
 
         // migrate database
-        // if( static::$init === false ){
-        //     static::$init = true;
-        //     $this->app->make('Illuminate\Contracts\Console\Kernel')->call('migrate:refresh',[
-        //         '--path'        => 'database/migrations',
-        //         '--database'    => 'testapi',
-        //     ]);
-        //     $this->app->make('Illuminate\Contracts\Console\Kernel')->call('db:seed', [
-        //         '--class'        => 'DatabaseSeeder',
-        //         '--database'     => 'testapi',
-        //     ]);
-        //     $this->app->make('Illuminate\Contracts\Console\Kernel')->call('migrate:refresh',[
-        //         '--path'        => 'database/client_migrations',
-        //         '--database'    => 'user',
-        //     ]);
-        //     $this->app->make('Illuminate\Contracts\Console\Kernel')->call('db:seed',[
-        //         '--class'        => 'ClientSeeder',
-        //         '--database'     => 'user',
-        //     ]);
-        // }
-        // // get tokens
-        // $this->createTokens();
-        // // init model for current resource
-        // $this->initModel();
+        if( static::$init === false ){
+            static::$init = true;
+            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('migrate:refresh',[
+                '--path'        => 'database/migrations',
+                '--database'    => 'testapi',
+            ]);
+            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('db:seed', [
+                '--class'        => 'DatabaseSeeder',
+                '--database'     => 'testapi',
+            ]);
+            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('migrate:refresh',[
+                '--path'        => 'database/client_migrations',
+                '--database'    => 'user',
+            ]);
+            $this->app->make('Illuminate\Contracts\Console\Kernel')->call('db:seed',[
+                '--class'        => 'ClientSeeder',
+                '--database'     => 'user',
+            ]);
+        }
+        // get tokens
+        $this->createTokens();
+        // init model for current resource
+        $this->initModel();
     }
     public function tearDown()
     {
@@ -203,11 +203,11 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
         // fail test on error
         $this->fail('Error response ['.$r['error']['status_code'].']: '.$r['error']['message']);
     }
-    // public function client(){
-    //     // Boot up HTTP Client
-    //     return new Guzzle([
-    //         'base_uri' => 'http://api.formandsystem.app',
-    //         'exceptions' => false,
-    //     ]);
-    // }
+    public function client(){
+        // Boot up HTTP Client
+        return new Guzzle([
+            'base_uri' => 'http://formandsystem-api.dev',
+            'exceptions' => false,
+        ]);
+    }
 }
