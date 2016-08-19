@@ -8,6 +8,8 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
 {
     use TestTrait;
     // guzzle client
+    protected $url = 'http://formandsystem-api.dev';
+    // guzzle client
     protected $client;
     // the tests main model
     protected $model;
@@ -206,7 +208,7 @@ class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
     public function client(){
         // Boot up HTTP Client
         return new Guzzle([
-            'base_uri' => 'http://api.formandsystem.app',
+            'base_uri' => $this->url,
             'exceptions' => false,
         ]);
     }
