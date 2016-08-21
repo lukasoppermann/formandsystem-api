@@ -12,7 +12,7 @@ abstract class AbstractRequest
      *
      * @var Request
      */
-    protected $request;
+    public $request;
     /**
      * the resource for the request
      *

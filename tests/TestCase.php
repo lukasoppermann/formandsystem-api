@@ -4,10 +4,11 @@ use Lukasoppermann\Httpstatus\Httpstatuscodes;
 use Lukasoppermann\Testing\Traits\CallTrait;
 use GuzzleHttp\Client as Guzzle;
 
-class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
+abstract class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
 {
     use CallTrait;
 
+    protected $faker;
     protected $url = 'http://formandsystem-api.dev';
     // the tests main model
     protected $model;

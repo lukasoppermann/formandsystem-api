@@ -24,7 +24,7 @@ abstract class Controller extends LumenController
      *
      * @var int
      */
-    protected $perPage = 20;
+    // protected $perPage = 20;
     /**
      * The general namespace for the api
      *

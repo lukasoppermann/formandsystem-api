@@ -18,7 +18,8 @@ $api->version('v1', function($api){
         // dd(app('config')->get('database.connections.test'));
         // ---------------------------
         // collections
-        $api->get('collections', 'CollectionsController@index');
+        // $api->get('collections', 'CollectionsController@index');
+        $api->get('collections', 'NewCollectionsController@newIndex');
         $api->get('collections/{id}', 'CollectionsController@show');
         $api->post('collections', 'CollectionsController@store');
         $api->patch('collections/{id}', 'CollectionsController@update');
