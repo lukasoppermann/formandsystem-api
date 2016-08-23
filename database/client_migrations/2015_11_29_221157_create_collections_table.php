@@ -18,6 +18,7 @@ class CreateCollectionsTable extends Migration
             $table->string('name', 100)->index();
             $table->string('slug', 100)->unique();
             $table->string('type', 100)->index();
+            $table->string('key', 100)->unique();
             $table->softDeletes();
         });
     }
