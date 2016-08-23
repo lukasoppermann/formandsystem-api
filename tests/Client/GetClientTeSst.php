@@ -22,6 +22,7 @@ class ClientTest extends TestCase{
      * @group bug
      */
     public function testGetClient(){
+        $this->markTestSkipped('must be revisited.');
         $client = factory(Client::class)->make();
         // // CALL
         $response = $this->getCall('/'.$this->resource.'/client_to_delete', [

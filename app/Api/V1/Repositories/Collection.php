@@ -9,7 +9,7 @@ use App\Api\V1\Models\Collection as Model;
  *
  * @return Eloquent Collection
  */
-class Collection implements Repository{
+class Collection extends AbstractRepository{
 
     protected $model;
 
@@ -19,10 +19,12 @@ class Collection implements Repository{
     }
 
     public function all(Array $parameters = []){
-        return $this->model->all();
+        $model = $this->applyFilter($this->model, collect($parameters));
+        return $model->get();
     }
 
-    public function getById($id){
-        return $this->model->findOrFail($id);
+    public function getById($id, Array $parameters = []){
+        $model = $this->applyFilter($this->model, collect($parameters));
+        return $this->findOrFail($model, $id);
     }
 }

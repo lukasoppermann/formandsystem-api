@@ -59,7 +59,7 @@ abstract class AbstractRequest
      *
      * @param  Request $request
      */
-    public function __construct($request = NULL){
+    public function __construct(Request $request){
         if($request !== NULL){
             // store current request
             $this->request = $request;
@@ -190,7 +190,7 @@ abstract class AbstractRequest
      * @return [array]
      */
     public function filter(){
-        return is_array($this->requestFilter) ? $this->requestFilter : [];
+        return collect($this->requestFilter);
     }
     /**
      * validate includes used in request

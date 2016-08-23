@@ -19,8 +19,8 @@ $api->version('v1', function($api){
         // ---------------------------
         // collections
         // $api->get('collections', 'CollectionsController@index');
-        $api->get('collections', 'NewCollectionsController@newIndex');
-        $api->get('collections/{id}', 'CollectionsController@show');
+        $api->get('collections', 'NewCollectionsController@index');
+        $api->get('collections/{id}', 'NewCollectionsController@show');
         $api->post('collections', 'CollectionsController@store');
         $api->patch('collections/{id}', 'CollectionsController@update');
         $api->delete('collections/{id}', 'CollectionsController@delete');

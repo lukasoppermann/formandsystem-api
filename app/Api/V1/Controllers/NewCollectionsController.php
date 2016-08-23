@@ -15,41 +15,55 @@ use App\Api\V1\Traits\PaginationTrait;
 class NewCollectionsController extends Controller
 {
     use PaginationTrait;
+
+    protected $request;
+    protected $repository;
+    protected $transformer;
+    protected $resource = 'collections';
+
+    public function __construct(CollectionRequest $request, Collection $repository, CollectionTransformer $transformer)
+    {
+        $this->request       = $request;
+        $this->repository    = $repository;
+        $this->transformer   = $transformer;
+    }
+
     /*
      * index
      */
-    public function newIndex(CollectionRequest $request, Collection $collection, CollectionTransformer $transformer)
+    public function index()
     {
-        $result = $collection->all([
+        $result = $this->repository->all([
             'with_trashed' => $this->request->with_trashed,
             'only_trashed' => $this->request->only_trashed,
             'filter'       => $this->request->filter(),
         ]);
-        // return new LengthAwarePaginator($items, $total, $perPage, $currentPage = null, array $options = []);
-        // // get model instance
-        // $model = $this->newModel();
-        // // with trashed items
-        // if($this->request->with_trashed === true){
-        //     $model = $model->withTrashed();
-        // }
-        // // only trashed items
-        // if($this->request->only_trashed === true){
-        //     $model = $model->onlyTrashed();
-        // }
-        // // apply filters
-        // foreach((array) $this->request->filter() as $key => $values){
-        //     $model = $model->whereIn($key, $values);
-        // }
-        // // return result
-        // $parameters = $request->all();
-        // unset($parameters['page']);
-        // // needs return rawurldecode($this->paginator->url($page));
-        // // in League\Fractal\Pagination\IlluminatePaginatorAdapter on line 102
+
         return $this->response->paginator(
-            $this->paginate($result, $request),
-            $transformer,
+            $this->paginate($result, $this->request),
+            $this->transformer,
             [
-                'key' => 'collections'
+                'key' => $this->resource
+            ]
+        );
+    }
+
+    /*
+     * show
+     */
+    public function show($id)
+    {
+        $result = $this->repository->getById($id, [
+            'with_trashed' => $this->request->with_trashed,
+            'only_trashed' => $this->request->only_trashed,
+            'filter'       => $this->request->filter(),
+        ]);
+        // return resource items
+        return $this->response->item(
+            $result,
+            $this->transformer,
+            [
+                'key' => $this->resource
             ]
         );
     }
