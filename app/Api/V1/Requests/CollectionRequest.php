@@ -31,16 +31,18 @@ class CollectionRequest extends AbstractResourceRequest
             'data.attributes.name' => 'required|string',
             'data.attributes.slug' => 'required|alpha_dash',
             'data.attributes.type' => 'required|alpha_dash',
+            'data.attributes.key' => 'alpha_dash',
         ],
         // PATCH
         'patch' => [
-            'data.id' => 'required|string',
-            'data.type' => 'required|in:collections',
-            'data.attributes.position' => 'integer',
-            'data.attributes.name' => 'string',
-            'data.attributes.slug' => 'alpha_dash',
-            'data.attributes.type' => 'alpha_dash',
-            'data.attributes.is_trashed' => 'boolean',
+            'data.id'                       => 'required|string',
+            'data.type'                     => 'required|in:collections',
+            'data.attributes.position'      => 'integer',
+            'data.attributes.name'          => 'string',
+            'data.attributes.slug'          => 'alpha_dash',
+            'data.attributes.type'          => 'alpha_dash',
+            'data.attributes.is_trashed'    => 'boolean',
+            'data.attributes.key'           => 'alpha_dash',
         ]
     ];
     /**
@@ -66,5 +68,6 @@ class CollectionRequest extends AbstractResourceRequest
         'id',
         'type',
         'name',
+        'key'
     ];
 }

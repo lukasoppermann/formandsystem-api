@@ -35,6 +35,7 @@ class CollectionTransformer extends ApiTransformer
             'position'      => $collection->position,
             'name'          => $collection->name,
             'slug'          => $collection->slug,
+            'key'           => $collection->key,
             'is_trashed'    => $this->isTrashed($collection),
             'relationships' => $this->relationshipsLinks('collections/'.$collection->id),
         ];
