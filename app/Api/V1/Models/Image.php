@@ -71,18 +71,4 @@ class Image extends BaseModel
     {
         return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Collection', 'imageable'));
     }
-    /**
-     * The images that belong to the image.
-     */
-    public function metadetails()
-    {
-        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Metadetail', 'metadetailable'));
-    }
-    /**
-     * The fragments that belong to the fragment.
-     */
-    public function ownedByMetadetails()
-    {
-        return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Metadetail', 'imageable'));
-    }
 }

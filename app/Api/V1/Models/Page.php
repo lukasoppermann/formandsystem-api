@@ -83,13 +83,6 @@ class Page extends BaseModel
         return $this->relationshipTrashedFilter($this->belongsTo('App\Api\V1\Models\Collection', 'collection_id'));
     }
     /**
-     * The metadetails that belongs to the page.
-     */
-    public function metadetails()
-    {
-        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Metadetail', 'metadetailable'));
-    }
-    /**
      * The pages that belongs to the page.
      */
     public function pages()

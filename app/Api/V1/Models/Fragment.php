@@ -94,11 +94,4 @@ class Fragment extends BaseModel
     {
         return $this->relationshipTrashedFilter($this->morphedByMany('App\Api\V1\Models\Collection', 'fragmentable'));
     }
-    /**
-     * The fragments that belong to the fragment.
-     */
-    public function metadetails()
-    {
-        return $this->relationshipTrashedFilter($this->morphToMany('App\Api\V1\Models\Metadetail', 'metadetailable'));
-    }
 }
