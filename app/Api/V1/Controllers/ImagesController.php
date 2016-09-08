@@ -37,6 +37,8 @@ class ImagesController extends ApiController
         $adapter = new SftpAdapter(array_merge([
             'timeout' => 30,
         ],$credentials));
+        \LOG::debug($adapter);
+        \LOG::debug(new Filesystem($adapter));
         // return the system
         return new Filesystem($adapter);
     }
