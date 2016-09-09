@@ -110,7 +110,7 @@ trait RequestAuthorization
             $ftp = array(
                 'type'      => $ftp['type'],
                 'host'      => $ftp['host'],
-                'path'      => isset($ftp['path']) ? $ftp['path'] : '',
+                'root'      => isset($ftp['root']) ? $ftp['root'] : '',
                 'port'      => isset($ftp['port']) ? $ftp['port'] : '22',
                 'username'  => $ftp['username'],
                 'password'  => $ftp['password'],
